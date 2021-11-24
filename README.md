@@ -1,2 +1,2 @@
-# AIPS-PlanetWars
-Repository for AIPS project
+# Planet Wars
+Studentski projekat iz Arhitekture i projektovanja softvera.
