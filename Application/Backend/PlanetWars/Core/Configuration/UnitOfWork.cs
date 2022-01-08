@@ -6,7 +6,7 @@ using PlanetWars.Data.Context;
 
 namespace PlanetWars.Core.Configuration
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly PlanetWarsDbContext _context;
         public IUserRepository Users { get; private set; }

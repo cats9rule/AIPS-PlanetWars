@@ -6,9 +6,9 @@ namespace PlanetWars.Core.IRepositories
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-         Task<IEnumerable<User>> GetByUsername(string username);
-         Task<IEnumerable<User>> GetByTag(string tag);
-         Task<IEnumerable<User>> GetByDisplayedName(string displayedName);
+         Task<User> GetByUsername(string username);
+         Task<User> GetByTag(string tag);
+         Task<User> GetByDisplayedName(string displayedName);
          Task<User> GetByUsernameAndTag(string username, string tag);
     }
 }

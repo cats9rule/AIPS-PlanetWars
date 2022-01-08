@@ -55,19 +55,19 @@ namespace PlanetWars.Core.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<User>> GetByUsername(string username)
+        public async Task<User> GetByUsername(string username)
         {
-            return await dbSet.Where(x => x.Username == username).ToListAsync();
+            return await dbSet.FirstOrDefaultAsync(x => x.Username == username);
         }
 
-        public async Task<IEnumerable<User>> GetByTag(string tag)
+        public async Task<User> GetByTag(string tag)
         {
-            return await dbSet.Where(x => x.Tag == tag).ToListAsync();
+            return await dbSet.FirstOrDefaultAsync(x => x.Tag == tag);
         }
 
-        public async Task<IEnumerable<User>> GetByDisplayedName(string displayedName)
+        public async Task<User> GetByDisplayedName(string displayedName)
         {
-            return await dbSet.Where(x => x.DisplayedName == displayedName).ToListAsync();
+            return await dbSet.FirstOrDefaultAsync(x => x.DisplayedName == displayedName);
         }
 
         public async Task<User> GetByUsernameAndTag(string username, string tag)

@@ -5,7 +5,7 @@ using PlanetWars.Core.IRepositories;
 
 namespace PlanetWars.Core.Configuration
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IUserRepository Users { get; }
         IPlayerRepository Players { get; }
