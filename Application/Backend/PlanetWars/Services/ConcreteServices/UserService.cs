@@ -40,7 +40,7 @@ namespace PlanetWars.Services.ConcreteServices
                     String generatedTag = random.Next(0, 9999).ToString("D4");
                     someUser = await _unitOfWork.Users.GetByUsernameAndTag(user.Username, generatedTag);
                 } while (someUser != null);
-                
+
                 await _unitOfWork.Users.Add(user);
                 await _unitOfWork.CompleteAsync();
                 return ModelToDto(user);
@@ -155,7 +155,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Mappers
-        private UserDto ModelToDto(User model)
+        public static UserDto ModelToDto(User model)
         {
             return new UserDto
             {
@@ -165,7 +165,7 @@ namespace PlanetWars.Services.ConcreteServices
                 DisplayedName = model.DisplayedName
             };
         }
-        private User DtoToModel(UserDto dto)
+        public static User DtoToModel(UserDto dto)
         {
             return new User
             {
