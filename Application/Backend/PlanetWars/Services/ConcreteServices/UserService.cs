@@ -26,9 +26,25 @@ namespace PlanetWars.Services.ConcreteServices
             random = new Random();
         }
 
-        public Task<UserDto> CreateUser(UserDto user)
+        public async Task<UserDto> CreateUser(UserDto userDto)
         {
-            throw new NotImplementedException();
+            using (_unitOfWork)
+            {
+                User user = DtoToModel(userDto);
+                user.Salt = GenerateSALT();
+                string passwordSalt = user.Password + user.Salt;
+                user.Password = HashPassword(passwordSalt);
+                User someUser;
+                do
+                {
+                    String generatedTag = random.Next(0, 9999).ToString("D4");
+                    someUser = await _unitOfWork.Users.GetByUsernameAndTag(user.Username, generatedTag);
+                } while (someUser != null);
+                
+                await _unitOfWork.Users.Add(user);
+                await _unitOfWork.CompleteAsync();
+                return ModelToDto(user);
+            }
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsers()
@@ -110,6 +126,31 @@ namespace PlanetWars.Services.ConcreteServices
             using (_unitOfWork)
             {
                 return await _unitOfWork.Users.Delete(id);
+            }
+        }
+
+        public async Task<UserDto> LogInUser(string usernameTag, string password)
+        {
+            using (_unitOfWork)
+            {
+                string username = usernameTag.Substring(0, usernameTag.Length-5);
+                string tag = usernameTag.Substring(usernameTag.Length-4);
+                User user = await _unitOfWork.Users.GetByUsernameAndTag(username, tag);
+                if (user == null)
+                {
+                    return null;
+                }
+                string passwordSalt = password + user.Salt;
+                string hashedPassword = this.HashPassword(passwordSalt);
+
+                if (password != hashedPassword)
+                {
+                    return null;
+                }
+                else
+                {
+                    return ModelToDto(user);
+                }
             }
         }
 
