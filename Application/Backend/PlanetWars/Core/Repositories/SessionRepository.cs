@@ -52,5 +52,13 @@ namespace PlanetWars.Core.Repositories
             dbSet.Update(entity);
             return true;
         }
+
+
+        
+        public async Task<Session> GetByName(string name)
+        {
+            var exist = await dbSet.Where(x => x.Name == name).FirstOrDefaultAsync();
+            return exist;   // if (exist == null) return exist;
+        }
     }
 }
