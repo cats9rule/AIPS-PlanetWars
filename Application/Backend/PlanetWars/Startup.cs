@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using PlanetWars.Data.Context;
 
 namespace PlanetWars
 {
@@ -31,6 +33,18 @@ namespace PlanetWars
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PlanetWars", Version = "v1" });
+            });
+            services.AddDbContext<PlanetWarsDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("PlanetWars"));
+            });
+            services.AddCors(options => {
+                options.AddPolicy("CORS", builder =>
+                {
+                    builder.AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowAnyOrigin();
+                });
             });
         }
 
