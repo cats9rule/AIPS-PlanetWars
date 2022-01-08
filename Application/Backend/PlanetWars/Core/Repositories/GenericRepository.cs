@@ -11,25 +11,23 @@ namespace PlanetWars.Core.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected PlanetWarsDbContext _context;
-        protected DbSet<T> _dbSet;
-        protected ILogger _logger;
+        protected DbSet<T> dbSet;
 
-        public GenericRepository(PlanetWarsDbContext context, ILogger logger)
+        public GenericRepository(PlanetWarsDbContext context)
         {
             _context = context;
-            _logger = logger;
-            _dbSet = _context.Set<T>();
+            dbSet = _context.Set<T>();
         }
 
-        public async Task<bool> Add(T entity)
+        public virtual async Task<bool> Add(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            await dbSet.AddAsync(entity);
             return true;
         }
 
-        public async Task<IEnumerable<T>> All()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
-            return await _dbSet.ToListAsync();
+            return await dbSet.ToListAsync();
         }
 
         public virtual Task<bool> Delete(Guid id)
@@ -37,9 +35,9 @@ namespace PlanetWars.Core.Repositories
             throw new NotImplementedException();
         }
 
-        public virtual Task<T> GetById(Guid id)
+        public virtual async Task<T> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            return await dbSet.FindAsync(id);
         }
 
         public virtual Task<bool> Update(T entity)
