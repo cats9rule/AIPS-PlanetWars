@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace PlanetWars.DTOs
@@ -9,7 +8,7 @@ namespace PlanetWars.DTOs
 
         public string UserID { get; set; }
 
-        public string Color { get; set; }
+        public PlayerColorDto PlayerColor { get; set; }
 
         public virtual List<string> PlanetIDs { get; set; }
 
