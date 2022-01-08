@@ -12,6 +12,10 @@ namespace PlanetWars.Services
         public Task<IEnumerable<UserDto>> GetAllUsers();
         public Task<UserDto> GetUserByUsername(string username);
         public Task<UserDto> GetUserByTag(string tag);
+        public Task<UserDto> GetUserByUsernameAndTag(string username, string tag);
+
+        public Task<bool> DeleteUser(Guid id);
+        public Task<bool> UpdateUser(UserDto user);
         
     }
 }

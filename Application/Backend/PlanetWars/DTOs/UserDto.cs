@@ -4,7 +4,7 @@ namespace PlanetWars.DTOs
 {
     public class UserDto
     {
-        public string ID { get; set; }
+        public Guid ID { get; set; }
         public string Username { get; set; }
         public string Tag { get; set; }
         public string DisplayedName { get; set; }    
