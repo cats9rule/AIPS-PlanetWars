@@ -9,24 +9,24 @@ using PlanetWars.Data.Models;
 
 namespace PlanetWars.Core.Repositories
 {
-    public class PlayerRepository : GenericRepository<Player>, IPlayerRepository
+    public class ColorRepository : GenericRepository<Color>, IColorRepository
     {
-        public PlayerRepository(PlanetWarsDbContext context) : base(context)
+        public ColorRepository(PlanetWarsDbContext context) : base(context)
         {
             
         }
-
-        public override Task<bool> Add(Player entity)
+        
+        public override Task<bool> Add(Color entity)
         {
             return base.Add(entity);
         }
 
-        public override Task<IEnumerable<Player>> GetAll()
+        public override Task<IEnumerable<Color>> GetAll()
         {
             return base.GetAll();
         }
 
-        public override Task<Player> GetById(Guid id)
+        public override Task<Color> GetById(Guid id)
         {
             return base.GetById(id);
         }
@@ -42,7 +42,7 @@ namespace PlanetWars.Core.Repositories
             return false;
         }
 
-        public override async Task<bool> Update(Player entity)
+        public override async Task<bool> Update(Color entity)
         {
             var existing = await dbSet.Where(x => x.ID == entity.ID).FirstOrDefaultAsync();
             if (existing == null)
@@ -53,14 +53,9 @@ namespace PlanetWars.Core.Repositories
             return true;
         }
 
-        public async Task<Player> GetByUsernameAndTag(string username, string tag)
+        public async Task<Color> GetByHexValue(string hexValue)
         {
-            return await dbSet.FirstOrDefaultAsync(player => player.User.Username == username && player.User.Tag == tag);
-        }
-
-        public async Task<Player> GetByUserID(Guid id)
-        {
-            return await dbSet.FirstOrDefaultAsync(player => player.User.ID == id);
+            return await dbSet.FirstOrDefaultAsync(x => x.HexValue == hexValue);
         }
     }
 }

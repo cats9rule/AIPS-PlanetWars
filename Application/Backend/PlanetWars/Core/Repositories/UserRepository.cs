@@ -72,7 +72,7 @@ namespace PlanetWars.Core.Repositories
 
         public async Task<User> GetByUsernameAndTag(string username, string tag)
         {
-            return await this.dbSet.FirstOrDefaultAsync(x => x.Username == username && x.Tag == tag);
+            return await dbSet.FirstOrDefaultAsync(x => x.Username == username && x.Tag == tag);
         }
     }
 }
