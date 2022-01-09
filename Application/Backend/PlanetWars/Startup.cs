@@ -13,6 +13,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PlanetWars.Data.Context;
+using PlanetWars.Core.Configuration;
+using PlanetWars.Services.ConcreteServices;
+using PlanetWars.Services;
 
 namespace PlanetWars
 {
@@ -28,6 +31,14 @@ namespace PlanetWars
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<IColorService, ColorService>();
+            //services.AddScoped<IGalaxyService>();
+            services.AddScoped<IPlayerColorService, PlayerColorService>();
+            //services.AddScoped<ISessionService>();
+            services.AddScoped<IUserService, UserService>();
+
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
