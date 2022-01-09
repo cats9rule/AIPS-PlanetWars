@@ -19,7 +19,9 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                return await _unitOfWork.Colors.Add(DtoToModel(colorDto));
+                var retval = await _unitOfWork.Colors.Add(DtoToModel(colorDto));
+                await _unitOfWork.CompleteAsync();
+                return retval;
             }
         }
 
@@ -27,7 +29,9 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                return await _unitOfWork.Colors.Delete(id);
+                var retval = await _unitOfWork.Colors.Delete(id);
+                await _unitOfWork.CompleteAsync();
+                return retval;
             }
         }
 
@@ -75,7 +79,9 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                return await _unitOfWork.Colors.Update(DtoToModel(colorDto));
+                var retval = await _unitOfWork.Colors.Update(DtoToModel(colorDto));
+                await _unitOfWork.CompleteAsync();
+                return retval;
             }
         }
 
