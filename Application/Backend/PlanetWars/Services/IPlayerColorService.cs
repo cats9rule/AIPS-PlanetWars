@@ -7,7 +7,7 @@ namespace PlanetWars.Services
 {
     public interface IPlayerColorService
     {
-         public Task<bool> Add(PlayerColorDto pcrDto);
+        public Task<bool> Add(PlayerColorDto pcDto);
         public Task<IEnumerable<PlayerColorDto>> GetAll();
         public Task<PlayerColorDto> GetById(Guid id);
         public Task<bool> Update(PlayerColorDto pcDto);

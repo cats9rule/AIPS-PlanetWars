@@ -58,7 +58,7 @@ namespace PlanetWars.Core.Repositories
             return await dbSet.FirstOrDefaultAsync(player => player.User.Username == username && player.User.Tag == tag);
         }
 
-        public async Task<Player> GetByUserID(Guid id)
+        public async Task<Player> GetByUserId(Guid id)
         {
             return await dbSet.FirstOrDefaultAsync(player => player.User.ID == id);
         }

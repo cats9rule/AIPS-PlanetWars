@@ -52,5 +52,26 @@ namespace PlanetWars.Core.Repositories
             dbSet.Update(entity);
             return true;
         }
+
+        public async Task<IEnumerable<Planet>> GetForPlayer(Guid playerID)
+        {
+            return await dbSet.Where(p => p.Owner.ID == playerID).ToListAsync();
+        }
+
+        public async Task<bool> UpdateArmies(Guid id, int armyDifference)
+        {
+            var planet = await dbSet.FindAsync(id);
+            if (planet != null)
+            {
+                planet.ArmyCount += armyDifference;
+                return true;
+            }
+            return false;
+        }
+
+        public Task<bool> UpdateOwnership(Guid id, Guid ownerID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
