@@ -52,5 +52,6 @@ namespace PlanetWars.Core.Repositories
             dbSet.Update(entity);
             return true;
         }
+
     }
 }
