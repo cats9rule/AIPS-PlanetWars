@@ -51,7 +51,10 @@ namespace PlanetWars.Core.Repositories
             {
                 return await Add(entity);
             }
-            dbSet.Update(entity);
+            if(entity.DisplayedName != null)
+                existing.DisplayedName = entity.DisplayedName;
+            if(entity.Password != null)
+                existing.DisplayedName = entity.DisplayedName;
             return true;
         }
 

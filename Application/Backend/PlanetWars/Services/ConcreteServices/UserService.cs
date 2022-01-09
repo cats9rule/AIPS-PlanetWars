@@ -35,12 +35,14 @@ namespace PlanetWars.Services.ConcreteServices
                 string passwordSalt = user.Password + user.Salt;
                 user.Password = HashPassword(passwordSalt);
                 User someUser;
+                String generatedTag;
                 do
                 {
-                    String generatedTag = random.Next(0, 9999).ToString("D4");
+                    generatedTag = random.Next(0, 9999).ToString("D4");
                     someUser = await _unitOfWork.Users.GetByUsernameAndTag(user.Username, generatedTag);
                 } while (someUser != null);
 
+                user.Tag = generatedTag;
                 await _unitOfWork.Users.Add(user);
                 await _unitOfWork.CompleteAsync();
                 return ModelToDto(user);
@@ -133,27 +135,27 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<UserDto> LogInUser(string usernameTag, string password)
+        public async Task<UserDto> LogInUser(UserDto user)
         {
             using (_unitOfWork)
             {
-                string username = usernameTag.Substring(0, usernameTag.Length-5);
-                string tag = usernameTag.Substring(usernameTag.Length-4);
-                User user = await _unitOfWork.Users.GetByUsernameAndTag(username, tag);
-                if (user == null)
+                string username = user.Username;
+                string tag = user.Tag;
+                User u = await _unitOfWork.Users.GetByUsernameAndTag(username, tag);
+                if (u == null)
                 {
                     return null;
                 }
-                string passwordSalt = password + user.Salt;
+                string passwordSalt = user.Password + u.Salt;
                 string hashedPassword = this.HashPassword(passwordSalt);
 
-                if (password != hashedPassword)
+                if (u.Password != hashedPassword)
                 {
                     return null;
                 }
                 else
                 {
-                    return ModelToDto(user);
+                    return ModelToDto(u);
                 }
             }
         }
@@ -176,7 +178,8 @@ namespace PlanetWars.Services.ConcreteServices
                 ID = dto.ID,
                 Username = dto.Username,
                 Tag = dto.Tag,
-                DisplayedName = dto.DisplayedName
+                DisplayedName = dto.DisplayedName,
+                Password = dto.Password
             };
         }
         #endregion

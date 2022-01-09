@@ -8,5 +8,7 @@ namespace PlanetWars.DTOs
         public Guid ID { get; set; }
 
         public List<Guid> Planets { get; set; }
+
+        public int PlanetCount {get; set; }
     }
 }
