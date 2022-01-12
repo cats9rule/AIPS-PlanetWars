@@ -93,7 +93,7 @@ namespace PlanetWars.Services.ConcreteServices
                 ID = model.ID,
                 Owner = model.Owner.ID,
                 ArmyCount = model.ArmyCount,
-                NeighbourPlanets = model.NeighbourPlanets.Select(planet => planet.ID).ToList(),
+                NeighbourPlanets = model.NeighbourPlanets.Select(planet => planet.PlanetToID).ToList(),
                 MovementBoost = model.MovementBoost,
                 DefenseBoost = model.DefenseBoost,
                 AttackBoost = model.AttackBoost

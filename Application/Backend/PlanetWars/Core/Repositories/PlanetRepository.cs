@@ -53,7 +53,6 @@ namespace PlanetWars.Core.Repositories
             return true;
         }
 
-<<<<<<< HEAD
         public async Task<IEnumerable<Planet>> GetForPlayer(Guid playerID)
         {
             return await dbSet.Where(p => p.Owner.ID == playerID).ToListAsync();
@@ -74,7 +73,5 @@ namespace PlanetWars.Core.Repositories
         {
             throw new NotImplementedException();
         }
-=======
->>>>>>> f9539b555156469fbfcd981087f3e0647eed24e7
     }
 }

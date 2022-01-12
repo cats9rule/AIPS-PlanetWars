@@ -18,7 +18,8 @@ namespace PlanetWars.Data.Models
         public int ArmyCount { get; set; }
 
         [JsonIgnore]
-        public virtual List<Planet> NeighbourPlanets { get; set; }
+        
+        public virtual List<PlanetPlanet> NeighbourPlanets { get; set; }
 
         public int MovementBoost { get; set; }
         public int AttackBoost { get; set; }

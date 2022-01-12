@@ -14,5 +14,11 @@ namespace PlanetWars.Data.Models
 
         [JsonIgnore]
         public virtual List<Planet> Planets { get; set; }
+
+        public int PlanetCount { get; set; }
+
+        public float ResourcePlanetRatio { get; set; }
+
+        public string Description { get; set; }
     }
 }
