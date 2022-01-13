@@ -10,6 +10,9 @@ namespace PlanetWars.Services.ConcreteServices
 {
     public class PlanetService : IPlanetService
     {
+        private int atkBoost = 2;
+        private int defBoost = 2;
+        private int movBoost = 2;
         private readonly IUnitOfWork _unitOfWork;
         public PlanetService(IUnitOfWork unitOfWork)
         {
@@ -26,9 +29,33 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public Task<PlanetDto> CreatePlanet()
+        public async Task<PlanetDto> CreatePlanet(bool hasResource)
         {
-            throw new NotImplementedException();
+            Planet planet = new Planet();
+            planet.ID = new Guid();
+            planet.ArmyCount = 0;
+            planet.Owner = null;
+            planet.NeighbourPlanets = new List<PlanetPlanet>();
+            if (hasResource)
+            {
+                Random rnd = new Random();
+                int num = rnd.Next();
+                if (num % 3 == 0)
+                {
+                    planet.DefenseBoost = defBoost;
+                }
+                if (num % 4 == 0) 
+                {
+                    planet.AttackBoost = atkBoost;
+                }
+                if (num % 5 == 0) 
+                {
+                    planet.MovementBoost = movBoost;
+                }
+            }
+            var retval = await _unitOfWork.Planets.Add(planet);
+            await _unitOfWork.CompleteAsync();
+            return ModelToDto(planet);
         }
 
         public async Task<bool> Delete(Guid id)
@@ -63,9 +90,15 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public Task<IEnumerable<PlanetDto>> GetForPlayer(Guid playerId)
+        public async Task<IEnumerable<PlanetDto>> GetForPlayer(Guid playerId)
         {
-            throw new NotImplementedException();
+            var player = await _unitOfWork.Players.GetById(playerId);
+            if(player != null)
+            {
+                List<PlanetDto> planets = player.Planets.Select(p => ModelToDto(p)).ToList();
+                return planets;
+            }
+            return new List<PlanetDto>();
         }
 
         public async Task<bool> Update(PlanetDto planetDto)
@@ -77,12 +110,25 @@ namespace PlanetWars.Services.ConcreteServices
 
         public Task<bool> UpdateArmies(Guid id, int armyDifference)
         {
-            throw new NotImplementedException();
+            return _unitOfWork.Planets.UpdateArmies(id, armyDifference);
         }
 
         public Task<bool> UpdateOwnership(Guid id, Guid ownerID)
         {
-            throw new NotImplementedException();
+            return _unitOfWork.Planets.UpdateOwnership(id, ownerID);
+        }
+        public async Task<IEnumerable<PlanetDto>> GetRelatedPlanets(Guid planetID)
+        {
+            var relations = await _unitOfWork.PlanetPlanets.GetAllRelationsForPlanet(planetID);
+            List<PlanetDto> relatedPlanets = new List<PlanetDto>();
+            foreach(PlanetPlanet relation in relations)
+            {
+                var planet = await _unitOfWork.Planets.GetById(relation.PlanetToID);
+                if (planet != null) {
+                    relatedPlanets.Add(ModelToDto(planet));
+                }
+            }
+            return relatedPlanets;
         }
 
         #region Mappers
@@ -112,10 +158,6 @@ namespace PlanetWars.Services.ConcreteServices
             };
         }
 
-        public Task<IEnumerable<PlanetDto>> GetRelatedPlanets(Guid planetID)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
     }
 }

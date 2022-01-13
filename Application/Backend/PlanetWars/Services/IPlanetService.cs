@@ -8,7 +8,7 @@ namespace PlanetWars.Services
     public interface IPlanetService
     {
         public Task<bool> Add(PlanetDto planetDto);
-        public Task<PlanetDto> CreatePlanet();
+        public Task<PlanetDto> CreatePlanet(bool hasResource);
 
         public Task<IEnumerable<PlanetDto>> GetAll();
         public Task<PlanetDto> GetById(Guid id);
