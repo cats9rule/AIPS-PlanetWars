@@ -11,6 +11,8 @@ namespace PlanetWars.Core.Configuration
         IPlayerRepository Players { get; }
         IPlayerColorRepository PlayerColors { get; }
         IPlanetRepository Planets { get; }
+
+        IPlanetPlanetRepository PlanetPlanets { get; }
         IGalaxyRepository Galaxies { get; }
         ISessionRepository Sessions { get; }
         Task CompleteAsync();
