@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlanetWars.Data.Context;
 
 namespace PlanetWars.Migrations
 {
     [DbContext(typeof(PlanetWarsDbContext))]
-    partial class PlanetWarsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220113185150_Removed Color")]
+    partial class RemovedColor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
