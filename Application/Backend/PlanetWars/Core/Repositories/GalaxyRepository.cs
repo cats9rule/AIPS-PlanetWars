@@ -13,6 +13,7 @@ namespace PlanetWars.Core.Repositories
 {
     public class GalaxyRepository : GenericRepository<Galaxy>, IGalaxyRepository
     {
+
         public GalaxyRepository(PlanetWarsDbContext context) : base(context)
         {
 
@@ -51,6 +52,16 @@ namespace PlanetWars.Core.Repositories
                 return await Add(entity);
             dbSet.Update(entity);
             return true;
+        }
+
+        public async Task<IEnumerable<Galaxy>> GetGalaxiesByResourceAbundanceFactor(float abundanceFactor)
+        {
+            return await dbSet.Where(g => g.ResourcePlanetRatio == abundanceFactor).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Galaxy>> GetGalaxiesByPlanetCount(int planetCount)
+        {
+            return await dbSet.Where(g => g.PlanetCount == planetCount).ToListAsync();
         }
     }
 }
