@@ -19,6 +19,8 @@ namespace PlanetWars.Core.Configuration
 
         public IPlanetRepository Planets { get; private set; }
 
+        public IPlanetPlanetRepository PlanetPlanets { get; set; }
+
         public IGalaxyRepository Galaxies { get; private set; }
 
         public ISessionRepository Sessions { get; private set; }
@@ -34,6 +36,7 @@ namespace PlanetWars.Core.Configuration
             Planets = new PlanetRepository(context);
             Galaxies = new GalaxyRepository(context);
             Sessions = new SessionRepository(context);
+            PlanetPlanets = new PlanetPlanetRepository(context);
         }
 
         public async Task CompleteAsync()
