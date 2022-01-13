@@ -15,8 +15,6 @@ namespace PlanetWars.Core.Configuration
 
         public IPlayerColorRepository PlayerColors { get; private set; }
 
-        public IColorRepository Colors { get; private set; }
-
         public IPlanetRepository Planets { get; private set; }
 
         public IPlanetPlanetRepository PlanetPlanets { get; set; }
@@ -32,7 +30,6 @@ namespace PlanetWars.Core.Configuration
             Users = new UserRepository(context);
             Players = new PlayerRepository(context);
             PlayerColors = new PlayerColorRepository(context);
-            Colors = new ColorRepository(context);
             Planets = new PlanetRepository(context);
             Galaxies = new GalaxyRepository(context);
             Sessions = new SessionRepository(context);

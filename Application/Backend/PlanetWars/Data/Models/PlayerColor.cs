@@ -11,8 +11,7 @@ namespace PlanetWars.Data.Models
         [Key]
         public Guid ID { get; set; }
 
-        [JsonIgnore]
-        public Color Color { get; set; }
+        public string ColorHexValue { get; set; }
 
         public int TurnIndex { get; set; }
 

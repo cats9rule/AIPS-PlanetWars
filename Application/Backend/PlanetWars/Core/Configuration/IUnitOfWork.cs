@@ -10,7 +10,6 @@ namespace PlanetWars.Core.Configuration
         IUserRepository Users { get; }
         IPlayerRepository Players { get; }
         IPlayerColorRepository PlayerColors { get; }
-        IColorRepository Colors { get; }
         IPlanetRepository Planets { get; }
         IGalaxyRepository Galaxies { get; }
         ISessionRepository Sessions { get; }

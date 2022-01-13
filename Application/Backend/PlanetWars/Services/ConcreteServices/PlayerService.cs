@@ -59,8 +59,8 @@ namespace PlanetWars.Services.ConcreteServices
             {
                 ID = model.ID,
                 UserID = model.User.ID,
-                Color = model.Color.Color.HexValue,
-                TurnIndex = model.Color.TurnIndex,
+                Color = model.PlayerColor.ColorHexValue,
+                TurnIndex = model.PlayerColor.TurnIndex,
                 PlanetIDs = planetIDs,
                 IsActive = model.IsActive
             };

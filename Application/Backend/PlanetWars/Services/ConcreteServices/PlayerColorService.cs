@@ -78,8 +78,7 @@ namespace PlanetWars.Services.ConcreteServices
             return new PlayerColorDto
             {
                 ID = model.ID,
-                HexColor = model.Color.HexValue,
-                ColorID = model.Color.ID,
+                HexColor = model.ColorHexValue,
                 TurnIndex = model.TurnIndex
             };
         }
@@ -88,7 +87,7 @@ namespace PlanetWars.Services.ConcreteServices
             return new PlayerColor
             {
                 ID = dto.ID,
-                Color = ColorService.DtoToModel(new ColorDto{ID = dto.ColorID, HexValue = dto.HexColor}),
+                ColorHexValue = dto.HexColor,
                 TurnIndex = dto.TurnIndex
             };
         }

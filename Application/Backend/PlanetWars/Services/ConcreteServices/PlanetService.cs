@@ -111,6 +111,11 @@ namespace PlanetWars.Services.ConcreteServices
                 DefenseBoost = dto.DefenseBoost,
             };
         }
+
+        public Task<IEnumerable<PlanetDto>> GetRelatedPlanets(Guid planetID)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

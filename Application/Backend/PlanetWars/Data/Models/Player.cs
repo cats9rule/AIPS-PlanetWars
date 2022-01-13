@@ -16,7 +16,7 @@ namespace PlanetWars.Data.Models
         public User User { get; set; }
 
         [JsonIgnore]
-        public PlayerColor Color { get; set; }
+        public PlayerColor PlayerColor { get; set; }
 
         [JsonIgnore]
         public virtual List<Planet> Planets { get; set; }
