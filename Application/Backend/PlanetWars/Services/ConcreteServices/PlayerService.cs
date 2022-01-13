@@ -18,37 +18,72 @@ namespace PlanetWars.Services.ConcreteServices
 
         public Task<bool> Add(PlayerDto playerDto)
         {
-            throw new NotImplementedException();
+            return _unitOfWork.Players.Add(DtoToModel(playerDto));
         }
 
         public Task<bool> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            return _unitOfWork.Players.Delete(id);
         }
 
-        public Task<IEnumerable<PlayerDto>> GetAll()
+        public async Task<IEnumerable<PlayerDto>> GetAll()
         {
-            throw new NotImplementedException();
+            IEnumerable<Player> players = await _unitOfWork.Players.GetAll();
+            List<PlayerDto> playerDtos = new List<PlayerDto>();
+            foreach (Player player in players)
+            {
+                playerDtos.Add(ModelToDto(player));
+            }
+            return playerDtos;
         }
 
-        public Task<PlayerDto> GetById(Guid id)
+        public async Task<PlayerDto> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            using (_unitOfWork)
+            {
+                Player player = await _unitOfWork.Players.GetById(id);
+                if (player != null)
+                {
+                    return ModelToDto(player);
+                }
+                return null;
+            }
         }
 
-        public Task<PlayerDto> GetByUserId(Guid id)
+        public async Task<PlayerDto> GetByUserId(Guid id)
         {
-            throw new NotImplementedException();
+            using (_unitOfWork)
+            {
+                Player player = await _unitOfWork.Players.GetByUserId(id);
+                if (player != null)
+                {
+                    return ModelToDto(player);
+                }
+                return null;
+            }
         }
 
-        public Task<PlayerDto> GetByUsernameAndTag(string username, string tag)
+        public async Task<PlayerDto> GetByUsernameAndTag(string username, string tag)
         {
-            throw new NotImplementedException();
+            using (_unitOfWork)
+            {
+                Player player = await _unitOfWork.Players.GetByUsernameAndTag(username, tag);
+                if (player != null)
+                {
+                    return ModelToDto(player);
+                }
+                return null;
+            }
         }
 
-        public Task<bool> Update(PlayerDto playerDto)
+        public async Task<bool> Update(PlayerDto playerDto)
         {
-            throw new NotImplementedException();
+            using (_unitOfWork)
+            {
+                var retval = await _unitOfWork.Players.Update(DtoToModel(playerDto));
+                await _unitOfWork.CompleteAsync();
+                return retval;
+            }
         }
 
         #region Mappers
@@ -59,23 +94,21 @@ namespace PlanetWars.Services.ConcreteServices
             {
                 ID = model.ID,
                 UserID = model.User.ID,
-                Color = model.PlayerColor.ColorHexValue,
+                PlayerColor = model.PlayerColor.ColorHexValue,
                 TurnIndex = model.PlayerColor.TurnIndex,
                 PlanetIDs = planetIDs,
                 IsActive = model.IsActive
             };
         }
-        // public static Player DtoToModel(PlayerDto dto)
-        // {
-            
-        //     return new Player
-        //     {
-        //         ID = dto.ID,
-        //         Username = dto.Username,
-        //         Tag = dto.Tag,
-        //         DisplayedName = dto.DisplayedName
-        //     };
-        // }
+        public static Player DtoToModel(PlayerDto dto)
+        {
+            //TODO: FIX THIS ASAP!!!
+            return new Player
+            {
+                ID = dto.ID,
+                IsActive = dto.IsActive
+            };
+        }
         #endregion
     }
 }

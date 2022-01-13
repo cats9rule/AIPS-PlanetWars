@@ -31,31 +31,34 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<PlanetDto> CreatePlanet(bool hasResource)
         {
-            Planet planet = new Planet();
-            planet.ID = new Guid();
-            planet.ArmyCount = 0;
-            planet.Owner = null;
-            planet.NeighbourPlanets = new List<PlanetPlanet>();
-            if (hasResource)
+            using (_unitOfWork)
             {
-                Random rnd = new Random();
-                int num = rnd.Next();
-                if (num % 3 == 0)
+                Planet planet = new Planet();
+                planet.ID = new Guid();
+                planet.ArmyCount = 0;
+                planet.Owner = null;
+                planet.NeighbourPlanets = new List<PlanetPlanet>();
+                if (hasResource)
                 {
-                    planet.DefenseBoost = defBoost;
+                    Random rnd = new Random();
+                    int num = rnd.Next();
+                    if (num % 3 == 0)
+                    {
+                        planet.DefenseBoost = defBoost;
+                    }
+                    if (num % 4 == 0)
+                    {
+                        planet.AttackBoost = atkBoost;
+                    }
+                    if (num % 5 == 0)
+                    {
+                        planet.MovementBoost = movBoost;
+                    }
                 }
-                if (num % 4 == 0) 
-                {
-                    planet.AttackBoost = atkBoost;
-                }
-                if (num % 5 == 0) 
-                {
-                    planet.MovementBoost = movBoost;
-                }
+                var retval = await _unitOfWork.Planets.Add(planet);
+                await _unitOfWork.CompleteAsync();
+                return ModelToDto(planet);
             }
-            var retval = await _unitOfWork.Planets.Add(planet);
-            await _unitOfWork.CompleteAsync();
-            return ModelToDto(planet);
         }
 
         public async Task<bool> Delete(Guid id)
@@ -92,43 +95,59 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<IEnumerable<PlanetDto>> GetForPlayer(Guid playerId)
         {
-            var player = await _unitOfWork.Players.GetById(playerId);
-            if(player != null)
+            using (_unitOfWork)
             {
-                List<PlanetDto> planets = player.Planets.Select(p => ModelToDto(p)).ToList();
-                return planets;
+                var player = await _unitOfWork.Players.GetById(playerId);
+                if (player != null)
+                {
+                    List<PlanetDto> planets = player.Planets.Select(p => ModelToDto(p)).ToList();
+                    return planets;
+                }
+                return new List<PlanetDto>();
             }
-            return new List<PlanetDto>();
         }
 
         public async Task<bool> Update(PlanetDto planetDto)
         {
-            var retval = await _unitOfWork.Planets.Update(DtoToModel(planetDto));
-            await _unitOfWork.CompleteAsync();
-            return retval;
+            using (_unitOfWork)
+            {
+                var retval = await _unitOfWork.Planets.Update(DtoToModel(planetDto));
+                await _unitOfWork.CompleteAsync();
+                return retval;
+            }
         }
 
         public Task<bool> UpdateArmies(Guid id, int armyDifference)
         {
-            return _unitOfWork.Planets.UpdateArmies(id, armyDifference);
+            using (_unitOfWork)
+            {
+                return _unitOfWork.Planets.UpdateArmies(id, armyDifference);
+            }
         }
 
         public Task<bool> UpdateOwnership(Guid id, Guid ownerID)
         {
-            return _unitOfWork.Planets.UpdateOwnership(id, ownerID);
+            using (_unitOfWork)
+            {
+                return _unitOfWork.Planets.UpdateOwnership(id, ownerID);
+            }
         }
         public async Task<IEnumerable<PlanetDto>> GetRelatedPlanets(Guid planetID)
         {
-            var relations = await _unitOfWork.PlanetPlanets.GetAllRelationsForPlanet(planetID);
-            List<PlanetDto> relatedPlanets = new List<PlanetDto>();
-            foreach(PlanetPlanet relation in relations)
+            using (_unitOfWork)
             {
-                var planet = await _unitOfWork.Planets.GetById(relation.PlanetToID);
-                if (planet != null) {
-                    relatedPlanets.Add(ModelToDto(planet));
+                var relations = await _unitOfWork.PlanetPlanets.GetAllRelationsForPlanet(planetID);
+                List<PlanetDto> relatedPlanets = new List<PlanetDto>();
+                foreach (PlanetPlanet relation in relations)
+                {
+                    var planet = await _unitOfWork.Planets.GetById(relation.PlanetToID);
+                    if (planet != null)
+                    {
+                        relatedPlanets.Add(ModelToDto(planet));
+                    }
                 }
+                return relatedPlanets;
             }
-            return relatedPlanets;
         }
 
         #region Mappers
