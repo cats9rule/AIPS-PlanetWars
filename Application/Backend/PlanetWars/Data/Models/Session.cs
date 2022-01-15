@@ -27,6 +27,8 @@ namespace PlanetWars.Data.Models
         [JsonIgnore]
         public virtual List<Player> Players { get; set; }
 
+        public int MaxPlayers { get; set; }
+
         [JsonIgnore]
         public Galaxy Galaxy { get; set; }
     }
