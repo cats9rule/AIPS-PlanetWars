@@ -9,6 +9,10 @@ namespace PlanetWars.DTOs
 
         public List<Guid> Planets { get; set; }
 
-        public int PlanetCount {get; set; }
+        public int PlanetCount { get; set; }
+
+        public float ResourcePlanetRatio { get; set; }
+
+        public string Description { get; set; }
     }
 }

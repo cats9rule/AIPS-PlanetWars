@@ -86,6 +86,26 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
+        public async Task<PlayerDto> CreatePlayer(Guid userId, Guid sessionId, int turnIndex)
+        {
+            using(_unitOfWork)
+            {
+                User user = await _unitOfWork.Users.GetById(userId);
+                Session session = await _unitOfWork.Sessions.GetById(sessionId);
+                PlayerColor playerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex);
+
+                Player player = new Player();
+                player.User = user;
+                player.PlayerColor = playerColor;
+                
+                session.Players.Add(player);
+
+                await _unitOfWork.Players.Add(player);
+                await _unitOfWork.CompleteAsync();
+                return ModelToDto(player);
+            }
+        }
+
         #region Mappers
         public static PlayerDto ModelToDto(Player model)
         {

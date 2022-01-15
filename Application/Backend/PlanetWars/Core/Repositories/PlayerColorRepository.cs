@@ -52,5 +52,10 @@ namespace PlanetWars.Core.Repositories
             dbSet.Update(entity);
             return true;
         }
+
+        public async Task<PlayerColor> GetByTurnIndex(int turnIndex)
+        {
+            return await dbSet.Where(x => x.TurnIndex == turnIndex).FirstOrDefaultAsync();
+        }
     }
 }
