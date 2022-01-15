@@ -45,10 +45,12 @@ namespace PlanetWars
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PlanetWars", Version = "v1" });
             });
+            
             services.AddDbContext<PlanetWarsDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("PlanetWars"));
-            });
+            }, ServiceLifetime.Transient);
+
             services.AddCors(options => {
                 options.AddPolicy("CORS", builder =>
                 {
