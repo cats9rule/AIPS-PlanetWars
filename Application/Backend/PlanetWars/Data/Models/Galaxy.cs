@@ -19,6 +19,5 @@ namespace PlanetWars.Data.Models
 
         public float ResourcePlanetRatio { get; set; }
 
-        public string Description { get; set; }
     }
 }
