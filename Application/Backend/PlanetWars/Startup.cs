@@ -33,11 +33,11 @@ namespace PlanetWars
         {
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped<IGalaxyService, GalaxyService>();
-            services.AddScoped<IPlayerColorService, PlayerColorService>();
-            services.AddScoped<ISessionService, SessionService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IPlayerService, PlayerService>();
+            services.AddTransient<IGalaxyService, GalaxyService>();
+            services.AddTransient<IPlayerColorService, PlayerColorService>();
+            services.AddTransient<ISessionService, SessionService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IPlayerService, PlayerService>();
 
 
             services.AddControllers();
