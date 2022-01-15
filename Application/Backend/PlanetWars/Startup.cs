@@ -31,7 +31,7 @@ namespace PlanetWars
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IGalaxyService, GalaxyService>();
             services.AddScoped<IPlayerColorService, PlayerColorService>();
