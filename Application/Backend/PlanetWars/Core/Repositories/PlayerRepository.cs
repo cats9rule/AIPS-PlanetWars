@@ -53,24 +53,24 @@ namespace PlanetWars.Core.Repositories
             return true;
         }
 
-        public async Task<Player> GetByUsernameAndTag(string username, string tag)
-        {
-            return await dbSet.FirstOrDefaultAsync(player => player.User.Username == username && player.User.Tag == tag);
-        }
-
-        public async Task<Player> GetByUserId(Guid id)
-        {
-            return await dbSet.FirstOrDefaultAsync(player => player.User.ID == id);
-        }
-
-        // public async Task<IEnumerable<Player>> GetByUsernameAndTag(string username, string tag)
+        // public async Task<Player> GetByUsernameAndTag(string username, string tag)
         // {
         //     return await dbSet.FirstOrDefaultAsync(player => player.User.Username == username && player.User.Tag == tag);
         // }
 
-        // public async Task<IEnumerable<Player>> GetByUserId(Guid id)
+        // public async Task<Player> GetByUserId(Guid id)
         // {
         //     return await dbSet.FirstOrDefaultAsync(player => player.User.ID == id);
         // }
+
+        public async Task<IEnumerable<Player>> GetByUsernameAndTag(string username, string tag)
+        {
+            return await dbSet.Where(player => player.User.Username == username && player.User.Tag == tag).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Player>> GetByUserId(Guid id)
+        {
+            return await dbSet.Where(player => player.User.ID == id).ToListAsync();
+        }
     }
 }

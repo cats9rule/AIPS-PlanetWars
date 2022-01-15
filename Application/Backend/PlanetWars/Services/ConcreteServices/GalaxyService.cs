@@ -21,17 +21,23 @@ namespace PlanetWars.Services.ConcreteServices
             _unitOfWork = uow;
         }
 
-        public async Task<GalaxyDto> CreateGalaxy(GalaxyDto galaxyDto)
+        public async Task<GalaxyDto> CreateGalaxy(int planetCount, float resourcePlanetRatio)
         {
             using(_unitOfWork)
             {
-                Galaxy galaxy = DtoToModel(galaxyDto);
+                Galaxy galaxy = new Galaxy();
+                GalaxyDto dto = new GalaxyDto();
 
+                galaxy.ResourcePlanetRatio = resourcePlanetRatio;
+                galaxy.PlanetCount = planetCount;
+                dto.ResourcePlanetRatio = resourcePlanetRatio;
+                dto.PlanetCount = planetCount;
 
+                //proveriti da li nesto fali --- mappere ne koristiti!
 
                 await _unitOfWork.Galaxies.Add(galaxy);
                 await _unitOfWork.CompleteAsync();
-                return ModelToDto(galaxy);
+                return dto;
             }
         }
 

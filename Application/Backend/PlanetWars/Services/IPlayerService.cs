@@ -11,8 +11,8 @@ namespace PlanetWars.Services
 
         public Task<IEnumerable<PlayerDto>> GetAll();
         public Task<PlayerDto> GetById(Guid id);
-        public Task<PlayerDto> GetByUsernameAndTag(string username, string tag);
-        public Task<PlayerDto> GetByUserId(Guid id);
+        public Task<IEnumerable<PlayerDto>> GetByUsernameAndTag(string username, string tag);
+        public Task<IEnumerable<PlayerDto>> GetByUserId(Guid id);
 
         public Task<bool> Update(PlayerDto playerDto);
 

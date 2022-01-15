@@ -11,12 +11,12 @@ namespace PlanetWars.DTOs
 
         public string Password { get; set; }
 
-        public string Creator { get; set; }
+        public Guid Creator { get; set; }
 
-        public string PlayerOnTurn { get; set; }
+        public Guid PlayerOnTurn { get; set; }
 
-        public List<string> Players { get; set; }
+        public List<Guid> Players { get; set; }
 
-        public int Galaxy { get; set; }
+        public Guid Galaxy { get; set; }
     }
 }
