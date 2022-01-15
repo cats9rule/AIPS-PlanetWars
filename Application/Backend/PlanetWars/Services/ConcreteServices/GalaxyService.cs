@@ -21,7 +21,7 @@ namespace PlanetWars.Services.ConcreteServices
             _unitOfWork = uow;
         }
 
-        public async Task<GalaxyDto> CreateGalaxy(int planetCount, float resourcePlanetRatio)
+        public async Task<Galaxy> CreateGalaxy(int planetCount, float resourcePlanetRatio)
         {
             using(_unitOfWork)
             {
@@ -37,7 +37,7 @@ namespace PlanetWars.Services.ConcreteServices
 
                 await _unitOfWork.Galaxies.Add(galaxy);
                 await _unitOfWork.CompleteAsync();
-                return dto;
+                return galaxy;
             }
         }
 

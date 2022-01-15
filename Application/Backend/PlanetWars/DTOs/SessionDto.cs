@@ -18,5 +18,7 @@ namespace PlanetWars.DTOs
         public List<Guid> Players { get; set; }
 
         public Guid Galaxy { get; set; }
+
+        public int MaxPlayers { get; set; }
     }
 }

@@ -55,9 +55,9 @@ namespace PlanetWars.Core.Repositories
 
 
         
-        public async Task<Session> GetByName(string name)
+        public async Task<IEnumerable<Session>> GetByName(string name)
         {
-            var exist = await dbSet.Where(x => x.Name == name).FirstOrDefaultAsync();
+            var exist = await dbSet.Where(x => x.Name == name).ToListAsync();
             return exist;   // if (exist == null) return exist;
         }
     }

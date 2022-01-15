@@ -16,14 +16,14 @@ namespace PlanetWars.Services.ConcreteServices
             _unitOfWork = unitOfWork;
         }
 
-        public Task<bool> Add(PlayerDto playerDto)
+        public async Task<bool> Add(PlayerDto playerDto)
         {
-            return _unitOfWork.Players.Add(DtoToModel(playerDto));
+            return await _unitOfWork.Players.Add(DtoToModel(playerDto));
         }
 
-        public Task<bool> Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            return _unitOfWork.Players.Delete(id);
+            return await _unitOfWork.Players.Delete(id);
         }
 
         public async Task<IEnumerable<PlayerDto>> GetAll()
@@ -97,23 +97,16 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<PlayerDto> CreatePlayer(Guid userId, Guid sessionId, int turnIndex)
+        public async Task<Player> CreatePlayer(Guid userId)
         {
             using(_unitOfWork)
             {
                 User user = await _unitOfWork.Users.GetById(userId);
-                Session session = await _unitOfWork.Sessions.GetById(sessionId);
-                PlayerColor playerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex);
 
                 Player player = new Player();
                 player.User = user;
-                player.PlayerColor = playerColor;
-                
-                session.Players.Add(player);
 
-                await _unitOfWork.Players.Add(player);
-                await _unitOfWork.CompleteAsync();
-                return ModelToDto(player);
+                return player;
             }
         }
 

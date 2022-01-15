@@ -35,7 +35,7 @@ namespace PlanetWars
 
             //services.AddScoped<IGalaxyService>();
             services.AddScoped<IPlayerColorService, PlayerColorService>();
-            //services.AddScoped<ISessionService>();
+            services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPlayerService, PlayerService>();
 

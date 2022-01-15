@@ -19,11 +19,11 @@ namespace PlanetWars.Controllers
             this.playerService = playerService;
         }
 
-        [Route("CreatePlayer/{sessionId}")]
+        [Route("CreatePlayer")]
         [HttpPost]
-        public async Task<ActionResult> CreatePlayer(Guid sessionId, [FromBody] PlayerDto player)
+        public async Task<ActionResult> CreatePlayer([FromBody] PlayerDto player)
         {
-            var result = await playerService.CreatePlayer(player.UserID, sessionId, player.TurnIndex);
+            var result = await playerService.CreatePlayer(player.UserID);
             return Ok(result);
         }
 
