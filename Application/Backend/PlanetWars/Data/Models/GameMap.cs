@@ -7,6 +7,7 @@ namespace PlanetWars.Data.Models
     {
         public Guid ID { get; set; }
         public int PlanetCount { get; set; }
+        public float ResourcePlanetRatio { get; set; }
         public int MaxPlayers { get; set; }
         public List<int[]> PlanetGraph { get; set; }
         public string Description { get; set; }
