@@ -7,7 +7,7 @@ namespace PlanetWars.Services
 {
     public interface IGalaxyService
     {
-        public Task<GalaxyDto> CreateGalaxy(GalaxyDto galaxy);
+        public Task<GalaxyDto> CreateGalaxy(int planetCount, float resourcePlanetRatio);
         public Task<IEnumerable<GalaxyDto>> GetAllGalaxies();
         public Task<GalaxyDto> GetGalaxy(Guid id);
         public Task<IEnumerable<GalaxyDto>> GetGalaxiesByPlanetCount(int count);

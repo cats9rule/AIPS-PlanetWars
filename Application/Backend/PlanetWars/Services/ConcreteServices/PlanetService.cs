@@ -29,36 +29,47 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<PlanetDto> CreatePlanet(bool hasResource)
+        public async Task<IEnumerable<PlanetDto>> CreatePlanets(int planetCount, bool hasResource)
         {
-            using (_unitOfWork)
+            using(_unitOfWork)
             {
-                Planet planet = new Planet();
-                planet.ID = new Guid();
-                planet.ArmyCount = 0;
-                planet.Owner = null;
-                planet.NeighbourPlanets = new List<PlanetPlanet>();
-                if (hasResource)
+                List<PlanetDto> planetList = new List<PlanetDto>();
+                for(int i = 0; i < planetCount; i++)
                 {
-                    Random rnd = new Random();
-                    int num = rnd.Next();
-                    if (num % 3 == 0)
-                    {
-                        planet.DefenseBoost = defBoost;
-                    }
-                    if (num % 4 == 0)
-                    {
-                        planet.AttackBoost = atkBoost;
-                    }
-                    if (num % 5 == 0)
-                    {
-                        planet.MovementBoost = movBoost;
-                    }
+                    Planet planet = CreatePlanet(hasResource);
+                    planetList.Add(ModelToDto(planet));
+                    var retval = await _unitOfWork.Planets.Add(planet);
                 }
-                var retval = await _unitOfWork.Planets.Add(planet);
                 await _unitOfWork.CompleteAsync();
-                return ModelToDto(planet);
+                return planetList;
             }
+        }
+
+        private Planet CreatePlanet(bool hasResource)
+        {
+            Planet planet = new Planet();
+            planet.ID = new Guid();
+            planet.ArmyCount = 0;
+            planet.Owner = null;
+            planet.NeighbourPlanets = new List<PlanetPlanet>();
+            if (hasResource)
+            {
+                Random rnd = new Random();
+                int num = rnd.Next();
+                if (num % 3 == 0)
+                {
+                    planet.DefenseBoost = defBoost;
+                }
+                if (num % 4 == 0)
+                {
+                    planet.AttackBoost = atkBoost;
+                }
+                if (num % 5 == 0)
+                {
+                    planet.MovementBoost = movBoost;
+                }
+            }
+            return planet;
         }
 
         public async Task<bool> Delete(Guid id)
