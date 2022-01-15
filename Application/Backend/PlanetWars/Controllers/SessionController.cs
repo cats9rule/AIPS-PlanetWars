@@ -83,6 +83,7 @@ namespace PlanetWars.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteSession(Guid sessionId)
         {
+            SessionDto session = await sessionService.GetById(sessionId);
             var result = await sessionService.Delete(sessionId);
             if(result == false)
                 return BadRequest();

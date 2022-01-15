@@ -81,11 +81,10 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<SessionDto> CreateSession(string name, string password, int maxPlayers, Galaxy galaxy, Player player)
+        public async Task<Session> CreateSession(string name, string password, int maxPlayers, Galaxy galaxy, Player player)
         {
             Session session = new Session();
             session.Name = name;
-            session.Creator = player;
             session.Galaxy = galaxy;
             session.MaxPlayers = maxPlayers;
             session.Password = password;
@@ -94,13 +93,19 @@ namespace PlanetWars.Services.ConcreteServices
             else session.IsPrivate = true;
             session.Players = new List<Player>();
 
-            await _unitOfWork.Players.Add(player);
-            await _unitOfWork.CompleteAsync();
-            session.Players.Add(player);
-
             await _unitOfWork.Sessions.Add(session);
             await _unitOfWork.CompleteAsync();
-            return ModelToDto(session);
+
+            await _unitOfWork.Players.Add(player);
+            //await _unitOfWork.CompleteAsync();
+            
+            session.Players.Add(player);
+            session.Creator = player;
+
+            var retval = await _unitOfWork.Sessions.Update(session);
+            await _unitOfWork.CompleteAsync();
+
+            return session;
         }
 
         public async Task<Player> AddPlayer(Guid sessionId, Player player)
