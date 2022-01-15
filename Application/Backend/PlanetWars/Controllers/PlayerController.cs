@@ -23,7 +23,7 @@ namespace PlanetWars.Controllers
         [HttpPost]
         public async Task<ActionResult> CreatePlayer([FromBody] PlayerDto player)
         {
-            var result = await playerService.CreatePlayer(player.UserID);
+            var result = await playerService.CreatePlayer(player.UserID, player.TurnIndex);
             return Ok(result);
         }
 

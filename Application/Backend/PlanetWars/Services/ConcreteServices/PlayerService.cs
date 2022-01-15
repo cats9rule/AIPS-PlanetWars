@@ -97,7 +97,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Player> CreatePlayer(Guid userId)
+        public async Task<Player> CreatePlayer(Guid userId, int turnIndex)
         {
             using(_unitOfWork)
             {
@@ -105,6 +105,8 @@ namespace PlanetWars.Services.ConcreteServices
 
                 Player player = new Player();
                 player.User = user;
+                player.PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex);
+                player.IsActive = true;
 
                 return player;
             }

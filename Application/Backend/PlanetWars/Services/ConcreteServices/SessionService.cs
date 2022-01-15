@@ -92,14 +92,13 @@ namespace PlanetWars.Services.ConcreteServices
             if(session.Password == "") 
                 session.IsPrivate = false;
             else session.IsPrivate = true;
+            session.Players = new List<Player>();
 
-            player.PlayerColor.TurnIndex = session.Players.Count; //= 0 zato sto je sesija prazna, igrac koji pravi sesiju igra prvi
             await _unitOfWork.Players.Add(player);
-
+            await _unitOfWork.CompleteAsync();
             session.Players.Add(player);
 
             await _unitOfWork.Sessions.Add(session);
-            
             await _unitOfWork.CompleteAsync();
             return ModelToDto(session);
         }

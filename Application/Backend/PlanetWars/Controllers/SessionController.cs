@@ -27,8 +27,8 @@ namespace PlanetWars.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateGame([FromBody] CreateGameDto createGameDto)
         {
+            var player = await playerService.CreatePlayer(createGameDto.UserId, 0);
             var galaxy = await galaxyService.CreateGalaxy(createGameDto.PlanetCount, createGameDto.ResourcePlanetRatio);
-            var player = await playerService.CreatePlayer(createGameDto.UserId);
             var result = await sessionService.CreateSession(createGameDto.Name, createGameDto.Password, createGameDto.MaxPlayers, galaxy, player);
 
             return Ok(result);
@@ -38,8 +38,8 @@ namespace PlanetWars.Controllers
         [HttpPut]
         public async Task<ActionResult> AddPlayer(Guid sessionId, [FromBody] UserDto user)
         {
-            var player = await playerService.CreatePlayer(user.ID);
-            /*var session = await sessionService.GetById(sessionId);*/
+            var session = await sessionService.GetById(sessionId);
+            var player = await playerService.CreatePlayer(user.ID, session.Players.Count);
             var result = await sessionService.AddPlayer(/*session.ID*/ sessionId, player);
 
             return Ok(result);
