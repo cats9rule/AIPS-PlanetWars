@@ -16,6 +16,7 @@ using PlanetWars.Data.Context;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Services.ConcreteServices;
 using PlanetWars.Services;
+using PlanetWars.Communication;
 
 namespace PlanetWars
 {
@@ -85,6 +86,7 @@ namespace PlanetWars
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<MessageHub>("/chat");
             });
         }
     }
