@@ -45,7 +45,7 @@ namespace PlanetWars
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PlanetWars", Version = "v1" });
             });
-            
+
             services.AddDbContext<PlanetWarsDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("PlanetWars"));
@@ -58,6 +58,11 @@ namespace PlanetWars
                             .AllowAnyMethod()
                             .AllowAnyOrigin();
                 });
+            });
+
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = true;
             });
         }
 
