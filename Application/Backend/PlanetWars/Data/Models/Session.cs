@@ -29,5 +29,7 @@ namespace PlanetWars.Data.Models
 
         [JsonIgnore]
         public Galaxy Galaxy { get; set; }
+
+        public int PlayerCount { get; set; }
     }
 }
