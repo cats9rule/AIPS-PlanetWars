@@ -100,7 +100,7 @@ namespace PlanetWars.Services.ConcreteServices
             //await _unitOfWork.CompleteAsync();
             
             session.Players.Add(player);
-            session.Creator = player;
+            session.CreatorID = player.ID;
 
             var retval = await _unitOfWork.Sessions.Update(session);
             await _unitOfWork.CompleteAsync();

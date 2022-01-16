@@ -12,8 +12,14 @@ namespace PlanetWars.Data.Models
         [Key]
         public Guid ID { get; set; }
 
+        public Guid OwnerID { get; set; }
+
         [JsonIgnore]
         public Player Owner { get; set; }
+
+        public Guid GalaxyID { get; set; }
+
+        public Galaxy Galaxy { get; set; }
 
         public int ArmyCount { get; set; }
 

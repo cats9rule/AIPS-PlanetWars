@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PlanetWars.Data.Models
 {
@@ -14,5 +16,8 @@ namespace PlanetWars.Data.Models
         public string DisplayedName { get; set; }    
         public string Password { get; set; }
         public string Salt { get; set; }
+
+        [JsonIgnore]
+        public virtual List<Player> Players { get; set; }
     }
 }

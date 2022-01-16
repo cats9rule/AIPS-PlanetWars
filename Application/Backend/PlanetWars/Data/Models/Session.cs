@@ -18,11 +18,9 @@ namespace PlanetWars.Data.Models
 
         public string Password { get; set; }
         
-        [JsonIgnore]
-        public Player Creator { get; set; }
+        public Guid CreatorID { get; set; }
 
-        [JsonIgnore]
-        public Player PlayerOnTurn { get; set; }
+        public int CurrentTurnIndex { get; set; }
 
         [JsonIgnore]
         public virtual List<Player> Players { get; set; }

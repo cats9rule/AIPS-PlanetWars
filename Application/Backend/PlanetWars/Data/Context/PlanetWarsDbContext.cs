@@ -35,6 +35,36 @@ namespace PlanetWars.Data.Context
                 .WithMany(p => p.NeighbourPlanets)
                 .HasForeignKey(pp => pp.PlanetToID)
                 .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<Player>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Players)
+                .HasForeignKey(p => p.UserID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+            
+            modelBuilder.Entity<Player>()
+                .HasOne(p => p.Session)
+                .WithMany(s => s.Players)
+                .HasForeignKey(p => p.SessionID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+            
+            modelBuilder.Entity<Galaxy>()
+                .HasOne(g => g.Session)
+                .WithOne(s => s.Galaxy)
+                .HasForeignKey<Galaxy>(g => g.SessionID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<Planet>()
+                .HasOne(p => p.Owner)
+                .WithMany(o => o.Planets)
+                .HasForeignKey(p => p.OwnerID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<Planet>()
+                .HasOne(p => p.Galaxy)
+                .WithMany(g => g.Planets)
+                .HasForeignKey(p => p.GalaxyID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
 }

@@ -19,5 +19,10 @@ namespace PlanetWars.Data.Models
 
         public float ResourcePlanetRatio { get; set; }
 
+        public Guid SessionID { get; set; }
+
+        [JsonIgnore]
+        public Session Session { get; set; }
+
     }
 }

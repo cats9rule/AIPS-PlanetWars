@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlanetWars.Data.Context;
 
 namespace PlanetWars.Migrations
 {
     [DbContext(typeof(PlanetWarsDbContext))]
-    partial class PlanetWarsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220116111429_Relationships update")]
+    partial class Relationshipsupdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,6 +107,12 @@ namespace PlanetWars.Migrations
                     b.Property<Guid>("SessionID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("SessionID1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("SessionID2")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
 
@@ -113,6 +121,14 @@ namespace PlanetWars.Migrations
                     b.HasIndex("PlayerColorID");
 
                     b.HasIndex("SessionID");
+
+                    b.HasIndex("SessionID1")
+                        .IsUnique()
+                        .HasFilter("[SessionID1] IS NOT NULL");
+
+                    b.HasIndex("SessionID2")
+                        .IsUnique()
+                        .HasFilter("[SessionID2] IS NOT NULL");
 
                     b.HasIndex("UserID");
 
@@ -141,12 +157,6 @@ namespace PlanetWars.Migrations
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CreatorID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("CurrentTurnIndex")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsPrivate")
                         .HasColumnType("bit");
@@ -246,6 +256,14 @@ namespace PlanetWars.Migrations
                         .HasForeignKey("SessionID")
                         .IsRequired();
 
+                    b.HasOne("PlanetWars.Data.Models.Session", null)
+                        .WithOne("Creator")
+                        .HasForeignKey("PlanetWars.Data.Models.Player", "SessionID1");
+
+                    b.HasOne("PlanetWars.Data.Models.Session", null)
+                        .WithOne("PlayerOnTurn")
+                        .HasForeignKey("PlanetWars.Data.Models.Player", "SessionID2");
+
                     b.HasOne("PlanetWars.Data.Models.User", "User")
                         .WithMany("Players")
                         .HasForeignKey("UserID")
@@ -275,7 +293,11 @@ namespace PlanetWars.Migrations
 
             modelBuilder.Entity("PlanetWars.Data.Models.Session", b =>
                 {
+                    b.Navigation("Creator");
+
                     b.Navigation("Galaxy");
+
+                    b.Navigation("PlayerOnTurn");
 
                     b.Navigation("Players");
                 });

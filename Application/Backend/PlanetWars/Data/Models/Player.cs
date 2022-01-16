@@ -12,6 +12,13 @@ namespace PlanetWars.Data.Models
         [Key]
         public Guid ID { get; set; }
 
+        public Guid SessionID { get; set; }
+
+        [JsonIgnore]
+        public Session Session { get; set; }
+
+        public Guid UserID { get; set; }
+
         [JsonIgnore]
         public User User { get; set; }
 
