@@ -45,25 +45,25 @@ namespace PlanetWars.Data.Context
             modelBuilder.Entity<Player>()
                 .HasOne(p => p.Session)
                 .WithMany(s => s.Players)
-                .HasForeignKey(p => p.SessionID)
+                .HasForeignKey(p => p.SessionID).IsRequired(false)
                 .OnDelete(DeleteBehavior.ClientSetNull);
             
             modelBuilder.Entity<Galaxy>()
                 .HasOne(g => g.Session)
                 .WithOne(s => s.Galaxy)
-                .HasForeignKey<Galaxy>(g => g.SessionID)
+                .HasForeignKey<Galaxy>(g => g.SessionID).IsRequired(false)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Planet>()
                 .HasOne(p => p.Owner)
                 .WithMany(o => o.Planets)
-                .HasForeignKey(p => p.OwnerID)
+                .HasForeignKey(p => p.OwnerID).IsRequired(false)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Planet>()
                 .HasOne(p => p.Galaxy)
                 .WithMany(g => g.Planets)
-                .HasForeignKey(p => p.GalaxyID)
+                .HasForeignKey(p => p.GalaxyID).IsRequired(false)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         }
     }
