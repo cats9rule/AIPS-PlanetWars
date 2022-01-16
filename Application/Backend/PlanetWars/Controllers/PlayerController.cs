@@ -39,7 +39,7 @@ namespace PlanetWars.Controllers
         [HttpGet]
         public async Task<ActionResult> GetPlayerById(Guid id)
         {
-            var result = await playerService.GetByUserId(id);
+            var result = await playerService.GetById(id);
 
             if(result == null)
                 return BadRequest();
@@ -68,9 +68,11 @@ namespace PlanetWars.Controllers
 
         [Route("UpdatePlayer")]
         [HttpPut]
-        public async Task<ActionResult> UpdatePlayer([FromBody] PlayerDto player)
+        public async Task<ActionResult> UpdatePlayer([FromBody] UpdatePlayerDto playerDto)
         {
-            var result = await playerService.Update(player);
+            //var player = await playerService.GetById(playerDto.ID);
+
+            var result = await playerService.Update(playerDto);
             if (result == false)
                 return BadRequest();
             return Ok(result);

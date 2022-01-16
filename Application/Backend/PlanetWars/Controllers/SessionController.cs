@@ -39,13 +39,13 @@ namespace PlanetWars.Controllers
             return Ok(result);
         }
 
-        [Route("AddPlayer/{sessionId}")]
+        [Route("AddPlayer")]
         [HttpPut]
-        public async Task<ActionResult> AddPlayer(Guid sessionId, [FromBody] UserDto user)
+        public async Task<ActionResult> AddPlayer([FromBody] PlayerDto playerDto)
         {
-            var session = await sessionService.GetById(sessionId);
-            var player = await playerService.CreatePlayer(user.ID, session.Players.Count, sessionId);
-            var result = await sessionService.AddPlayer(/*session.ID*/ sessionId, player);
+            var session = await sessionService.GetById(playerDto.SessionID);
+            var player = await playerService.CreatePlayer(playerDto.ID, session.Players.Count, session.ID);
+            var result = await sessionService.AddPlayer(session.ID, player);
 
             return Ok(result);
         }
@@ -76,9 +76,9 @@ namespace PlanetWars.Controllers
 
         [Route("UpdateSession")]
         [HttpPut]
-        public async Task<ActionResult> UpdateSession([FromBody] SessionDto session)
+        public async Task<ActionResult> UpdateSession([FromBody] UpdateSessionDto sessionDto)
         {
-            var result = await sessionService.Update(session);
+            var result = await sessionService.Update(sessionDto);
             if(result == false)
                 return BadRequest();
             return Ok(result);
@@ -88,7 +88,6 @@ namespace PlanetWars.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteSession(Guid sessionId)
         {
-            SessionDto session = await sessionService.GetById(sessionId);
             var result = await sessionService.Delete(sessionId);
             if(result == false)
                 return BadRequest();
