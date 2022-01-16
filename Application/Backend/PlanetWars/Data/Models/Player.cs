@@ -29,5 +29,7 @@ namespace PlanetWars.Data.Models
         public virtual List<Planet> Planets { get; set; }
 
         public bool IsActive { get; set; }
+
+        public int TotalArmies { get; set; }
     }
 }
