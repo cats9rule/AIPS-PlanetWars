@@ -81,16 +81,14 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Session> CreateSession(string name, string password, int maxPlayers/*, Galaxy galaxy, Player player*/)
+        public async Task<Session> CreateSession( CreateGameDto dto /*string name, string password, int maxPlayers, Galaxy galaxy, Player player*/)
         {
             using(_unitOfWork)
             {
-                Session 
-                session = new Session();
-                session.Name = name;
-                // session.Galaxy = galaxy;
-                session.MaxPlayers = maxPlayers;
-                session.Password = password;
+                var session = new Session();
+                session.Name = dto.Name;
+                session.MaxPlayers = dto.MaxPlayers;
+                session.Password = dto.Password;
                 if(session.Password == "") 
                     session.IsPrivate = false;
                 else session.IsPrivate = true;
@@ -99,12 +97,34 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Add(session);
                 await _unitOfWork.CompleteAsync();
 
-                // await _unitOfWork.Players.Add(player);
-                // session.Players.Add(player);
-                // session.CreatorID = player.ID;
+                //AKO SALJETE GALAXY I PLAYER KAO PARAMETRE ONDA VAM NE TREBA OVO SA NEW
+                //AKO HOCETE SA NJU ONDA MORATE DA POSALJETE STA JE POTREBNO OD PARAMETARA KROZ FUNKCIJU
 
-                // await _unitOfWork.Sessions.Update(session);
-                // await _unitOfWork.CompleteAsync();
+                User user = await _unitOfWork.Users.GetById(dto.UserId);
+                Player player = new Player();
+                player.User = user;
+                player.UserID = dto.UserId;
+                player.PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(0);
+                player.IsActive = true;
+                player.SessionID = session.ID;
+                player.Session = session;
+
+                await _unitOfWork.Players.Add(player);
+
+                Galaxy galaxy = new Galaxy();
+                galaxy.ResourcePlanetRatio = dto.ResourcePlanetRatio;
+                galaxy.PlanetCount = dto.PlanetCount;
+                galaxy.SessionID = session.ID;
+                galaxy.Session = session;
+
+                await _unitOfWork.Galaxies.Add(galaxy);
+
+                session.Players.Add(player);
+                session.CreatorID = player.ID;
+                session.Galaxy = galaxy;
+
+                await _unitOfWork.Sessions.Update(session);
+                await _unitOfWork.CompleteAsync();
 
                 return session;
             }
