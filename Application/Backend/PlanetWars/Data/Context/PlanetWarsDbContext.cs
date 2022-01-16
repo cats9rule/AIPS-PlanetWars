@@ -11,6 +11,7 @@ namespace PlanetWars.Data.Context
         public DbSet<Planet> Planets { get; set; }
         public DbSet<Galaxy> Galaxies { get; set; }
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<GameMap> GameMaps { get; set; }
 
         public DbSet<PlanetPlanet> PlanetPlanet { get; set; }
 
