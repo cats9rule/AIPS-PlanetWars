@@ -16,5 +16,7 @@ namespace PlanetWars.DTOs
         public virtual List<Guid> PlanetIDs { get; set; }
 
         public bool IsActive { get; set; }
+
+        public Guid SessionID { get; set; }
     }
 }

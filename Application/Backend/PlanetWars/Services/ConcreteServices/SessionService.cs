@@ -19,55 +19,85 @@ namespace PlanetWars.Services.ConcreteServices
             _unitOfWork = uow;
         }
 
-        public async Task<bool> Add(SessionDto dto)
+        public async Task<bool> Add(Session session)
         {
-            return await _unitOfWork.Sessions.Add(DtoToModel(dto));
+            return await _unitOfWork.Sessions.Add(session);
         }
 
-        public async Task<IEnumerable<SessionDto>> GetAllSessions()
+        public async Task<IEnumerable<Session>> GetAllSessions()
         {
             using(_unitOfWork)
             {
-                IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAll();
-                List<SessionDto> sessionDtos = new List<SessionDto>();
-                foreach(Session session in sessions)
-                {
-                    sessionDtos.Add(ModelToDto(session));
-                }
-                return sessionDtos;
+                // IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetAll();
+                // List<SessionDto> sessionDtos = new List<SessionDto>();
+                // foreach(Session session in sessions)
+                // {
+                //     sessionDtos.Add(ModelToDto(session));
+                // }
+                // return sessionDtos;
+                return await _unitOfWork.Sessions.GetAll();
             }
         }
 
-        public async Task<SessionDto> GetById(Guid id)
+        public async Task<Session> GetById(Guid id)
         {
             using(_unitOfWork)
             {
                 Session session = await _unitOfWork.Sessions.GetById(id);
                 if(session != null)
-                    return ModelToDto(session);
+                    return session;
                 return null;
             }
         }
 
-        public async Task<IEnumerable<SessionDto>> GetByName(string name)
+        public async Task<IEnumerable<Session>> GetByName(string name)
         {
             using(_unitOfWork)
             {
-                IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetByName(name);
-                List<SessionDto> dtos = new List<SessionDto>();
-                foreach(Session s in sessions)
-                {
-                    dtos.Add(ModelToDto(s));
-                }
-                return dtos;
+                // IEnumerable<Session> sessions = await _unitOfWork.Sessions.GetByName(name);
+                // List<SessionDto> dtos = new List<SessionDto>();
+                // foreach(Session s in sessions)
+                // {
+                //     dtos.Add(ModelToDto(s));
+                // }
+                // return dtos;
+                return await _unitOfWork.Sessions.GetByName(name);
             }
         }
 
-        public async Task<bool> Update(SessionDto dto)
+        public async Task<bool> Update(UpdateSessionDto sessionDto)
         {
             using(_unitOfWork)
             {
-                var retval = await _unitOfWork.Sessions.Update(DtoToModel(dto));
+                var session = await _unitOfWork.Sessions.GetById(sessionDto.SessionID);
+
+                if(sessionDto.HasLostPlanet == true && sessionDto.HasWonPlanet)
+                {
+                    var loser = await _unitOfWork.Players.GetById(sessionDto.PlanetLoserID);
+                    var planet = await _unitOfWork.Planets.GetById(sessionDto.PlanetID);
+                    loser.Planets.Remove(planet);
+
+                    await _unitOfWork.Players.Update(loser);
+                }
+
+                if(sessionDto.HasWonPlanet == true)
+                {
+                    var winner = await _unitOfWork.Players.GetById(sessionDto.PlanetWinnerID);
+                    var planet = await _unitOfWork.Planets.GetById(sessionDto.PlanetID);
+                    winner.Planets.Add(planet);
+                    planet.OwnerID = winner.ID;
+                    planet.Owner = winner;
+
+                    await _unitOfWork.Planets.Update(planet);
+                    await _unitOfWork.Players.Update(winner);
+                }
+
+                if(sessionDto.NextPlayer == true)
+                {
+                    session.CurrentTurnIndex = (session.CurrentTurnIndex++) % session.Players.Count;
+                }
+
+                var retval = await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
                 return retval;
             }

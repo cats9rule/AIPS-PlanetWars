@@ -31,75 +31,100 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<IEnumerable<PlayerDto>> GetAll()
+        public async Task<IEnumerable<Player>> GetAll()
         {
             using(_unitOfWork)
             {
-                IEnumerable<Player> players = await _unitOfWork.Players.GetAll();
-                List<PlayerDto> playerDtos = new List<PlayerDto>();
-                foreach (Player player in players)
-                {
-                    playerDtos.Add(ModelToDto(player));
-                }
-                return playerDtos;
+                // IEnumerable<Player> players = await _unitOfWork.Players.GetAll();
+                // List<PlayerDto> playerDtos = new List<PlayerDto>();
+                // foreach (Player player in players)
+                // {
+                //     playerDtos.Add(ModelToDto(player));
+                // }
+                // return playerDtos;
+                return await _unitOfWork.Players.GetAll();
             }
         }
 
-        public async Task<PlayerDto> GetById(Guid id)
+        public async Task<Player> GetById(Guid id)
         {
             using (_unitOfWork)
             {
                 Player player = await _unitOfWork.Players.GetById(id);
-                if (player != null)
-                {
-                    return ModelToDto(player);
-                }
-                return null;
+                // if (player != null)
+                // {
+                //     return player;
+                // }
+                // return null;
+                return player;
             }
         }
 
-        public async Task<IEnumerable<PlayerDto>> GetByUserId(Guid id)
+        public async Task<IEnumerable<Player>> GetByUserId(Guid id)
         {
             using (_unitOfWork)
             {
-                IEnumerable<Player> players = await _unitOfWork.Players.GetByUserId(id);
-                if (players != null)
-                {
-                    List<PlayerDto> dtoList = new List<PlayerDto>();
-                    foreach(Player player in players)
-                    {
-                        dtoList.Add(ModelToDto(player));
-                    }
-                    return dtoList;
-                }
-                return null;
+                // IEnumerable<Player> players = await _unitOfWork.Players.GetByUserId(id);
+                // if (players != null)
+                // {
+                //     List<PlayerDto> dtoList = new List<PlayerDto>();
+                //     foreach(Player player in players)
+                //     {
+                //         dtoList.Add(ModelToDto(player));
+                //     }
+                //     return dtoList;
+                // }
+                // return null;
+                return await _unitOfWork.Players.GetByUserId(id);
             }
         }
 
-        public async Task<IEnumerable<PlayerDto>> GetByUsernameAndTag(string username, string tag)
+        public async Task<IEnumerable<Player>> GetByUsernameAndTag(string username, string tag)
         {
             using (_unitOfWork)
             {
-                IEnumerable<Player> players = await _unitOfWork.Players.GetByUsernameAndTag(username, tag);
+                // IEnumerable<Player> players = await _unitOfWork.Players.GetByUsernameAndTag(username, tag);
 
-                if (players != null)
-                {
-                    List<PlayerDto> dtoList = new List<PlayerDto>();
-                    foreach(Player player in players)
-                    {
-                        dtoList.Add(ModelToDto(player));
-                    }
-                    return dtoList;
-                }
-                return null;
+                // if (players != null)
+                // {
+                //     List<PlayerDto> dtoList = new List<PlayerDto>();
+                //     foreach(Player player in players)
+                //     {
+                //         dtoList.Add(ModelToDto(player));
+                //     }
+                //     return dtoList;
+                // }
+                // return null;
+                return await _unitOfWork.Players.GetByUsernameAndTag(username, tag);
             }
         }
 
-        public async Task<bool> Update(PlayerDto playerDto)
+        public async Task<bool> Update(UpdatePlayerDto playerDto)
         {
             using (_unitOfWork)
             {
-                var retval = await _unitOfWork.Players.Update(DtoToModel(playerDto));
+                // var retval = await _unitOfWork.Players.Update(DtoToModel(playerDto));
+
+                var player = await _unitOfWork.Players.GetById(playerDto.PlayerID);
+
+                if(playerDto.ShouldAddPlanet == true)
+                {
+                    var planet = await _unitOfWork.Planets.GetById(playerDto.AddPlanetID);
+                    player.Planets.Add(planet);
+                }
+
+                if(playerDto.ShouldRemovePlanet == true)
+                {
+                    var planet = await _unitOfWork.Planets.GetById(playerDto.RemovePlayerID);
+                    player.Planets.Remove(planet);
+                }
+
+                if(playerDto.ChangeActivity == true)
+                {
+                    player.IsActive = !player.IsActive;
+                }
+
+                var retval = await _unitOfWork.Players.Update(player);
                 await _unitOfWork.CompleteAsync();
                 return retval;
             }
@@ -119,6 +144,7 @@ namespace PlanetWars.Services.ConcreteServices
                 player.IsActive = true;
                 player.SessionID = sessionId;
                 player.Session = session;
+                player.Planets = new List<Planet>();
 
                 await _unitOfWork.Players.Add(player);
                 await _unitOfWork.CompleteAsync();
