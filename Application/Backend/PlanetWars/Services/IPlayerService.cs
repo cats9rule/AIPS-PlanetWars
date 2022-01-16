@@ -17,6 +17,6 @@ namespace PlanetWars.Services
         public Task<IEnumerable<PlayerDto>> GetByUserId(Guid id);
         public Task<bool> Update(PlayerDto playerDto);
         public Task<bool> Delete(Guid id);
-        public Task<Player> CreatePlayer(Guid userId, int turnIndex);
+        public Task<Player> CreatePlayer(Guid userId, int turnIndex, Guid sessionId);
     }
 }

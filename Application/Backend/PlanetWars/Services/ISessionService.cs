@@ -8,7 +8,8 @@ namespace PlanetWars.Services
 {
     public interface ISessionService
     {
-        public Task<Session> CreateSession(string name, string password, int maxPlayers, Galaxy galaxy, Player player);
+        public Task<Session> CreateSession(string name, string password, int maxPlayers);//, Galaxy galaxy, Player player);
+        public Task<Session> InitializeSession(Session session, Guid galaxyId, Guid playerId);
         public Task<bool> Add(SessionDto session);
         public Task<IEnumerable<SessionDto>> GetAllSessions();
         public Task<SessionDto> GetById(Guid id);

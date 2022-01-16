@@ -81,49 +81,67 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Session> CreateSession(string name, string password, int maxPlayers, Galaxy galaxy, Player player)
+        public async Task<Session> CreateSession(string name, string password, int maxPlayers/*, Galaxy galaxy, Player player*/)
         {
-            Session session = new Session();
-            session.Name = name;
-            session.Galaxy = galaxy;
-            session.MaxPlayers = maxPlayers;
-            session.Password = password;
-            if(session.Password == "") 
-                session.IsPrivate = false;
-            else session.IsPrivate = true;
-            session.Players = new List<Player>();
+            using(_unitOfWork)
+            {
+                Session 
+                session = new Session();
+                session.Name = name;
+                // session.Galaxy = galaxy;
+                session.MaxPlayers = maxPlayers;
+                session.Password = password;
+                if(session.Password == "") 
+                    session.IsPrivate = false;
+                else session.IsPrivate = true;
+                session.Players = new List<Player>();
 
-            await _unitOfWork.Sessions.Add(session);
-            await _unitOfWork.CompleteAsync();
+                await _unitOfWork.Sessions.Add(session);
+                await _unitOfWork.CompleteAsync();
 
-            await _unitOfWork.Players.Add(player);
-            //await _unitOfWork.CompleteAsync();
-            
-            session.Players.Add(player);
-            session.CreatorID = player.ID;
+                // await _unitOfWork.Players.Add(player);
+                // session.Players.Add(player);
+                // session.CreatorID = player.ID;
 
-            var retval = await _unitOfWork.Sessions.Update(session);
-            await _unitOfWork.CompleteAsync();
+                // await _unitOfWork.Sessions.Update(session);
+                // await _unitOfWork.CompleteAsync();
 
-            return session;
+                return session;
+            }
+        }
+
+        public async Task<Session> InitializeSession(Session session, Guid galaxyId, Guid playerId)
+        {
+            using(_unitOfWork)
+            {
+                session.Galaxy = await _unitOfWork.Galaxies.GetById(galaxyId);
+                session.CreatorID = playerId;
+
+                await _unitOfWork.Sessions.Update(session);
+                await _unitOfWork.CompleteAsync();
+                return session;
+            }
         }
 
         public async Task<Player> AddPlayer(Guid sessionId, Player player)
         {
-            Session session = await _unitOfWork.Sessions.GetById(sessionId);
-
-            if(session.Players.Count == session.MaxPlayers)
+            using(_unitOfWork)
             {
-                return null;
+                Session session = await _unitOfWork.Sessions.GetById(sessionId);
+
+                if(session.Players.Count == session.MaxPlayers)
+                {
+                    return null;
+                }
+
+                player.PlayerColor.TurnIndex = session.Players.Count;
+                await _unitOfWork.Players.Add(player);
+
+                session.Players.Add(player);
+                await _unitOfWork.Sessions.Update(session);
+                await _unitOfWork.CompleteAsync();
+                return player;
             }
-
-            player.PlayerColor.TurnIndex = session.Players.Count;
-            await _unitOfWork.Players.Add(player);
-
-            session.Players.Add(player);
-            await _unitOfWork.Sessions.Update(session);
-            await _unitOfWork.CompleteAsync();
-            return player;
         }
 
         #region Mappers

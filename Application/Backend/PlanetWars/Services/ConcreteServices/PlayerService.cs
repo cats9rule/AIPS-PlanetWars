@@ -105,16 +105,23 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Player> CreatePlayer(Guid userId, int turnIndex)
+        public async Task<Player> CreatePlayer(Guid userId, int turnIndex, Guid sessionId)
         {
             using(_unitOfWork)
             {
                 User user = await _unitOfWork.Users.GetById(userId);
+                Session session = await _unitOfWork.Sessions.GetById(sessionId);
 
                 Player player = new Player();
                 player.User = user;
+                player.UserID = userId;
                 player.PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex);
                 player.IsActive = true;
+                player.SessionID = sessionId;
+                player.Session = session;
+
+                await _unitOfWork.Players.Add(player);
+                await _unitOfWork.CompleteAsync();
 
                 return player;
             }

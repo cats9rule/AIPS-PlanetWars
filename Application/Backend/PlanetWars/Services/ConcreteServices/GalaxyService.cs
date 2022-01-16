@@ -21,17 +21,20 @@ namespace PlanetWars.Services.ConcreteServices
             _unitOfWork = uow;
         }
 
-        public async Task<Galaxy> CreateGalaxy(int planetCount, float resourcePlanetRatio)
+        public async Task<Galaxy> CreateGalaxy(int planetCount, float resourcePlanetRatio, Guid sessionId)
         {
             using(_unitOfWork)
             {
                 Galaxy galaxy = new Galaxy();
-                GalaxyDto dto = new GalaxyDto();
+                //GalaxyDto dto = new GalaxyDto();
 
                 galaxy.ResourcePlanetRatio = resourcePlanetRatio;
                 galaxy.PlanetCount = planetCount;
-                dto.ResourcePlanetRatio = resourcePlanetRatio;
-                dto.PlanetCount = planetCount;
+                // dto.ResourcePlanetRatio = resourcePlanetRatio;
+                // dto.PlanetCount = planetCount;
+
+                galaxy.SessionID = sessionId;
+                galaxy.Session = await _unitOfWork.Sessions.GetById(sessionId);
 
                 //proveriti da li nesto fali --- mappere ne koristiti!
 
