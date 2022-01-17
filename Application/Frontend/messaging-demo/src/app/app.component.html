@@ -1,4 +1,4 @@
-<app-chat *ngIf="isLoggedIn;else userloginblock"></app-chat>
+<app-chat *ngIf="isLoggedIn;else userloginblock" [user]="user"></app-chat>
 <ng-template #userloginblock>
-    <app-user-login (userLoginEvent)="logInUser(user)"></app-user-login>
+    <app-user-login (userLoginEvent)="logInUser($event)"></app-user-login>
 </ng-template>

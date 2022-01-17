@@ -4,6 +4,14 @@
     width: 100%;
     margin: 10%;
   }
+
+  .heading {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+    margin: 10%;
+    margin-bottom: 0;
+  }
   
   .example-full-width {
     width: 100%;

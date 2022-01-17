@@ -8,7 +8,7 @@ import { UserDto } from 'src/interfaces/user-dto';
 })
 export class AppComponent {
   title = 'messaging-demo';
-  user: UserDto | undefined;
+  public user: UserDto | undefined;
   isLoggedIn: boolean = false;
   constructor() { }
 

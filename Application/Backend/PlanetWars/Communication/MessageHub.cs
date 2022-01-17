@@ -8,8 +8,15 @@ namespace PlanetWars.Communication
     {
         public async Task<MessageResponseDto> JoinGameChat(JoinGameChatDto param)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, param.UserID.ToString());
-            await Clients.Group(param.SessionID.ToString()).SendAsync(param.ClientHandler, param.UsernameWithTag + " has joined the game!");
+            await Groups.AddToGroupAsync(Context.ConnectionId, param.SessionID);
+            MessageDto mess = new MessageDto {
+                ClientHandler = "receiveMessage",
+                Contents = param.UsernameWithTag + " has joined the game!",
+                SessionID = param.SessionID,
+                UserID = param.UserID,
+                UsernameWithTag = "ChatBot"
+            };
+            await Clients.Group(param.SessionID).SendAsync("receiveMessage", mess);
             return new MessageResponseDto { IsSuccessful = true, Message = "Joined Game." };
         }
 
@@ -22,8 +29,8 @@ namespace PlanetWars.Communication
 
         public async Task<MessageResponseDto> SendChatMessage(MessageDto message)
         {
-            await Clients.Group(message.SessionID.ToString()).SendAsync(message.ClientHandler, message);
-            return new MessageResponseDto { IsSuccessful = true, Message = "Sent Message." };;
+            await Clients.Group(message.SessionID).SendAsync("receiveMessage", message);
+            return new MessageResponseDto { IsSuccessful = true, Message = "Sent Message." };
         }
     }
 }
