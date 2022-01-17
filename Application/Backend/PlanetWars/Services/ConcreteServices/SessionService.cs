@@ -39,14 +39,15 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Session> GetById(Guid id)
+        public async Task<Session> GetById(Guid sessionId)
         {
             using(_unitOfWork)
             {
-                Session session = await _unitOfWork.Sessions.GetById(id);
-                if(session != null)
-                    return session;
-                return null;
+                // Session session = await _unitOfWork.Sessions.GetById(id);
+                // if(session != null)
+                //     return session;
+                // return null;
+                return await _unitOfWork.Sessions.GetById(sessionId);
             }
         }
 
@@ -107,7 +108,9 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using(_unitOfWork)
             {
-                return await _unitOfWork.Sessions.Delete(id);
+                var retval = await _unitOfWork.Sessions.Delete(id);
+                await _unitOfWork.CompleteAsync();
+                return retval;
             }
         }
 
@@ -150,6 +153,7 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Galaxies.Add(galaxy);
 
                 session.Players.Add(player);
+                session.PlayerCount = 1;
                 session.CreatorID = player.ID;
                 session.Galaxy = galaxy;
 
@@ -173,21 +177,21 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Player> AddPlayer(Guid sessionId, Player player)
+        public async Task<Player> AddPlayer(Session session, Player player)
         {
             using(_unitOfWork)
             {
-                Session session = await _unitOfWork.Sessions.GetById(sessionId);
+                //Session session = await _unitOfWork.Sessions.GetById(sessionId);
 
-                if(session.Players.Count == session.MaxPlayers)
+                if(session.PlayerCount == session.MaxPlayers)
                 {
                     return null;
                 }
 
                 player.PlayerColor.TurnIndex = session.Players.Count;
-                await _unitOfWork.Players.Add(player);
 
                 session.Players.Add(player);
+                session.PlayerCount++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
                 return player;

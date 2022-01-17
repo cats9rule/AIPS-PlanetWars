@@ -28,9 +28,9 @@ namespace PlanetWars.Core.Repositories
             return base.GetAll();
         }
 
-        public override Task<Session> GetById(Guid id)
+        public override Task<Session> GetById(Guid sessionId)
         {
-            return base.GetById(id);
+            return base.GetById(sessionId);
         }
 
         public override async Task<bool> Delete(Guid id)
