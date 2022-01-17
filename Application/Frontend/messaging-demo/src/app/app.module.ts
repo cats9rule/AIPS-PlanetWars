@@ -9,12 +9,17 @@ import { MatInputModule } from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { MessageComponent } from './components/message/message.component';
+import {MatCardModule} from '@angular/material/card';
+import { MessageListComponent } from './components/message-list/message-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    UserLoginComponent
+    UserLoginComponent,
+    MessageComponent,
+    MessageListComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +27,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     MatButtonModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatCardModule
   ],
   providers: [],
   bootstrap: [AppComponent]

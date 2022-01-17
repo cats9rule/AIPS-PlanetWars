@@ -1,0 +1,10 @@
+<mat-card class="example-card">
+    <mat-card-title>Chat</mat-card-title>
+    <mat-card-content>
+        <app-message
+          *ngFor="let message of messages"
+          [usernameWithTag]="message.usernameWithTag"
+          [contents]="message.contents"
+        ></app-message>
+    </mat-card-content>
+</mat-card>
