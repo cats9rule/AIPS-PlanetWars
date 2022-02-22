@@ -113,6 +113,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<Session> CreateSession( CreateGameDto dto /*string name, string password, int maxPlayers, Galaxy galaxy, Player player*/)
         {
+            //FIXME: clean this up and make it work normally.
             using(_unitOfWork)
             {
                 var session = new Session();
@@ -195,6 +196,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Mappers
+        //TODO: implement Automapper
         public static Session DtoToModel(SessionDto dto)
         {
             Session model = new Session();

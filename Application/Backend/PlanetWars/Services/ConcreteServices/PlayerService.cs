@@ -132,6 +132,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<Player> CreatePlayer(Guid userId, int turnIndex, Guid sessionId)
         {
+            //TODO: check this method if its okay
             using(_unitOfWork)
             {
                 User user = await _unitOfWork.Users.GetById(userId);
@@ -154,6 +155,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Mappers
+        //TODO: implement Automapper
         public static PlayerDto ModelToDto(Player model)
         {
             List<Guid> planetIDs = model.Planets.Select(planet => planet.ID).ToList();
@@ -169,7 +171,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
         public static Player DtoToModel(PlayerDto dto)
         {
-            //TODO: FIX THIS ASAP!!!
+            
             return new Player
             {
                 ID = dto.ID,

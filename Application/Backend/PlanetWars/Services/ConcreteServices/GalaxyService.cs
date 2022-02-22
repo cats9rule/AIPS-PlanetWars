@@ -106,6 +106,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Mappers
+        //TODO: implement Automapper
         public static Galaxy DtoToModel(GalaxyDto dto)
         {
             Galaxy model = new Galaxy();

@@ -73,6 +73,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Mappers
+        //TODO: implement Automapper
         public static PlayerColorDto ModelToDto(PlayerColor model)
         {
             return new PlayerColorDto

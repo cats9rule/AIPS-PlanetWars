@@ -47,6 +47,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         private Planet CreatePlanet(bool hasResource)
         {
+            //FIXME: possible that planet doesnt have a resource even though hasResource is True
             Planet planet = new Planet();
             planet.ID = new Guid();
             planet.ArmyCount = 0;
@@ -128,6 +129,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
+        //FIXME: do we need multiple updaters?
         public Task<bool> UpdateArmies(Guid id, int armyDifference)
         {
             using (_unitOfWork)
@@ -162,6 +164,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Mappers
+        //TODO: implement Automapper
         public static PlanetDto ModelToDto(Planet model)
         {
             return new PlanetDto

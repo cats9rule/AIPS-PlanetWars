@@ -161,6 +161,7 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Mappers
+        //TODO: implement Automapper
         public static UserDto ModelToDto(User model)
         {
             return new UserDto

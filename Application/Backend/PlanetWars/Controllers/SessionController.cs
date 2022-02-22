@@ -94,5 +94,7 @@ namespace PlanetWars.Controllers
             return Ok(result);
         }
 
+        //TODO: implement methods for exchanging game state
+
     }
 }
