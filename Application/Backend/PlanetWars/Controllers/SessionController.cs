@@ -44,8 +44,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> AddPlayer([FromBody] PlayerDto playerDto)
         {
             var session = await sessionService.GetById(playerDto.SessionID);
-            var player = await playerService.CreatePlayer(playerDto.ID, session.Players.Count, session.ID);
-            var result = await sessionService.AddPlayer(session.ID, player);
+            var player = await playerService.CreatePlayer(playerDto.UserID, session.PlayerCount, session.ID);
+            var result = await sessionService.AddPlayer(session, player);
 
             return Ok(result);
         }

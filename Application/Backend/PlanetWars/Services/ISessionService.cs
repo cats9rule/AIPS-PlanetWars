@@ -16,6 +16,6 @@ namespace PlanetWars.Services
         public Task<IEnumerable<Session>> GetByName(string name);
         public Task<bool> Update(UpdateSessionDto sessionDto);
         public Task<bool> Delete(Guid id);
-        public Task<Player> AddPlayer(Guid sessionId, Player player);
+        public Task<Player> AddPlayer(Session session, Player player);
     } 
 }
