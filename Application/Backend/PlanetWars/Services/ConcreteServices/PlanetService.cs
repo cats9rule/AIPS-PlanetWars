@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
@@ -14,9 +15,11 @@ namespace PlanetWars.Services.ConcreteServices
         private int defBoost = 2;
         private int movBoost = 2;
         private readonly IUnitOfWork _unitOfWork;
-        public PlanetService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public PlanetService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<bool> Add(PlanetDto planetDto)

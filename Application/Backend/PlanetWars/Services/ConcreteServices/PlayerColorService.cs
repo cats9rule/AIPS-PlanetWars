@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
@@ -10,9 +11,11 @@ namespace PlanetWars.Services.ConcreteServices
     public class PlayerColorService : IPlayerColorService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PlayerColorService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public PlayerColorService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<bool> Add(PlayerColorDto pcDto)

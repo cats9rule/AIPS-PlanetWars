@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using PlanetWars.Core.Configuration;
 using PlanetWars.DTOs;
 using PlanetWars.Data.Models;
-
+using AutoMapper;
 
 namespace PlanetWars.Services.ConcreteServices
 {
@@ -13,12 +13,14 @@ namespace PlanetWars.Services.ConcreteServices
     {
         #region Atributes
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
         #endregion
 
 
-        public GalaxyService(IUnitOfWork uow)
+        public GalaxyService(IUnitOfWork uow, IMapper mapper)
         {
             _unitOfWork = uow;
+            _mapper = mapper;
         }
 
         public async Task<Galaxy> CreateGalaxy(int planetCount, float resourcePlanetRatio, Guid sessionId)

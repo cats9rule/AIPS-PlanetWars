@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
@@ -13,6 +14,7 @@ namespace PlanetWars.Services.ConcreteServices
     {
         #region Attributes
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         #region Helper Attributes
         private Random random;
@@ -20,9 +22,11 @@ namespace PlanetWars.Services.ConcreteServices
         #endregion
 
         #endregion
-        public UserService(IUnitOfWork unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            
             random = new Random();
         }
 
@@ -30,7 +34,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                User user = DtoToModel(userDto);
+                User user = _mapper.Map<UserDto, User>(userDto);
                 user.Salt = GenerateSALT();
                 string passwordSalt = user.Password + user.Salt;
                 user.Password = HashPassword(passwordSalt);
@@ -45,7 +49,7 @@ namespace PlanetWars.Services.ConcreteServices
                 user.Tag = generatedTag;
                 await _unitOfWork.Users.Add(user);
                 await _unitOfWork.CompleteAsync();
-                return ModelToDto(user);
+                return _mapper.Map<User, UserDto>(user);
             }
         }
 

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using AutoMapper;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
@@ -12,11 +12,13 @@ namespace PlanetWars.Services.ConcreteServices
     {
         #region Attributes
         public readonly IUnitOfWork _unitOfWork;
+        public readonly IMapper _mapper;
         #endregion
 
-        public SessionService(IUnitOfWork uow)
+        public SessionService(IUnitOfWork uow, IMapper mapper)
         {
             _unitOfWork = uow;
+            _mapper = mapper;
         }
 
         public async Task<bool> Add(Session session)

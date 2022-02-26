@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
@@ -11,9 +12,11 @@ namespace PlanetWars.Services.ConcreteServices
     public class PlayerService : IPlayerService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public PlayerService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public PlayerService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         // public async Task<bool> Add(PlayerDto playerDto)

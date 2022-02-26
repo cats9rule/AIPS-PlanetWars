@@ -17,6 +17,7 @@ using PlanetWars.Core.Configuration;
 using PlanetWars.Services.ConcreteServices;
 using PlanetWars.Services;
 using PlanetWars.Communication;
+using PlanetWars.DTOs.MappingProfiles;
 
 namespace PlanetWars
 {
@@ -40,6 +41,7 @@ namespace PlanetWars
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IPlayerService, PlayerService>();
 
+            services.AddAutoMapper(typeof(UserProfiles));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
