@@ -7,6 +7,6 @@ namespace PlanetWars.Core.IRepositories
     public interface IGalaxyRepository : IGenericRepository<Galaxy>
     {
         public Task<IEnumerable<Galaxy>> GetGalaxiesByResourceAbundanceFactor(float abundanceFactor);
-        public Task<IEnumerable<Galaxy>> GetGalaxiesByPlanetCount(int planetCount);
+        public Task<List<Galaxy>> GetGalaxiesByPlanetCount(int planetCount);
     }
 }

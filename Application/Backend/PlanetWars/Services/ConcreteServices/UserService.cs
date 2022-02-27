@@ -61,7 +61,7 @@ namespace PlanetWars.Services.ConcreteServices
                 List<UserDto> userDtos = new List<UserDto>();
                 foreach (User user in users)
                 {
-                    userDtos.Add(ModelToDto(user));
+                    userDtos.Add(_mapper.Map<User, UserDto>(user));
                 }
                 return userDtos;
             }
@@ -74,7 +74,7 @@ namespace PlanetWars.Services.ConcreteServices
                 User user = await _unitOfWork.Users.GetById(id);
                 if (user != null)
                 {
-                    return ModelToDto(user);
+                    return _mapper.Map<User, UserDto>(user);
                 }
                 return null;
             }
@@ -87,7 +87,7 @@ namespace PlanetWars.Services.ConcreteServices
                 User user = await _unitOfWork.Users.GetByTag(tag);
                 if (user != null)
                 {
-                    return ModelToDto(user);
+                    return _mapper.Map<User, UserDto>(user);
                 }
                 return null;
             }
@@ -100,7 +100,7 @@ namespace PlanetWars.Services.ConcreteServices
                 User user = await _unitOfWork.Users.GetByUsername(username);
                 if (user != null)
                 {
-                    return ModelToDto(user);
+                    return _mapper.Map<User, UserDto>(user);
                 }
                 return null;
             }
@@ -113,17 +113,17 @@ namespace PlanetWars.Services.ConcreteServices
                 User user = await _unitOfWork.Users.GetByUsernameAndTag(username, tag);
                 if (user != null)
                 {
-                    return ModelToDto(user);
+                    return _mapper.Map<User, UserDto>(user);
                 }
                 return null;
             }
         }
 
-        public async Task<bool> UpdateUser(UserDto user)
+        public async Task<bool> UpdateUser(UserDto userDto)
         {
             using (_unitOfWork)
             {
-                var retval = await _unitOfWork.Users.Update(DtoToModel(user));
+                var retval = await _unitOfWork.Users.Update(_mapper.Map<UserDto, User>(userDto));
                 await _unitOfWork.CompleteAsync();
                 return retval;
             }
@@ -139,7 +139,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<UserDto> LogInUser(UserDto user)
+        public async Task<UserDto> LogInUser(UserLoginDto user)
         {
             using (_unitOfWork)
             {
@@ -159,35 +159,10 @@ namespace PlanetWars.Services.ConcreteServices
                 }
                 else
                 {
-                    return ModelToDto(u);
+                    return _mapper.Map<User, UserDto>(u);
                 }
             }
         }
-
-        #region Mappers
-        //TODO: implement Automapper
-        public static UserDto ModelToDto(User model)
-        {
-            return new UserDto
-            {
-                ID = model.ID,
-                Username = model.Username,
-                Tag = model.Tag,
-                DisplayedName = model.DisplayedName
-            };
-        }
-        public static User DtoToModel(UserDto dto)
-        {
-            return new User
-            {
-                ID = dto.ID,
-                Username = dto.Username,
-                Tag = dto.Tag,
-                DisplayedName = dto.DisplayedName,
-                Password = dto.Password
-            };
-        }
-        #endregion
 
         #region Helpers
 

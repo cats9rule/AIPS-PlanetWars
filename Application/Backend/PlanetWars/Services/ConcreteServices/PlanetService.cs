@@ -26,7 +26,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                var retval = await _unitOfWork.Planets.Add(DtoToModel(planetDto));
+                var retval = await _unitOfWork.Planets.Add(_mapper.Map<PlanetDto, Planet>(planetDto));
                 await _unitOfWork.CompleteAsync();
                 return retval;
             }
@@ -40,7 +40,7 @@ namespace PlanetWars.Services.ConcreteServices
                 for(int i = 0; i < planetCount; i++)
                 {
                     Planet planet = CreatePlanet(hasResource);
-                    planetList.Add(ModelToDto(planet));
+                    planetList.Add(_mapper.Map<Planet, PlanetDto>(planet));
                     var retval = await _unitOfWork.Planets.Add(planet);
                 }
                 await _unitOfWork.CompleteAsync();
@@ -50,27 +50,30 @@ namespace PlanetWars.Services.ConcreteServices
 
         private Planet CreatePlanet(bool hasResource)
         {
-            //FIXME: possible that planet doesnt have a resource even though hasResource is True
             Planet planet = new Planet();
             planet.ID = new Guid();
             planet.ArmyCount = 0;
             planet.Owner = null;
             planet.NeighbourPlanets = new List<PlanetPlanet>();
-            if (hasResource)
+            bool madeResource = !hasResource;
+            while (madeResource)
             {
                 Random rnd = new Random();
                 int num = rnd.Next();
                 if (num % 3 == 0)
                 {
                     planet.DefenseBoost = defBoost;
+                    madeResource = true;
                 }
                 if (num % 4 == 0)
                 {
                     planet.AttackBoost = atkBoost;
+                    madeResource = true;
                 }
                 if (num % 5 == 0)
                 {
                     planet.MovementBoost = movBoost;
+                    madeResource = true;
                 }
             }
             return planet;
@@ -90,8 +93,8 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                IEnumerable<Planet> planets = await _unitOfWork.Planets.GetAll();
-                return planets.Select(planet => ModelToDto(planet)).ToList();
+                List<Planet> planets = new List<Planet>(await _unitOfWork.Planets.GetAll());
+                return _mapper.Map<List<Planet>, List<PlanetDto>>(planets);
             }
         }
 
@@ -102,7 +105,7 @@ namespace PlanetWars.Services.ConcreteServices
                 var planet = await _unitOfWork.Planets.GetById(id);
                 if (planet != null)
                 {
-                    return ModelToDto(planet);
+                    return _mapper.Map<Planet, PlanetDto>(planet);
                 }
                 return null;
             }
@@ -115,8 +118,7 @@ namespace PlanetWars.Services.ConcreteServices
                 var player = await _unitOfWork.Players.GetById(playerId);
                 if (player != null)
                 {
-                    List<PlanetDto> planets = player.Planets.Select(p => ModelToDto(p)).ToList();
-                    return planets;
+                    return _mapper.Map<List<Planet>, List<PlanetDto>>(player.Planets);
                 }
                 return new List<PlanetDto>();
             }
@@ -126,7 +128,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                var retval = await _unitOfWork.Planets.Update(DtoToModel(planetDto));
+                var retval = await _unitOfWork.Planets.Update(_mapper.Map<PlanetDto, Planet>(planetDto));
                 await _unitOfWork.CompleteAsync();
                 return retval;
             }
@@ -159,41 +161,11 @@ namespace PlanetWars.Services.ConcreteServices
                     var planet = await _unitOfWork.Planets.GetById(relation.PlanetToID);
                     if (planet != null)
                     {
-                        relatedPlanets.Add(ModelToDto(planet));
+                        relatedPlanets.Add(_mapper.Map<Planet, PlanetDto>(planet));
                     }
                 }
                 return relatedPlanets;
             }
         }
-
-        #region Mappers
-        //TODO: implement Automapper
-        public static PlanetDto ModelToDto(Planet model)
-        {
-            return new PlanetDto
-            {
-                ID = model.ID,
-                Owner = model.Owner.ID,
-                ArmyCount = model.ArmyCount,
-                NeighbourPlanets = model.NeighbourPlanets.Select(planet => planet.PlanetToID).ToList(),
-                MovementBoost = model.MovementBoost,
-                DefenseBoost = model.DefenseBoost,
-                AttackBoost = model.AttackBoost
-            };
-        }
-        public static Planet DtoToModel(PlanetDto dto)
-        {
-
-            return new Planet
-            {
-                ID = dto.ID,
-                ArmyCount = dto.ArmyCount,
-                MovementBoost = dto.MovementBoost,
-                AttackBoost = dto.AttackBoost,
-                DefenseBoost = dto.DefenseBoost,
-            };
-        }
-
-        #endregion
     }
 }

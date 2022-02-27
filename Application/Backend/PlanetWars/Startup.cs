@@ -41,7 +41,7 @@ namespace PlanetWars
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IPlayerService, PlayerService>();
 
-            services.AddAutoMapper(typeof(UserProfiles));
+            services.AddAutoMapper(typeof(Mappings));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

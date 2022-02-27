@@ -16,7 +16,7 @@ namespace PlanetWars.Services
 
         public Task<bool> DeleteUser(Guid id);
         public Task<bool> UpdateUser(UserDto user);
-        public Task<UserDto> LogInUser(UserDto user);
+        public Task<UserDto> LogInUser(UserLoginDto user);
         
     }
 }

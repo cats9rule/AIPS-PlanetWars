@@ -7,6 +7,8 @@ using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
 
+//TODO: fix all methods to return PlayerDto instead of Player
+
 namespace PlanetWars.Services.ConcreteServices
 {
     public class PlayerService : IPlayerService
@@ -156,31 +158,5 @@ namespace PlanetWars.Services.ConcreteServices
                 return player;
             }
         }
-
-        #region Mappers
-        //TODO: implement Automapper
-        public static PlayerDto ModelToDto(Player model)
-        {
-            List<Guid> planetIDs = model.Planets.Select(planet => planet.ID).ToList();
-            return new PlayerDto
-            {
-                ID = model.ID,
-                UserID = model.User.ID,
-                PlayerColor = model.PlayerColor.ColorHexValue,
-                TurnIndex = model.PlayerColor.TurnIndex,
-                PlanetIDs = planetIDs,
-                IsActive = model.IsActive
-            };
-        }
-        public static Player DtoToModel(PlayerDto dto)
-        {
-            
-            return new Player
-            {
-                ID = dto.ID,
-                IsActive = dto.IsActive
-            };
-        }
-        #endregion
     }
 }

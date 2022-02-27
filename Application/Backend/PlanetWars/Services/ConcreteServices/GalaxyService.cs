@@ -54,7 +54,7 @@ namespace PlanetWars.Services.ConcreteServices
                 List<GalaxyDto> galaxyDtos = new List<GalaxyDto>();
                 foreach(Galaxy galaxy in galaxies)
                 {
-                    galaxyDtos.Add(ModelToDto(galaxy));
+                    galaxyDtos.Add(_mapper.Map<Galaxy, GalaxyDto>(galaxy));
                 }
                 return galaxyDtos;
             }
@@ -67,7 +67,7 @@ namespace PlanetWars.Services.ConcreteServices
                 Galaxy galaxy = await _unitOfWork.Galaxies.GetById(id);
                 if (galaxy != null)
                 {
-                    return ModelToDto(galaxy);
+                    return _mapper.Map<Galaxy, GalaxyDto>(galaxy);
                 }
                 return null;
             }
@@ -77,13 +77,13 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using(_unitOfWork)
             {
-                IEnumerable<Galaxy> galaxies = await _unitOfWork.Galaxies.GetGalaxiesByPlanetCount(count);
-                List<GalaxyDto> galaxyDtos = new List<GalaxyDto>();
-                foreach(Galaxy galaxy in galaxies)
-                {
-                    galaxyDtos.Add(ModelToDto(galaxy));
-                }
-                return galaxyDtos;
+                return _mapper.Map<List<Galaxy>, List<GalaxyDto>>(await _unitOfWork.Galaxies.GetGalaxiesByPlanetCount(count));
+                // List<GalaxyDto> galaxyDtos = new List<GalaxyDto>();
+                // foreach(Galaxy galaxy in galaxies)
+                // {
+                //     galaxyDtos.Add(_mapper.Map<Galaxy, GalaxyDto>(galaxy));
+                // }
+                // return galaxyDtos;
             }
         }
 
@@ -91,7 +91,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using(_unitOfWork)
             {
-                var retVal = await _unitOfWork.Galaxies.Update(DtoToModel(dto));
+                var retVal = await _unitOfWork.Galaxies.Update(_mapper.Map<GalaxyDto, Galaxy>(dto));
                 await _unitOfWork.CompleteAsync();
                 return retVal;
             }
@@ -106,34 +106,5 @@ namespace PlanetWars.Services.ConcreteServices
                 return retval;
             }
         }
-
-        #region Mappers
-        //TODO: implement Automapper
-        public static Galaxy DtoToModel(GalaxyDto dto)
-        {
-            Galaxy model = new Galaxy();
-            model.ID = dto.ID;
-            foreach(var v in dto.Planets)
-            {
-                Planet p = new Planet{ ID = v };
-                model.Planets.Add(p);
-            }
-
-            return model;
-        }
-
-        public static GalaxyDto ModelToDto(Galaxy model)
-        {
-            GalaxyDto dto = new GalaxyDto();
-            dto.ID = model.ID;
-            foreach(var v in model.Planets)
-            {
-                Guid id = v.ID;
-                dto.Planets.Add(id);
-            }
-
-            return dto;
-        }
-        #endregion
     }
 }

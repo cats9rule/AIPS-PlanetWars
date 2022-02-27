@@ -59,7 +59,7 @@ namespace PlanetWars.Core.Repositories
             return await dbSet.Where(g => g.ResourcePlanetRatio == abundanceFactor).ToListAsync();
         }
 
-        public async Task<IEnumerable<Galaxy>> GetGalaxiesByPlanetCount(int planetCount)
+        public async Task<List<Galaxy>> GetGalaxiesByPlanetCount(int planetCount)
         {
             return await dbSet.Where(g => g.PlanetCount == planetCount).ToListAsync();
         }

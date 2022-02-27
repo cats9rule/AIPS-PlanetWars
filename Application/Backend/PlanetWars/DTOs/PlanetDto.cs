@@ -7,7 +7,7 @@ namespace PlanetWars.DTOs
     {
         public Guid ID { get; set; }
 
-        public Guid Owner { get; set; }
+        public Guid OwnerID { get; set; }
 
         public int ArmyCount { get; set; }
 

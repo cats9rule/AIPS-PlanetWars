@@ -8,6 +8,9 @@ using PlanetWars.DTOs;
 
 namespace PlanetWars.Services.ConcreteServices
 {
+
+    //TODO: fix all methods to return SessionDtos instead of Session
+
     public class SessionService : ISessionService
     {
         #region Attributes
@@ -200,22 +203,5 @@ namespace PlanetWars.Services.ConcreteServices
                 return player;
             }
         }
-
-        #region Mappers
-        //TODO: implement Automapper
-        public static Session DtoToModel(SessionDto dto)
-        {
-            Session model = new Session();
-
-            return model;
-        }
-
-        public static SessionDto ModelToDto(Session model)
-        {
-            SessionDto dto = new SessionDto();
-
-            return dto;
-        }
-        #endregion
     }
 }

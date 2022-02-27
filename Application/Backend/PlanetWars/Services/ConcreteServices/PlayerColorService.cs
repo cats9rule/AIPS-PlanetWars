@@ -22,7 +22,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                var retval = await _unitOfWork.PlayerColors.Add(DtoToModel(pcDto));
+                var retval = await _unitOfWork.PlayerColors.Add(_mapper.Map<PlayerColorDto, PlayerColor>(pcDto));
                 await _unitOfWork.CompleteAsync();
                 return retval;
             }
@@ -42,13 +42,14 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                IEnumerable<PlayerColor> playerColors = await _unitOfWork.PlayerColors.GetAll();
-                List<PlayerColorDto> pcDtos = new List<PlayerColorDto>();
-                foreach (PlayerColor pc in playerColors)
-                {
-                    pcDtos.Add(ModelToDto(pc));
-                }
-                return pcDtos;
+                return _mapper.Map<List<PlayerColor>, List<PlayerColorDto>>(new List<PlayerColor>(await _unitOfWork.PlayerColors.GetAll()));
+                // IEnumerable<PlayerColor> playerColors = await _unitOfWork.PlayerColors.GetAll();
+                // List<PlayerColorDto> pcDtos = new List<PlayerColorDto>();
+                // foreach (PlayerColor pc in playerColors)
+                // {
+                //     pcDtos.Add(ModelToDto(pc));
+                // }
+                // return pcDtos;
             }
         }
 
@@ -59,7 +60,7 @@ namespace PlanetWars.Services.ConcreteServices
                var pc = await _unitOfWork.PlayerColors.GetById(id);
                if (pc != null)
                {
-                   return ModelToDto(pc);
+                   return _mapper.Map<PlayerColor, PlayerColorDto>(pc);
                }
                return null;
             }
@@ -69,32 +70,10 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                var retval = await _unitOfWork.PlayerColors.Update(DtoToModel(pcDto));
+                var retval = await _unitOfWork.PlayerColors.Update(_mapper.Map<PlayerColorDto, PlayerColor>(pcDto));
                 await _unitOfWork.CompleteAsync();
                 return retval;
             }
         }
-
-        #region Mappers
-        //TODO: implement Automapper
-        public static PlayerColorDto ModelToDto(PlayerColor model)
-        {
-            return new PlayerColorDto
-            {
-                ID = model.ID,
-                HexColor = model.ColorHexValue,
-                TurnIndex = model.TurnIndex
-            };
-        }
-        public static PlayerColor DtoToModel(PlayerColorDto dto)
-        {
-            return new PlayerColor
-            {
-                ID = dto.ID,
-                ColorHexValue = dto.HexColor,
-                TurnIndex = dto.TurnIndex
-            };
-        }
-        #endregion
     }
 }
