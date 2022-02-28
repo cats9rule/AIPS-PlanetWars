@@ -13,9 +13,10 @@ namespace PlanetWars.DTOs
 
         public Guid Creator { get; set; }
 
-        public Guid PlayerOnTurn { get; set; }
+        public int CurrentTurnIndex { get; set; }
 
         public List<Guid> Players { get; set; }
+        public int PlayerCount { get; set; }
 
         public Guid Galaxy { get; set; }
 

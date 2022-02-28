@@ -11,12 +11,12 @@ namespace PlanetWars.Services
     public interface IPlayerService
     {
         // public Task<bool> Add(PlayerDto playerDto);
-        public Task<IEnumerable<Player>> GetAll();
-        public Task<Player> GetById(Guid id);
-        public Task<IEnumerable<Player>> GetByUsernameAndTag(string username, string tag);
-        public Task<IEnumerable<Player>> GetByUserId(Guid id);
+        public Task<IEnumerable<PlayerDto>> GetAll();
+        public Task<PlayerDto> GetById(Guid id);
+        public Task<IEnumerable<PlayerDto>> GetByUsernameAndTag(string username, string tag);
+        public Task<IEnumerable<PlayerDto>> GetByUserId(Guid id);
         public Task<bool> Update(UpdatePlayerDto playerDto);
         public Task<bool> Delete(Guid id);
-        public Task<Player> CreatePlayer(Guid userId, int turnIndex, Guid sessionId);
+        public Task<PlayerDto> CreatePlayer(Guid userId, int turnIndex, Guid sessionId);
     }
 }

@@ -7,8 +7,6 @@ using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
 
-//TODO: fix all methods to return PlayerDto instead of Player
-
 namespace PlanetWars.Services.ConcreteServices
 {
     public class PlayerService : IPlayerService
@@ -36,7 +34,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<IEnumerable<Player>> GetAll()
+        public async Task<IEnumerable<PlayerDto>> GetAll()
         {
             using(_unitOfWork)
             {
@@ -47,25 +45,24 @@ namespace PlanetWars.Services.ConcreteServices
                 //     playerDtos.Add(ModelToDto(player));
                 // }
                 // return playerDtos;
-                return await _unitOfWork.Players.GetAll();
+                return _mapper.Map<List<Player>, List<PlayerDto>>(new List<Player>(await _unitOfWork.Players.GetAll()));
             }
         }
 
-        public async Task<Player> GetById(Guid id)
+        public async Task<PlayerDto> GetById(Guid id)
         {
             using (_unitOfWork)
             {
                 Player player = await _unitOfWork.Players.GetById(id);
-                // if (player != null)
-                // {
-                //     return player;
-                // }
-                // return null;
-                return player;
+                if (player != null)
+                {
+                    return _mapper.Map<Player, PlayerDto>(player);
+                }
+                return null;
             }
         }
 
-        public async Task<IEnumerable<Player>> GetByUserId(Guid id)
+        public async Task<IEnumerable<PlayerDto>> GetByUserId(Guid id)
         {
             using (_unitOfWork)
             {
@@ -80,11 +77,11 @@ namespace PlanetWars.Services.ConcreteServices
                 //     return dtoList;
                 // }
                 // return null;
-                return await _unitOfWork.Players.GetByUserId(id);
+                return _mapper.Map<List<Player>, List<PlayerDto>>(new List<Player>(await _unitOfWork.Players.GetByUserId(id)));
             }
         }
 
-        public async Task<IEnumerable<Player>> GetByUsernameAndTag(string username, string tag)
+        public async Task<IEnumerable<PlayerDto>> GetByUsernameAndTag(string username, string tag)
         {
             using (_unitOfWork)
             {
@@ -100,7 +97,7 @@ namespace PlanetWars.Services.ConcreteServices
                 //     return dtoList;
                 // }
                 // return null;
-                return await _unitOfWork.Players.GetByUsernameAndTag(username, tag);
+                return _mapper.Map<List<Player>, List<PlayerDto>>(new List<Player>(await _unitOfWork.Players.GetByUsernameAndTag(username, tag)));
             }
         }
 
@@ -135,7 +132,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Player> CreatePlayer(Guid userId, int turnIndex, Guid sessionId)
+        public async Task<PlayerDto> CreatePlayer(Guid userId, int turnIndex, Guid sessionId)
         {
             //TODO: check this method if its okay
             using(_unitOfWork)
@@ -155,7 +152,7 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Players.Add(player);
                 await _unitOfWork.CompleteAsync();
 
-                return player;
+                return _mapper.Map<Player, PlayerDto>(player);
             }
         }
     }

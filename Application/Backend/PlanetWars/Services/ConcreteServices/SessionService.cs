@@ -29,7 +29,7 @@ namespace PlanetWars.Services.ConcreteServices
             return await _unitOfWork.Sessions.Add(session);
         }
 
-        public async Task<IEnumerable<Session>> GetAllSessions()
+        public async Task<IEnumerable<SessionDto>> GetAllSessions()
         {
             using(_unitOfWork)
             {
@@ -40,11 +40,11 @@ namespace PlanetWars.Services.ConcreteServices
                 //     sessionDtos.Add(ModelToDto(session));
                 // }
                 // return sessionDtos;
-                return await _unitOfWork.Sessions.GetAll();
+                return _mapper.Map<List<Session>, List<SessionDto>>(new List<Session>(await _unitOfWork.Sessions.GetAll()));
             }
         }
 
-        public async Task<Session> GetById(Guid sessionId)
+        public async Task<SessionDto> GetById(Guid sessionId)
         {
             using(_unitOfWork)
             {
@@ -52,11 +52,11 @@ namespace PlanetWars.Services.ConcreteServices
                 // if(session != null)
                 //     return session;
                 // return null;
-                return await _unitOfWork.Sessions.GetById(sessionId);
+                return _mapper.Map<Session, SessionDto>(await _unitOfWork.Sessions.GetById(sessionId));
             }
         }
 
-        public async Task<IEnumerable<Session>> GetByName(string name)
+        public async Task<IEnumerable<SessionDto>> GetByName(string name)
         {
             using(_unitOfWork)
             {
@@ -67,7 +67,7 @@ namespace PlanetWars.Services.ConcreteServices
                 //     dtos.Add(ModelToDto(s));
                 // }
                 // return dtos;
-                return await _unitOfWork.Sessions.GetByName(name);
+                return _mapper.Map<List<Session>, List<SessionDto>>(new List<Session>(await _unitOfWork.Sessions.GetByName(name)));
             }
         }
 
@@ -119,7 +119,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<Session> CreateSession( CreateGameDto dto /*string name, string password, int maxPlayers, Galaxy galaxy, Player player*/)
+        public async Task<SessionDto> CreateSession( CreateGameDto dto /*string name, string password, int maxPlayers, Galaxy galaxy, Player player*/)
         {
             //FIXME: clean this up and make it work normally.
             using(_unitOfWork)
@@ -166,12 +166,13 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                return session;
+                return _mapper.Map<Session, SessionDto>(session);
             }
         }
 
-        public async Task<Session> InitializeSession(Session session, Guid galaxyId, Guid playerId)
+        public async Task<SessionDto> InitializeSession(Session session, Guid galaxyId, Guid playerId)
         {
+            //FIXME: should receive sessionID, not whole session
             using(_unitOfWork)
             {
                 session.Galaxy = await _unitOfWork.Galaxies.GetById(galaxyId);
@@ -179,12 +180,13 @@ namespace PlanetWars.Services.ConcreteServices
 
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
-                return session;
+                return _mapper.Map<Session, SessionDto>(session);
             }
         }
 
-        public async Task<Player> AddPlayer(Session session, Player player)
+        public async Task<PlayerDto> AddPlayer(SessionDto session, PlayerDto player)
         {
+            //FIXME: should receive sessionID, not whole session
             using(_unitOfWork)
             {
                 //Session session = await _unitOfWork.Sessions.GetById(sessionId);
@@ -194,11 +196,11 @@ namespace PlanetWars.Services.ConcreteServices
                     return null;
                 }
 
-                player.PlayerColor.TurnIndex = session.Players.Count;
+                player.TurnIndex = session.Players.Count;
 
-                session.Players.Add(player);
+                session.Players.Add(player.ID);
                 session.PlayerCount++;
-                await _unitOfWork.Sessions.Update(session);
+                await _unitOfWork.Sessions.Update(_mapper.Map<SessionDto, Session>(session));
                 await _unitOfWork.CompleteAsync();
                 return player;
             }
