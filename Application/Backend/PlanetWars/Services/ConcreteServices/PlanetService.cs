@@ -32,6 +32,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
+        //FIXME: all created planets have a resource if "has resource" is true
         public async Task<IEnumerable<PlanetDto>> CreatePlanets(int planetCount, bool hasResource)
         {
             using(_unitOfWork)
@@ -56,7 +57,7 @@ namespace PlanetWars.Services.ConcreteServices
             planet.Owner = null;
             planet.NeighbourPlanets = new List<PlanetPlanet>();
             bool madeResource = !hasResource;
-            while (madeResource)
+            while (!madeResource)
             {
                 Random rnd = new Random();
                 int num = rnd.Next();

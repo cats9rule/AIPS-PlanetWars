@@ -43,13 +43,6 @@ namespace PlanetWars.Services.ConcreteServices
             using (_unitOfWork)
             {
                 return _mapper.Map<List<PlayerColor>, List<PlayerColorDto>>(new List<PlayerColor>(await _unitOfWork.PlayerColors.GetAll()));
-                // IEnumerable<PlayerColor> playerColors = await _unitOfWork.PlayerColors.GetAll();
-                // List<PlayerColorDto> pcDtos = new List<PlayerColorDto>();
-                // foreach (PlayerColor pc in playerColors)
-                // {
-                //     pcDtos.Add(ModelToDto(pc));
-                // }
-                // return pcDtos;
             }
         }
 

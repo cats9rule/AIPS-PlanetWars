@@ -14,8 +14,8 @@ namespace PlanetWars.Services.ConcreteServices
         #region Atributes
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        #endregion
 
+        #endregion
 
         public GalaxyService(IUnitOfWork uow, IMapper mapper)
         {
@@ -23,43 +23,33 @@ namespace PlanetWars.Services.ConcreteServices
             _mapper = mapper;
         }
 
-        public async Task<Galaxy> CreateGalaxy(int planetCount, float resourcePlanetRatio, Guid sessionId)
+        //TODO: check 
+        public async Task<GalaxyDto> CreateGalaxy(int planetCount, float resourcePlanetRatio, Guid sessionId)
         {
             using(_unitOfWork)
             {
-                Galaxy galaxy = new Galaxy();
-                //GalaxyDto dto = new GalaxyDto();
-
-                galaxy.ResourcePlanetRatio = resourcePlanetRatio;
-                galaxy.PlanetCount = planetCount;
-                // dto.ResourcePlanetRatio = resourcePlanetRatio;
-                // dto.PlanetCount = planetCount;
-
-                galaxy.SessionID = sessionId;
-                galaxy.Session = await _unitOfWork.Sessions.GetById(sessionId);
-
-                //proveriti da li nesto fali --- mappere ne koristiti!
-
+                Galaxy galaxy = new Galaxy(){
+                    ResourcePlanetRatio = resourcePlanetRatio, 
+                    PlanetCount = planetCount, 
+                    SessionID = sessionId, 
+                    Session = await _unitOfWork.Sessions.GetById(sessionId)
+                };
                 await _unitOfWork.Galaxies.Add(galaxy);
                 await _unitOfWork.CompleteAsync();
-                return galaxy;
+                return _mapper.Map<Galaxy, GalaxyDto>(galaxy);
             }
         }
 
+        //TODO: check 
         public async Task<IEnumerable<GalaxyDto>> GetAllGalaxies()
         {
             using (_unitOfWork)
             {
-                IEnumerable<Galaxy> galaxies = await _unitOfWork.Galaxies.GetAll();
-                List<GalaxyDto> galaxyDtos = new List<GalaxyDto>();
-                foreach(Galaxy galaxy in galaxies)
-                {
-                    galaxyDtos.Add(_mapper.Map<Galaxy, GalaxyDto>(galaxy));
-                }
-                return galaxyDtos;
+                return _mapper.Map<List<Galaxy>, List<GalaxyDto>>(new List<Galaxy>(await _unitOfWork.Galaxies.GetAll()));
             }
         }
 
+        //TODO: check 
         public async Task<GalaxyDto> GetGalaxy(Guid id)
         {
             using (_unitOfWork)
@@ -73,20 +63,16 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
+        //TODO: check 
         public async Task<IEnumerable<GalaxyDto>> GetGalaxiesByPlanetCount(int count)
         {
             using(_unitOfWork)
             {
                 return _mapper.Map<List<Galaxy>, List<GalaxyDto>>(await _unitOfWork.Galaxies.GetGalaxiesByPlanetCount(count));
-                // List<GalaxyDto> galaxyDtos = new List<GalaxyDto>();
-                // foreach(Galaxy galaxy in galaxies)
-                // {
-                //     galaxyDtos.Add(_mapper.Map<Galaxy, GalaxyDto>(galaxy));
-                // }
-                // return galaxyDtos;
             }
         }
 
+        //TODO: check 
         public async Task<bool> UpdateGalaxy(GalaxyDto dto)
         {
             using(_unitOfWork)
@@ -97,6 +83,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
+        //TODO: check 
         public async Task<bool> DeleteGalaxy(Guid id)
         {
             using (_unitOfWork)
