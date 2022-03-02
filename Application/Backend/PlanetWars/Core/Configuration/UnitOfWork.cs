@@ -23,6 +23,8 @@ namespace PlanetWars.Core.Configuration
 
         public ISessionRepository Sessions { get; private set; }
 
+        public IGameMapRepository GameMaps { get; private set; }
+
         public UnitOfWork(PlanetWarsDbContext context)
         {
             _context = context;
@@ -34,6 +36,7 @@ namespace PlanetWars.Core.Configuration
             Galaxies = new GalaxyRepository(context);
             Sessions = new SessionRepository(context);
             PlanetPlanets = new PlanetPlanetRepository(context);
+            GameMaps = new GameMapRepository(context);
         }
 
         public async Task CompleteAsync()

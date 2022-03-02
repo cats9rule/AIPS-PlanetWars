@@ -15,6 +15,8 @@ namespace PlanetWars.Core.Configuration
         IPlanetPlanetRepository PlanetPlanets { get; }
         IGalaxyRepository Galaxies { get; }
         ISessionRepository Sessions { get; }
+
+        IGameMapRepository GameMaps { get; }
         Task CompleteAsync();
     }
 }
