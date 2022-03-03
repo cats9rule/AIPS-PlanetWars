@@ -31,9 +31,10 @@ namespace PlanetWars.Core.Repositories
             return await dbSet.Where(gm => gm.ResourcePlanetRatio == ratio).ToListAsync();
         }
 
-        public override Task<bool> Add(GameMap entity)
+        public override async Task<bool> Add(GameMap entity)
         {
-            return base.Add(entity);
+            await dbSet.AddAsync(entity);
+            return true;
         }
 
         public override async Task<bool> Delete(Guid id)

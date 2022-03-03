@@ -17,13 +17,20 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<bool> AddGameMap(GameMap gm)
         {
-            await _unitOfWork.GameMaps.Add(gm);
-            return true;
+            using (_unitOfWork)
+            {
+                var result =  await _unitOfWork.GameMaps.Add(gm);
+                await _unitOfWork.CompleteAsync();
+                return result;
+            }
         }
 
         public async Task<IEnumerable<GameMap>> GetAll()
         {
-            return await _unitOfWork.GameMaps.GetAll();
+            using (_unitOfWork)
+            {
+                return await _unitOfWork.GameMaps.GetAll();
+            }
         }
 
         public async Task<IEnumerable<GameMap>> GetByPlanetCount(int planetCount)

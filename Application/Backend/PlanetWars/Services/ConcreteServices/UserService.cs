@@ -30,11 +30,11 @@ namespace PlanetWars.Services.ConcreteServices
             random = new Random();
         }
 
-        public async Task<UserDto> CreateUser(UserDto userDto)
+        public async Task<UserDto> CreateUser(UserCreateDto userDto)
         {
             using (_unitOfWork)
             {
-                User user = _mapper.Map<UserDto, User>(userDto);
+                User user = _mapper.Map<UserCreateDto, User>(userDto);
                 user.Salt = GenerateSALT();
                 string passwordSalt = user.Password + user.Salt;
                 user.Password = HashPassword(passwordSalt);

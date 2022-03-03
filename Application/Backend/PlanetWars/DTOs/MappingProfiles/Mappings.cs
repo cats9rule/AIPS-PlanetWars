@@ -12,7 +12,9 @@ namespace PlanetWars.DTOs.MappingProfiles
             // works
             CreateMap<User, UserDto>().ReverseMap();
             // works
-            CreateMap<User, UserLoginDto>().ReverseMap();
+            CreateMap<UserLoginDto, User>();
+
+            CreateMap<UserCreateDto, User>();
 
             CreateMap<Galaxy, GalaxyDto>().ReverseMap();
 

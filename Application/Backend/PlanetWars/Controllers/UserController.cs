@@ -10,18 +10,18 @@ namespace PlanetWars.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
         public UserController(IUserService userService)
         {
-            this.userService = userService;
+            _userService = userService;
         }
 
         [Route("CreateUser")]
         [HttpPost]
-        public async Task<ActionResult> CreateUser([FromBody] UserDto user)
+        public async Task<ActionResult> CreateUser([FromBody] UserCreateDto user)
         {
-            var result = await userService.CreateUser(user);
+            var result = await _userService.CreateUser(user);
             return Ok(result);
         }
 
@@ -29,7 +29,7 @@ namespace PlanetWars.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllUsers()
         {
-            var users = await userService.GetAllUsers();
+            var users = await _userService.GetAllUsers();
             return Ok(users);
         }
 
@@ -37,7 +37,7 @@ namespace PlanetWars.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUserById(Guid id)
         {
-            var user = await userService.GetUser(id);
+            var user = await _userService.GetUser(id);
 
             if(user == null)
                 return BadRequest();
@@ -48,7 +48,7 @@ namespace PlanetWars.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUserByUsername(string username, string tag)
         {
-            var user = await userService.GetUserByUsernameAndTag(username, tag);
+            var user = await _userService.GetUserByUsernameAndTag(username, tag);
 
             if(user == null)
                 return BadRequest();
@@ -59,7 +59,7 @@ namespace PlanetWars.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateUser([FromBody] UserDto user)
         {
-            var result = await userService.UpdateUser(user);
+            var result = await _userService.UpdateUser(user);
 
             if(result == false)
                 return BadRequest();
@@ -70,7 +70,7 @@ namespace PlanetWars.Controllers
         [HttpPost]
         public async Task<ActionResult> LogInUser([FromBody] UserLoginDto user)
         {
-            var result = await userService.LogInUser(user);
+            var result = await _userService.LogInUser(user);
 
             if(result == null)
                 return StatusCode(401); //401 Unauthorized
@@ -82,7 +82,7 @@ namespace PlanetWars.Controllers
         [HttpDelete]
         public async Task<ActionResult> DeleteUser(Guid userId)
         {
-            var result = await userService.DeleteUser(userId);
+            var result = await _userService.DeleteUser(userId);
 
             if(result == false)
                 return BadRequest();
