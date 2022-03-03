@@ -45,7 +45,7 @@ namespace PlanetWars.Controllers
         {
             var session = await sessionService.GetById(playerDto.SessionID);
             var player = await playerService.CreatePlayer(playerDto.UserID, session.PlayerCount, session.ID);
-            var result = await sessionService.AddPlayer(session, player);
+            var result = await sessionService.AddPlayer(session.ID, player);
 
             return Ok(result);
         }
