@@ -23,9 +23,9 @@ namespace PlanetWars.Core.Repositories
             return base.Add(entity);
         }
 
-        public override Task<IEnumerable<Session>> GetAll()
+        public async override Task<IEnumerable<Session>> GetAll()
         {
-            return base.GetAll();
+            return await dbSet.Include(p => p.Galaxy).Include(p => p.Players).ToListAsync();
         }
 
         public override Task<Session> GetById(Guid sessionId)

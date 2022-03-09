@@ -14,7 +14,7 @@ namespace PlanetWars.DTOs.MappingProfiles
             CreateMap<User, UserDto>().ReverseMap();
             // works
             CreateMap<UserLoginDto, User>();
-
+            // works
             CreateMap<UserCreateDto, User>();
 
             CreateMap<Galaxy, GalaxyDto>().ReverseMap();
@@ -25,11 +25,11 @@ namespace PlanetWars.DTOs.MappingProfiles
 
             CreateMap<PlayerColor, PlayerColorDto>().ReverseMap();
 
-            //FIXME: this one is sus, either duplicates player in session or doesn't display them at all
+            // works
             CreateMap<Session, SessionDto>()
             .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.CreatorID))
-            .ForMember(dest => dest.Players, opt => opt.MapFrom(src => src.Players.ConvertAll<Guid>(p => p.ID)))
-            .ForMember(dest => dest.Galaxy, opt => opt.MapFrom(src => src.Galaxy.ID))
+            .ForMember(dest => dest.GalaxyID, opt => opt.MapFrom(src => src.Galaxy.ID))
+            .ForMember(dest => dest.PlayerIDs, opt => opt.MapFrom(src => src.Players.Select(p => p.ID).ToList<Guid>()))
             .ReverseMap();
 
         }

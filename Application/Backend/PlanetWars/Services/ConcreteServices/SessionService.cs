@@ -101,7 +101,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<SessionDto> CreateSession(CreateGameDto dto /*string name, string password, int maxPlayers, Galaxy galaxy, Player player*/)
+        public async Task<SessionDto> CreateSession(CreateGameDto dto)
         {
             //FIXME: clean this up and make it work normally.
             using (_unitOfWork)
