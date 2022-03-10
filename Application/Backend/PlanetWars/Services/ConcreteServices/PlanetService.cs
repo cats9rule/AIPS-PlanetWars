@@ -33,29 +33,31 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         //FIXME: all created planets have a resource if "has resource" is true
-        public async Task<IEnumerable<PlanetDto>> CreatePlanets(int planetCount, bool hasResource)
+        public async Task<IEnumerable<PlanetDto>> CreatePlanets(CreateGameDto createGameDto, Guid GalaxyID)
         {
-            using(_unitOfWork)
+            GameMap gameMap = await _unitOfWork.GameMaps.GetById(createGameDto.GameMapID);
+            List<PlanetDto> planetList = new List<PlanetDto>();
+
+            int planetsWithResource = (int)(gameMap.PlanetCount * gameMap.ResourcePlanetRatio);
+
+            for (int i = 0; i < gameMap.PlanetCount; i++)
             {
-                List<PlanetDto> planetList = new List<PlanetDto>();
-                for(int i = 0; i < planetCount; i++)
-                {
-                    Planet planet = CreatePlanet(hasResource);
-                    planetList.Add(_mapper.Map<Planet, PlanetDto>(planet));
-                    var retval = await _unitOfWork.Planets.Add(planet);
-                }
-                await _unitOfWork.CompleteAsync();
-                return planetList;
+                Planet planet = i < planetsWithResource ? CreatePlanet(true) : CreatePlanet(false);
+                planetList.Add(_mapper.Map<Planet, PlanetDto>(planet));
+                var retval = await _unitOfWork.Planets.Add(planet);
             }
+            await _unitOfWork.CompleteAsync();
+            return planetList;
         }
 
         private Planet CreatePlanet(bool hasResource)
         {
-            Planet planet = new Planet();
-            planet.ID = new Guid();
-            planet.ArmyCount = 0;
-            planet.Owner = null;
-            planet.NeighbourPlanets = new List<PlanetPlanet>();
+            Planet planet = new Planet()
+            {
+                ArmyCount = 0,
+                Owner = null,
+                NeighbourPlanets = new List<PlanetPlanet>()
+            };
             bool madeResource = !hasResource;
             while (!madeResource)
             {

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 using PlanetWars.DTOs;
 using PlanetWars.Services;
+using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace PlanetWars.Controllers
 {
@@ -15,6 +17,7 @@ namespace PlanetWars.Controllers
     {
         private readonly ISessionService sessionService;
         private readonly IGalaxyService galaxyService;
+        private readonly IPlanetService planetService;
         private readonly IPlayerService playerService;
         public SessionController(ISessionService sService, IGalaxyService gService, IPlayerService pService)
         {
@@ -27,16 +30,13 @@ namespace PlanetWars.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateGame([FromBody] CreateGameDto createGameDto)
         {
-            var result = await sessionService.CreateSession(createGameDto);
-            //var player = await playerService.CreatePlayer(createGameDto.UserId, 0, session.ID);
-            //var galaxy = await galaxyService.CreateGalaxy(createGameDto.PlanetCount, createGameDto.ResourcePlanetRatio, session.ID);
+            var sessionDto = await sessionService.CreateSession(createGameDto);
 
-            //var result = await sessionService.InitializeSession(session, galaxy.ID, player.ID);
-            // var player = await playerService.CreatePlayer(createGameDto.UserId, 0);
-            // var galaxy = await galaxyService.CreateGalaxy(createGameDto.PlanetCount, createGameDto.ResourcePlanetRatio);
-            // var result = await sessionService.CreateSession(createGameDto.Name, createGameDto.Password, createGameDto.MaxPlayers, galaxy, player);
+            List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.GalaxyID));
 
-            return Ok(result);
+            //TODO: add planets to galaxy           
+
+            return sessionDto == null ? new StatusCodeResult(StatusCodes.Status500InternalServerError) : Ok(sessionDto);
         }
 
         [Route("AddPlayer")]
