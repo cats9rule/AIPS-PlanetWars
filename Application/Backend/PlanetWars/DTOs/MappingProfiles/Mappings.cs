@@ -32,6 +32,9 @@ namespace PlanetWars.DTOs.MappingProfiles
             .ForMember(dest => dest.PlayerIDs, opt => opt.MapFrom(src => src.Players.Select(p => p.ID).ToList<Guid>()))
             .ReverseMap();
 
+            CreateMap<GameMap, GameMapDto>()
+            .ForMember(dest => dest.PlanetGraph, opt => opt.ConvertUsing(new MapConverter(), src => src.PlanetGraph));
+
         }
         
     }

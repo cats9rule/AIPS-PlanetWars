@@ -121,7 +121,7 @@ namespace PlanetWars.Services.ConcreteServices
                     IsActive = true,
                     Session = session,
                     SessionID = session.ID,
-                    TotalArmies = 5,
+                    TotalArmies = 5, //TODO: define this parameter
                     Planets = new List<Planet>()
                 };
                 var result = await _unitOfWork.Players.Add(player);

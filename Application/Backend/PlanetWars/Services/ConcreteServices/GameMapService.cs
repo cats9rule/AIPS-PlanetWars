@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
+using PlanetWars.DTOs;
 
 namespace PlanetWars.Services.ConcreteServices
 {
@@ -9,27 +11,29 @@ namespace PlanetWars.Services.ConcreteServices
     {
 
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public GameMapService(IUnitOfWork uow)
+        public GameMapService(IUnitOfWork uow, IMapper mapper)
         {
             _unitOfWork = uow;
+            _mapper = mapper;
         }
 
         public async Task<bool> AddGameMap(GameMap gm)
         {
             using (_unitOfWork)
             {
-                var result =  await _unitOfWork.GameMaps.Add(gm);
+                var result = await _unitOfWork.GameMaps.Add(gm);
                 await _unitOfWork.CompleteAsync();
                 return result;
             }
         }
 
-        public async Task<IEnumerable<GameMap>> GetAll()
+        public async Task<IEnumerable<GameMapDto>> GetAll()
         {
             using (_unitOfWork)
             {
-                return await _unitOfWork.GameMaps.GetAll();
+                return _mapper.Map<List<GameMapDto>>(await _unitOfWork.GameMaps.GetAll());
             }
         }
 
@@ -42,5 +46,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             return await _unitOfWork.GameMaps.GetByResourcePlanetRatio(ratio);
         }
+
+
     }
 }
