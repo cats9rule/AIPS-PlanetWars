@@ -187,6 +187,9 @@ namespace PlanetWars.Services.ConcreteServices
                 session.PlayerCount++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
+
+                //TODO: add player in SessionGroup in GameHub
+                
                 return player;
             }
         }
