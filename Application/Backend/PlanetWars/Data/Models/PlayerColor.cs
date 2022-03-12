@@ -15,5 +15,6 @@ namespace PlanetWars.Data.Models
 
         public int TurnIndex { get; set; }
 
+        public string ColorName { get; set; }
     }
 }
