@@ -23,7 +23,9 @@ namespace PlanetWars.DTOs.MappingProfiles
 
             CreateMap<Player, PlayerDto>().ReverseMap();
 
-            CreateMap<PlayerColor, PlayerColorDto>().ReverseMap();
+            CreateMap<PlayerColor, PlayerColorDto>()
+            .ForMember(dest => dest.HexColor, opt => opt.MapFrom(src=> src.ColorHexValue))
+            .ReverseMap();
 
             // works
             CreateMap<Session, SessionDto>()
