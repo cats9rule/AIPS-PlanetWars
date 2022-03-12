@@ -33,7 +33,7 @@ namespace PlanetWars.DTOs.MappingProfiles
             .ReverseMap();
 
             CreateMap<GameMap, GameMapDto>()
-            .ForMember(dest => dest.PlanetGraph, opt => opt.ConvertUsing(new MapConverter(), src => src.PlanetGraph));
+            .ForMember(dest => dest.PlanetGraph, opt => opt.ConvertUsing(new PlanetGraphConverter(), src => src.PlanetGraph));
 
         }
         

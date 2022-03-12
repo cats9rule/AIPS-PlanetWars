@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace PlanetWars.DTOs.MappingProfiles
 {
-    public class MapConverter : IValueConverter<string, Dictionary<int, List<int>>>
+    public class PlanetGraphConverter : IValueConverter<string, Dictionary<int, List<int>>>
     {
         public Dictionary<int, List<int>> Convert(string sourceMember, ResolutionContext context)
         {
