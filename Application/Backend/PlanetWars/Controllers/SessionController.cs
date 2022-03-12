@@ -1,9 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
 using Microsoft.AspNetCore.Mvc;
-
 using PlanetWars.DTOs;
 using PlanetWars.Services;
 using System.Net;
@@ -19,11 +17,12 @@ namespace PlanetWars.Controllers
         private readonly IGalaxyService galaxyService;
         private readonly IPlanetService planetService;
         private readonly IPlayerService playerService;
-        public SessionController(ISessionService sService, IGalaxyService gService, IPlayerService pService)
+        public SessionController(ISessionService sService, IGalaxyService gService, IPlayerService pService, IPlanetService planetService)
         {
             this.sessionService = sService;
             this.galaxyService = gService;
             this.playerService = pService;
+            this.planetService = planetService;
         }
 
         [Route("CreateGame")]
