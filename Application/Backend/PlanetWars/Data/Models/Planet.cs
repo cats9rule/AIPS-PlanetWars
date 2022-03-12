@@ -20,11 +20,11 @@ namespace PlanetWars.Data.Models
         public Guid GalaxyID { get; set; }
 
         public Galaxy Galaxy { get; set; }
-
+        public int IndexInGalaxy { get; set; }
         public int ArmyCount { get; set; }
 
         [JsonIgnore]
-        
+
         public virtual List<PlanetPlanet> NeighbourPlanets { get; set; }
 
         public int MovementBoost { get; set; }
