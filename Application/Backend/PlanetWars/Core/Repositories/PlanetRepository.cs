@@ -72,6 +72,13 @@ namespace PlanetWars.Core.Repositories
         public Task<bool> UpdateOwnership(Guid id, Guid ownerID)
         {
             throw new NotImplementedException();
+            //TODO: implement this
+        }
+
+        public async Task<bool> DeleteAll()
+        {
+            dbSet.RemoveRange(await dbSet.ToArrayAsync());
+            return true;
         }
     }
 }

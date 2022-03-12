@@ -12,7 +12,7 @@ namespace PlanetWars.Data.Models
         [Key]
         public Guid ID { get; set; }
 
-        public Guid OwnerID { get; set; }
+        public Guid? OwnerID { get; set; }
 
         [JsonIgnore]
         public Player Owner { get; set; }
@@ -24,7 +24,6 @@ namespace PlanetWars.Data.Models
         public int ArmyCount { get; set; }
 
         [JsonIgnore]
-
         public virtual List<PlanetPlanet> NeighbourPlanets { get; set; }
 
         public int MovementBoost { get; set; }

@@ -35,5 +35,13 @@ namespace PlanetWars.Controllers
             var result = await planetService.GetRelatedPlanets(planetId);
             return Ok(result);
         }
+
+        [Route("DeleteAll")]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAll()
+        {
+            var result = await planetService.DeleteAll();
+            return Ok(result);
+        }
     }
 }

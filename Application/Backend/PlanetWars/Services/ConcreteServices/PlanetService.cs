@@ -35,47 +35,53 @@ namespace PlanetWars.Services.ConcreteServices
         //FIXME: all created planets have a resource if "has resource" is true
         public async Task<IEnumerable<PlanetDto>> CreatePlanets(CreateGameDto createGameDto, Guid GalaxyID)
         {
-            GameMap gameMap = await _unitOfWork.GameMaps.GetById(createGameDto.GameMapID);
-            List<Planet> planetList = new List<Planet>();
-
-            int planetsWithResource = (int)(gameMap.PlanetCount * gameMap.ResourcePlanetRatio);
-
-            for (int i = 0; i < gameMap.PlanetCount; i++)
+            using (_unitOfWork)
             {
-                Planet planet = i < planetsWithResource ? CreatePlanet(true, i) : CreatePlanet(false, i);
-                planetList.Add(/*_mapper.Map<Planet, PlanetDto>(planet)*/ planet);
-                var retval = await _unitOfWork.Planets.Add(planet);
-            }
-            await _unitOfWork.CompleteAsync();
+                GameMap gameMap = await _unitOfWork.GameMaps.GetById(createGameDto.GameMapID);
+                List<Planet> planetList = new List<Planet>();
 
-            GameMapDto gameMapDto = _mapper.Map<GameMapDto>(gameMap);
-            foreach(var entry in gameMapDto.PlanetGraph)
-            {
-                foreach(int index in entry.Value)
+                int planetsWithResource = (int)(gameMap.PlanetCount * gameMap.ResourcePlanetRatio);
+
+                for (int i = 0; i < gameMap.PlanetCount; i++)
                 {
-                    PlanetPlanet pp = new PlanetPlanet()
-                    {
-                        PlanetFrom = planetList[entry.Key],
-                        PlanetFromID = planetList[entry.Key].ID,
-                        PlanetTo = planetList[index],
-                        PlanetToID = planetList[index].ID
-                    };
-                    await _unitOfWork.PlanetPlanets.Add(pp);
+                    Planet planet = i < planetsWithResource ? await CreatePlanet(true, i, GalaxyID) : await CreatePlanet(false, i, GalaxyID);
+                    planetList.Add(/*_mapper.Map<Planet, PlanetDto>(planet)*/ planet);
+                    var retval = await _unitOfWork.Planets.Add(planet);
                 }
-            }
-            await _unitOfWork.CompleteAsync();
+                //await _unitOfWork.CompleteAsync();
 
-            return _mapper.Map<List<PlanetDto>>(planetList);
+                GameMapDto gameMapDto = _mapper.Map<GameMapDto>(gameMap);
+                foreach (var entry in gameMapDto.PlanetGraph)
+                {
+                    foreach (int index in entry.Value)
+                    {
+                        PlanetPlanet pp = new PlanetPlanet()
+                        {
+                            PlanetFrom = planetList[entry.Key],
+                            PlanetFromID = planetList[entry.Key].ID,
+                            PlanetTo = planetList[index],
+                            PlanetToID = planetList[index].ID
+                        };
+                        await _unitOfWork.PlanetPlanets.Add(pp);
+                    }
+                }
+                await _unitOfWork.CompleteAsync();
+
+                return _mapper.Map<List<PlanetDto>>(planetList);
+            }
         }
 
-        private Planet CreatePlanet(bool hasResource, int planetIndex)
+        private async Task<Planet> CreatePlanet(bool hasResource, int planetIndex, Guid GalaxyID)
         {
             Planet planet = new Planet()
             {
                 ArmyCount = 0,
                 Owner = null,
+                OwnerID = null,
                 NeighbourPlanets = new List<PlanetPlanet>(),
-                IndexInGalaxy = planetIndex
+                IndexInGalaxy = planetIndex,
+                GalaxyID = GalaxyID,
+                Galaxy = await _unitOfWork.Galaxies.GetById(GalaxyID)
             };
             bool madeResource = !hasResource;
             while (!madeResource)
@@ -187,6 +193,17 @@ namespace PlanetWars.Services.ConcreteServices
                     }
                 }
                 return relatedPlanets;
+            }
+        }
+
+        public async Task<bool> DeleteAll()
+        {
+            using(_unitOfWork)
+            {
+                await _unitOfWork.PlanetPlanets.DeleteAll();
+                await _unitOfWork.Planets.DeleteAll();
+                await _unitOfWork.CompleteAsync();
+                return true;
             }
         }
     }

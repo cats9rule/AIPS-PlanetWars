@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlanetWars.Data.Context;
 
 namespace PlanetWars.Migrations
 {
     [DbContext(typeof(PlanetWarsDbContext))]
-    partial class PlanetWarsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220312143544_Planet update nullable Owner")]
+    partial class PlanetupdatenullableOwner
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,9 +139,6 @@ namespace PlanetWars.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSessionOwner")
-                        .HasColumnType("bit");
-
                     b.Property<Guid?>("PlayerColorID")
                         .HasColumnType("uniqueidentifier");
 
@@ -187,6 +186,9 @@ namespace PlanetWars.Migrations
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CurrentTurnIndex")

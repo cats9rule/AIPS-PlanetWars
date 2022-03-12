@@ -30,6 +30,8 @@ namespace PlanetWars.Data.Models
 
         public bool IsActive { get; set; }
 
+        public bool IsSessionOwner { get; set; }
+
         public int TotalArmies { get; set; }
     }
 }

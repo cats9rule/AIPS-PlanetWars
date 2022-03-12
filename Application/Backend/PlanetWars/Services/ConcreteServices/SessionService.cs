@@ -120,6 +120,7 @@ namespace PlanetWars.Services.ConcreteServices
                     PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(0),
                     IsActive = true,
                     Session = session,
+                    IsSessionOwner = true,
                     SessionID = session.ID,
                     TotalArmies = 5, //TODO: define this parameter
                     Planets = new List<Planet>()
@@ -127,8 +128,8 @@ namespace PlanetWars.Services.ConcreteServices
                 var result = await _unitOfWork.Players.Add(player);
                 if (result)
                 {
-                    session.CreatorID = player.ID;
-                    session.Players.Add(player);
+                    //session.CreatorID = player.ID;
+                    //session.Players.Add(player);
                     session.PlayerCount++;
                 }
                 else return null;

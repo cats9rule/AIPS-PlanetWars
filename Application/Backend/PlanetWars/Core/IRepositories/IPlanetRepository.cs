@@ -10,5 +10,6 @@ namespace PlanetWars.Core.IRepositories
         public Task<IEnumerable<Planet>> GetForPlayer(Guid playerID);
         public Task<bool> UpdateArmies(Guid id, int armyDifference);
         public Task<bool> UpdateOwnership(Guid id, Guid ownerID);
+        public Task<bool> DeleteAll();   
     }
 }

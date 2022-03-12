@@ -28,9 +28,10 @@ namespace PlanetWars.Core.Repositories
             return await dbSet.Include(p => p.Galaxy).Include(p => p.Players).ToListAsync();
         }
 
-        public override Task<Session> GetById(Guid sessionId)
+        public async override Task<Session> GetById(Guid sessionId)
         {
-            return base.GetById(sessionId);
+            //return base.GetById(sessionId);
+            return await dbSet.Include(p => p.Galaxy).Include(p => p.Players).Where(session => session.ID == sessionId).FirstOrDefaultAsync();
         }
 
         public override async Task<bool> Delete(Guid id)

@@ -17,8 +17,6 @@ namespace PlanetWars.Data.Models
         public bool IsPrivate { get; set; }
 
         public string Password { get; set; }
-        
-        public Guid CreatorID { get; set; }
 
         public int CurrentTurnIndex { get; set; }
 
@@ -27,7 +25,6 @@ namespace PlanetWars.Data.Models
 
         public int MaxPlayers { get; set; }
 
-        [JsonIgnore]
         public Galaxy Galaxy { get; set; }
 
         public int PlayerCount { get; set; }

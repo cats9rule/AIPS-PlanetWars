@@ -8,5 +8,6 @@ namespace PlanetWars.Core.IRepositories
     public interface IPlanetPlanetRepository : IGenericRepository<PlanetPlanet>
     {
         public Task<IEnumerable<PlanetPlanet>> GetAllRelationsForPlanet(Guid planetID);
+        public Task<bool> DeleteAll();
     }
 }

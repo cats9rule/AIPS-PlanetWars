@@ -20,5 +20,7 @@ namespace PlanetWars.Services
         public Task<bool> UpdateOwnership(Guid id, Guid ownerID);
 
         public Task<bool> Delete(Guid id);
+        public Task<bool> DeleteAll();
+
     }
 }

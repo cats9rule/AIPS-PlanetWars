@@ -19,7 +19,9 @@ namespace PlanetWars.DTOs.MappingProfiles
 
             CreateMap<Galaxy, GalaxyDto>().ReverseMap();
 
-            CreateMap<Planet, PlanetDto>().ReverseMap();
+            CreateMap<Planet, PlanetDto>()
+            .ForMember(dest => dest.NeighbourPlanets, opt => opt.MapFrom(src => src.NeighbourPlanets.Select(relation => relation.PlanetToID).ToList()))
+            .ReverseMap();
 
             CreateMap<Player, PlayerDto>().ReverseMap();
 
@@ -29,7 +31,6 @@ namespace PlanetWars.DTOs.MappingProfiles
 
             // works
             CreateMap<Session, SessionDto>()
-            .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.CreatorID))
             .ForMember(dest => dest.GalaxyID, opt => opt.MapFrom(src => src.Galaxy.ID))
             .ForMember(dest => dest.PlayerIDs, opt => opt.MapFrom(src => src.Players.Select(p => p.ID).ToList<Guid>()))
             .ReverseMap();

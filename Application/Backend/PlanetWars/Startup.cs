@@ -36,6 +36,7 @@ namespace PlanetWars
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<IGalaxyService, GalaxyService>();
+            services.AddTransient<IPlanetService, PlanetService>();
             services.AddTransient<IPlayerColorService, PlayerColorService>();
             services.AddTransient<ISessionService, SessionService>();
             services.AddTransient<IUserService, UserService>();

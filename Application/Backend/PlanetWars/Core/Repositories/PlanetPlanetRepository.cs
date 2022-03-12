@@ -56,5 +56,11 @@ namespace PlanetWars.Core.Repositories
             return await dbSet.Where(pp => pp.PlanetFromID == planetID).ToListAsync();
 
         }
+
+        public async Task<bool> DeleteAll()
+        {
+            dbSet.RemoveRange(await dbSet.ToArrayAsync());
+            return true;
+        }
     }
 }
