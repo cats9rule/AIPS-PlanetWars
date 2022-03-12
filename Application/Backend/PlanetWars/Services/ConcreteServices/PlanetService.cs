@@ -36,27 +36,46 @@ namespace PlanetWars.Services.ConcreteServices
         public async Task<IEnumerable<PlanetDto>> CreatePlanets(CreateGameDto createGameDto, Guid GalaxyID)
         {
             GameMap gameMap = await _unitOfWork.GameMaps.GetById(createGameDto.GameMapID);
-            List<PlanetDto> planetList = new List<PlanetDto>();
+            List<Planet> planetList = new List<Planet>();
 
             int planetsWithResource = (int)(gameMap.PlanetCount * gameMap.ResourcePlanetRatio);
 
             for (int i = 0; i < gameMap.PlanetCount; i++)
             {
-                Planet planet = i < planetsWithResource ? CreatePlanet(true) : CreatePlanet(false);
-                planetList.Add(_mapper.Map<Planet, PlanetDto>(planet));
+                Planet planet = i < planetsWithResource ? CreatePlanet(true, i) : CreatePlanet(false, i);
+                planetList.Add(/*_mapper.Map<Planet, PlanetDto>(planet)*/ planet);
                 var retval = await _unitOfWork.Planets.Add(planet);
             }
             await _unitOfWork.CompleteAsync();
-            return planetList;
+
+            GameMapDto gameMapDto = _mapper.Map<GameMapDto>(gameMap);
+            foreach(var entry in gameMapDto.PlanetGraph)
+            {
+                foreach(int index in entry.Value)
+                {
+                    PlanetPlanet pp = new PlanetPlanet()
+                    {
+                        PlanetFrom = planetList[entry.Key],
+                        PlanetFromID = planetList[entry.Key].ID,
+                        PlanetTo = planetList[index],
+                        PlanetToID = planetList[index].ID
+                    };
+                    await _unitOfWork.PlanetPlanets.Add(pp);
+                }
+            }
+            await _unitOfWork.CompleteAsync();
+
+            return _mapper.Map<List<PlanetDto>>(planetList);
         }
 
-        private Planet CreatePlanet(bool hasResource)
+        private Planet CreatePlanet(bool hasResource, int planetIndex)
         {
             Planet planet = new Planet()
             {
                 ArmyCount = 0,
                 Owner = null,
-                NeighbourPlanets = new List<PlanetPlanet>()
+                NeighbourPlanets = new List<PlanetPlanet>(),
+                IndexInGalaxy = planetIndex
             };
             bool madeResource = !hasResource;
             while (!madeResource)
