@@ -22,11 +22,13 @@ namespace PlanetWars.Data.Models
         [JsonIgnore]
         public User User { get; set; }
 
+        public Guid PlayerColorID { get; set; }
+        
         [JsonIgnore]
         public PlayerColor PlayerColor { get; set; }
 
         [JsonIgnore]
-        public virtual List<Planet> Planets { get; set; }
+        public virtual ICollection<Planet> Planets { get; set; }
 
         public bool IsActive { get; set; }
 

@@ -20,7 +20,6 @@ namespace PlanetWars.DTOs.MappingProfiles
             CreateMap<Galaxy, GalaxyDto>().ReverseMap();
 
             CreateMap<Planet, PlanetDto>()
-            .ForMember(dest => dest.NeighbourPlanets, opt => opt.MapFrom(src => src.NeighbourPlanets.Select(relation => relation.PlanetToID).ToList()))
             .ReverseMap();
 
             CreateMap<Player, PlayerDto>().ReverseMap();

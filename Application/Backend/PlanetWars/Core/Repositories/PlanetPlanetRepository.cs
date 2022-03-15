@@ -44,7 +44,7 @@ namespace PlanetWars.Core.Repositories
 
         public override async Task<bool> Update(PlanetPlanet entity)
         {
-            var exist = await dbSet.FindAsync(entity.PlanetFromID, entity.PlanetToID);
+            var exist = await dbSet.FindAsync(entity.ID);
             if(exist == null)
                 return await Add(entity);
             dbSet.Update(entity);
@@ -60,6 +60,19 @@ namespace PlanetWars.Core.Repositories
         public async Task<bool> DeleteAll()
         {
             dbSet.RemoveRange(await dbSet.ToArrayAsync());
+            return true;
+        }
+
+        public async Task<IEnumerable<PlanetPlanet>> DeleteAllRelationsForPlanet(Guid planetID)
+        {
+            List<PlanetPlanet> relationsToDelete = await dbSet.Where(relation => relation.PlanetFromID == planetID).ToListAsync();
+            dbSet.RemoveRange(relationsToDelete);
+            return relationsToDelete;
+        }
+
+        public async Task<bool> AddAll(List<PlanetPlanet> relations)
+        {
+            await dbSet.AddRangeAsync(relations);
             return true;
         }
     }

@@ -23,37 +23,36 @@ namespace PlanetWars.Data.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PlanetPlanet>()
-                .HasKey(pp => new { pp.PlanetFromID, pp.PlanetToID });
+                .HasKey(pp => pp.ID);
 
-            modelBuilder.Entity<PlanetPlanet>()
-                .HasOne(pp => pp.PlanetFrom)
-                .WithMany() 
-                .HasForeignKey(pp => pp.PlanetFromID)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            // modelBuilder.Entity<PlanetPlanet>()
+            //     .HasOne(pp => pp.PlanetFrom)
+            //     .WithMany().IsRequired(false) 
+            //     .OnDelete(DeleteBehavior.ClientSetNull);
 
-            modelBuilder.Entity<PlanetPlanet>()
-                .HasOne(pp => pp.PlanetTo)
-                .WithMany(p => p.NeighbourPlanets)
-                .HasForeignKey(pp => pp.PlanetToID)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+            // modelBuilder.Entity<PlanetPlanet>()
+            //     .HasOne(pp => pp.PlanetTo)
+            //     .WithMany(p => p.NeighbourPlanets).IsRequired(false)
+            //     .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Player>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.Players)
-                .HasForeignKey(p => p.UserID)
-                .OnDelete(DeleteBehavior.ClientSetNull);
-            
+                .HasForeignKey(p => p.UserID).IsRequired(true)
+                .OnDelete(DeleteBehavior.ClientCascade);
+
+            //TODO: get rid of this
             modelBuilder.Entity<Player>()
                 .HasOne(p => p.Session)
                 .WithMany(s => s.Players)
-                .HasForeignKey(p => p.SessionID).IsRequired(false)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey(p => p.SessionID).IsRequired(true)
+                .OnDelete(DeleteBehavior.ClientCascade);
             
             modelBuilder.Entity<Galaxy>()
                 .HasOne(g => g.Session)
                 .WithOne(s => s.Galaxy)
-                .HasForeignKey<Galaxy>(g => g.SessionID).IsRequired(false)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey<Galaxy>(g => g.SessionID).IsRequired(true)
+                .OnDelete(DeleteBehavior.ClientCascade);
 
             modelBuilder.Entity<Planet>()
                 .HasOne(p => p.Owner)
@@ -64,8 +63,8 @@ namespace PlanetWars.Data.Context
             modelBuilder.Entity<Planet>()
                 .HasOne(p => p.Galaxy)
                 .WithMany(g => g.Planets)
-                .HasForeignKey(p => p.GalaxyID).IsRequired(false)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .HasForeignKey(p => p.GalaxyID).IsRequired(true)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

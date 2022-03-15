@@ -21,7 +21,7 @@ namespace PlanetWars.Data.Models
         public int CurrentTurnIndex { get; set; }
 
         [JsonIgnore]
-        public virtual List<Player> Players { get; set; }
+        public virtual ICollection<Player> Players { get; set; }
 
         public int MaxPlayers { get; set; }
 

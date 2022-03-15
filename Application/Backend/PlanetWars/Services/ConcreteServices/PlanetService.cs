@@ -57,9 +57,7 @@ namespace PlanetWars.Services.ConcreteServices
                     {
                         PlanetPlanet pp = new PlanetPlanet()
                         {
-                            PlanetFrom = planetList[entry.Key],
                             PlanetFromID = planetList[entry.Key].ID,
-                            PlanetTo = planetList[index],
                             PlanetToID = planetList[index].ID
                         };
                         await _unitOfWork.PlanetPlanets.Add(pp);
@@ -78,7 +76,6 @@ namespace PlanetWars.Services.ConcreteServices
                 ArmyCount = 0,
                 Owner = null,
                 OwnerID = null,
-                NeighbourPlanets = new List<PlanetPlanet>(),
                 IndexInGalaxy = planetIndex,
                 GalaxyID = GalaxyID,
                 Galaxy = await _unitOfWork.Galaxies.GetById(GalaxyID)
@@ -146,7 +143,7 @@ namespace PlanetWars.Services.ConcreteServices
                 var player = await _unitOfWork.Players.GetById(playerId);
                 if (player != null)
                 {
-                    return _mapper.Map<List<Planet>, List<PlanetDto>>(player.Planets);
+                    return _mapper.Map<ICollection<Planet>, List<PlanetDto>>(player.Planets);
                 }
                 return new List<PlanetDto>();
             }
@@ -186,7 +183,8 @@ namespace PlanetWars.Services.ConcreteServices
                 List<PlanetDto> relatedPlanets = new List<PlanetDto>();
                 foreach (PlanetPlanet relation in relations)
                 {
-                    var planet = await _unitOfWork.Planets.GetById(relation.PlanetToID);
+                    if(relation.PlanetFromID == null) return null;
+                    var planet = await _unitOfWork.Planets.GetById(relation.PlanetFromID);
                     if (planet != null)
                     {
                         relatedPlanets.Add(_mapper.Map<Planet, PlanetDto>(planet));

@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace PlanetWars.Data.Models
 {
@@ -16,5 +17,8 @@ namespace PlanetWars.Data.Models
         public int TurnIndex { get; set; }
 
         public string ColorName { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<Player> PlayersWithColor { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace PlanetWars.Data.Models
         public Guid ID { get; set; }
 
         [JsonIgnore]
-        public virtual List<Planet> Planets { get; set; }
+        public virtual ICollection<Planet> Planets { get; set; }
 
         public int PlanetCount { get; set; }
 

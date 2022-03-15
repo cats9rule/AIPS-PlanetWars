@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PlanetWars.Data.Context;
 
 namespace PlanetWars.Migrations
 {
     [DbContext(typeof(PlanetWarsDbContext))]
-    partial class PlanetWarsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220315165441_Old Entity relationships")]
+    partial class OldEntityrelationships
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,17 +117,18 @@ namespace PlanetWars.Migrations
 
             modelBuilder.Entity("PlanetWars.Data.Models.PlanetPlanet", b =>
                 {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("PlanetFromID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("PlanetToID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("ID");
+                    b.Property<Guid>("ID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PlanetFromID", "PlanetToID");
+
+                    b.HasIndex("PlanetToID");
 
                     b.ToTable("PlanetPlanet");
                 });
@@ -244,9 +247,7 @@ namespace PlanetWars.Migrations
                 {
                     b.HasOne("PlanetWars.Data.Models.Session", "Session")
                         .WithOne("Galaxy")
-                        .HasForeignKey("PlanetWars.Data.Models.Galaxy", "SessionID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .HasForeignKey("PlanetWars.Data.Models.Galaxy", "SessionID");
 
                     b.Navigation("Session");
                 });
@@ -255,9 +256,7 @@ namespace PlanetWars.Migrations
                 {
                     b.HasOne("PlanetWars.Data.Models.Galaxy", "Galaxy")
                         .WithMany("Planets")
-                        .HasForeignKey("GalaxyID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .HasForeignKey("GalaxyID");
 
                     b.HasOne("PlanetWars.Data.Models.Player", "Owner")
                         .WithMany("Planets")
@@ -266,6 +265,23 @@ namespace PlanetWars.Migrations
                     b.Navigation("Galaxy");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("PlanetWars.Data.Models.PlanetPlanet", b =>
+                {
+                    b.HasOne("PlanetWars.Data.Models.Planet", "PlanetFrom")
+                        .WithMany()
+                        .HasForeignKey("PlanetFromID")
+                        .IsRequired();
+
+                    b.HasOne("PlanetWars.Data.Models.Planet", "PlanetTo")
+                        .WithMany("NeighbourPlanets")
+                        .HasForeignKey("PlanetToID")
+                        .IsRequired();
+
+                    b.Navigation("PlanetFrom");
+
+                    b.Navigation("PlanetTo");
                 });
 
             modelBuilder.Entity("PlanetWars.Data.Models.Player", b =>
@@ -278,14 +294,11 @@ namespace PlanetWars.Migrations
 
                     b.HasOne("PlanetWars.Data.Models.Session", "Session")
                         .WithMany("Players")
-                        .HasForeignKey("SessionID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                        .HasForeignKey("SessionID");
 
                     b.HasOne("PlanetWars.Data.Models.User", "User")
                         .WithMany("Players")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("PlayerColor");
@@ -298,6 +311,11 @@ namespace PlanetWars.Migrations
             modelBuilder.Entity("PlanetWars.Data.Models.Galaxy", b =>
                 {
                     b.Navigation("Planets");
+                });
+
+            modelBuilder.Entity("PlanetWars.Data.Models.Planet", b =>
+                {
+                    b.Navigation("NeighbourPlanets");
                 });
 
             modelBuilder.Entity("PlanetWars.Data.Models.Player", b =>

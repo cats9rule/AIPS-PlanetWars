@@ -9,5 +9,9 @@ namespace PlanetWars.Core.IRepositories
     {
         public Task<IEnumerable<PlanetPlanet>> GetAllRelationsForPlanet(Guid planetID);
         public Task<bool> DeleteAll();
+
+        public Task<IEnumerable<PlanetPlanet>> DeleteAllRelationsForPlanet(Guid planetID);
+
+        public Task<bool> AddAll(List<PlanetPlanet> relations);
     }
 }

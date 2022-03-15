@@ -80,5 +80,10 @@ namespace PlanetWars.Core.Repositories
             dbSet.RemoveRange(await dbSet.ToArrayAsync());
             return true;
         }
+
+        public async Task<IEnumerable<Planet>> GetForSession(Guid sessionID)
+        {
+            return await dbSet.Where(p => p.Galaxy.SessionID == sessionID).ToListAsync();
+        }
     }
 }

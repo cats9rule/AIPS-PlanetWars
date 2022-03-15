@@ -18,6 +18,6 @@ namespace PlanetWars.Data.Models
         public string Salt { get; set; }
 
         [JsonIgnore]
-        public virtual List<Player> Players { get; set; }
+        public virtual ICollection<Player> Players { get; set; }
     }
 }

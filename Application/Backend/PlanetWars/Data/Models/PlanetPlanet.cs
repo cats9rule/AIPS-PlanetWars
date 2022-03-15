@@ -5,14 +5,10 @@ namespace PlanetWars.Data.Models
 {
     public class PlanetPlanet
     {
-        public Guid PlanetFromID { get; set; }
+        public Guid ID { get; set; }
 
-        [JsonIgnore]
-        public Planet PlanetFrom { get; set; }
+        public Guid PlanetFromID { get; set; }
         
         public Guid PlanetToID { get; set; }
-
-        [JsonIgnore]
-        public Planet PlanetTo { get; set; }
     }
 }

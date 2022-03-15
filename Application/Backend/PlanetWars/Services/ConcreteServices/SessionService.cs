@@ -95,8 +95,29 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                var retval = await _unitOfWork.Sessions.Delete(id);
+                List<Planet> sessionPlanets = new List<Planet>(await _unitOfWork.Planets.GetForSession(id));
+                List<PlanetPlanet> relations = new List<PlanetPlanet>();
+                foreach (Planet planet in sessionPlanets)
+                {
+                    relations.AddRange(await _unitOfWork.PlanetPlanets.DeleteAllRelationsForPlanet(planet.ID));
+                    //Console.WriteLine("deleted relation");
+                }
                 await _unitOfWork.CompleteAsync();
+                var retval = await _unitOfWork.Sessions.Delete(id);
+                if (retval)
+                {
+                    try
+                    {
+                    await _unitOfWork.CompleteAsync();
+                    }
+                    catch(Exception e)
+                    {
+                        await _unitOfWork.PlanetPlanets.AddAll(relations);
+                        Console.Error.Write(e.Message);
+                        Console.Error.Write(e.StackTrace);
+                    }
+
+                }
                 return retval;
             }
         }
@@ -125,14 +146,17 @@ namespace PlanetWars.Services.ConcreteServices
                     TotalArmies = 5, //TODO: define this parameter
                     Planets = new List<Planet>()
                 };
-                var result = await _unitOfWork.Players.Add(player);
-                if (result)
-                {
-                    //session.CreatorID = player.ID;
-                    //session.Players.Add(player);
-                    session.PlayerCount++;
-                }
-                else return null;
+                // var result = await _unitOfWork.Players.Add(player);
+                // if (result)
+                // {
+                //     //session.CreatorID = player.ID;
+                //     //session.Players.Add(player);
+                //     session.PlayerCount++;
+                // }
+                // else return null;
+
+                session.Players.Add(player);
+                session.PlayerCount++;
 
                 Galaxy galaxy = new Galaxy()
                 {
@@ -142,7 +166,7 @@ namespace PlanetWars.Services.ConcreteServices
                     SessionID = session.ID,
                     Planets = new List<Planet>()
                 };
-                result = await _unitOfWork.Galaxies.Add(galaxy);
+                var result = await _unitOfWork.Galaxies.Add(galaxy);
                 if (result)
                 {
                     session.Galaxy = galaxy;
@@ -154,23 +178,6 @@ namespace PlanetWars.Services.ConcreteServices
 
                 return _mapper.Map<Session, SessionDto>(session);
             }
-        }
-
-        private async Task<Session> InitSession(string name, string password, int maxPlayers)
-        {
-            Session session = new Session()
-            {
-                Name = name,
-                MaxPlayers = maxPlayers,
-                Password = password,
-                IsPrivate = password == "" ? false : true,
-                Players = new List<Player>(),
-                PlayerCount = 0,
-                CurrentTurnIndex = 0
-            };
-            var result = await _unitOfWork.Sessions.Add(session);
-            await _unitOfWork.CompleteAsync();
-            return result ? session : null;
         }
 
         public async Task<PlayerDto> AddPlayer(Guid sessionID, PlayerDto player)
@@ -189,9 +196,25 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.CompleteAsync();
 
                 //TODO: add player in SessionGroup in GameHub
-                
+
                 return player;
             }
+        }
+        private async Task<Session> InitSession(string name, string password, int maxPlayers)
+        {
+            Session session = new Session()
+            {
+                Name = name,
+                MaxPlayers = maxPlayers,
+                Password = password,
+                IsPrivate = password == "" ? false : true,
+                Players = new List<Player>(),
+                PlayerCount = 0,
+                CurrentTurnIndex = 0
+            };
+            var result = await _unitOfWork.Sessions.Add(session);
+            await _unitOfWork.CompleteAsync();
+            return result ? session : null;
         }
     }
 }

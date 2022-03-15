@@ -36,10 +36,14 @@ namespace PlanetWars.Core.Repositories
 
         public override async Task<bool> Delete(Guid id)
         {
-            var exist = await dbSet.Where(x => x.ID == id).FirstOrDefaultAsync();
-            if (exist != null)
+            var session = await dbSet.Where(x => x.ID == id)
+                .Include(session => session.Players)
+                .Include(session => session.Galaxy)
+                    .ThenInclude(galaxy => galaxy.Planets)
+                .FirstOrDefaultAsync();
+            if (session != null)
             {
-                dbSet.Remove(exist);
+                dbSet.Remove(session);
                 return true;
             }
             return false;
@@ -55,7 +59,7 @@ namespace PlanetWars.Core.Repositories
         }
 
 
-        
+
         public async Task<IEnumerable<Session>> GetByName(string name)
         {
             var exist = await dbSet.Where(x => x.Name == name).ToListAsync();
