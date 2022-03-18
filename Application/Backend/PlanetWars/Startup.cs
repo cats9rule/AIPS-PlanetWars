@@ -94,6 +94,7 @@ namespace PlanetWars
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<MessageHub>("/chat");
+                endpoints.MapHub<GameHub>("/gameupdates");
             });
         }
     }
