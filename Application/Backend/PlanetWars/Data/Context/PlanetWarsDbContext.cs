@@ -25,23 +25,12 @@ namespace PlanetWars.Data.Context
             modelBuilder.Entity<PlanetPlanet>()
                 .HasKey(pp => pp.ID);
 
-            // modelBuilder.Entity<PlanetPlanet>()
-            //     .HasOne(pp => pp.PlanetFrom)
-            //     .WithMany().IsRequired(false) 
-            //     .OnDelete(DeleteBehavior.ClientSetNull);
-
-            // modelBuilder.Entity<PlanetPlanet>()
-            //     .HasOne(pp => pp.PlanetTo)
-            //     .WithMany(p => p.NeighbourPlanets).IsRequired(false)
-            //     .OnDelete(DeleteBehavior.ClientSetNull);
-
             modelBuilder.Entity<Player>()
                 .HasOne(p => p.User)
                 .WithMany(u => u.Players)
                 .HasForeignKey(p => p.UserID).IsRequired(true)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
-            //TODO: get rid of this
             modelBuilder.Entity<Player>()
                 .HasOne(p => p.Session)
                 .WithMany(s => s.Players)

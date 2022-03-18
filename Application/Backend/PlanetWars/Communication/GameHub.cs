@@ -11,6 +11,7 @@ namespace PlanetWars.Communication
         //begin
         public async Task<MessageResponseDto> JoinGame(JoinGameChatDto param)
         {
+            //FIXME: ne treba poruka da se salje
             await Groups.AddToGroupAsync(Context.ConnectionId, param.SessionID.ToString());
             MessageDto message = new MessageDto
             {
@@ -32,6 +33,7 @@ namespace PlanetWars.Communication
         }
         //end
 
+        //FIXME: ova metoda se poziva iz SessionService, prima GameUpdateDto, rename to NotifyOnGameChanges
         public async Task<MessageResponseDto> PlayTurn(PlayedMoveDto param)
         {
             await Clients.Group(Context.ConnectionId).SendAsync(param.ClientHandler, param);

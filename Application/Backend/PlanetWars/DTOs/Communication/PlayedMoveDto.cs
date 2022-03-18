@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace PlanetWars.DTOs
 {
+    //FIXME: firstAction, secondAction, ne nasledjuje CommunicationParam
     public class PlayedMoveDto : CommunicationParam
     {
         public ActionDto attackAction { get; set; }

@@ -23,7 +23,7 @@ namespace PlanetWars.Services.ConcreteServices
             _mapper = mapper;
         }
 
-        //TODO: check 
+        // works
         public async Task<GalaxyDto> CreateGalaxy(int planetCount, float resourcePlanetRatio, Guid sessionId)
         {
             using(_unitOfWork)

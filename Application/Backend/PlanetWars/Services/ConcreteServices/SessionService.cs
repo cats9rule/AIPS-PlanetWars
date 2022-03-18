@@ -93,6 +93,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<bool> Delete(Guid id)
         {
+            //TODO: remove players from GameHub and MessageHub
             using (_unitOfWork)
             {
                 List<Planet> sessionPlanets = new List<Planet>(await _unitOfWork.Planets.GetForSession(id));
@@ -100,7 +101,6 @@ namespace PlanetWars.Services.ConcreteServices
                 foreach (Planet planet in sessionPlanets)
                 {
                     relations.AddRange(await _unitOfWork.PlanetPlanets.DeleteAllRelationsForPlanet(planet.ID));
-                    //Console.WriteLine("deleted relation");
                 }
                 await _unitOfWork.CompleteAsync();
                 var retval = await _unitOfWork.Sessions.Delete(id);
@@ -108,7 +108,7 @@ namespace PlanetWars.Services.ConcreteServices
                 {
                     try
                     {
-                    await _unitOfWork.CompleteAsync();
+                        await _unitOfWork.CompleteAsync();
                     }
                     catch(Exception e)
                     {
@@ -124,7 +124,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<SessionDto> CreateSession(CreateGameDto dto)
         {
-            //FIXME: clean this up and make it work normally.
+            //TODO: call JoinGame for new player in GameHub
             using (_unitOfWork)
             {
                 GameMap gameMap = await _unitOfWork.GameMaps.GetById(dto.GameMapID);
@@ -146,14 +146,6 @@ namespace PlanetWars.Services.ConcreteServices
                     TotalArmies = 5, //TODO: define this parameter
                     Planets = new List<Planet>()
                 };
-                // var result = await _unitOfWork.Players.Add(player);
-                // if (result)
-                // {
-                //     //session.CreatorID = player.ID;
-                //     //session.Players.Add(player);
-                //     session.PlayerCount++;
-                // }
-                // else return null;
 
                 session.Players.Add(player);
                 session.PlayerCount++;
@@ -195,7 +187,7 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                //TODO: add player in SessionGroup in GameHub
+                //TODO: invoke JoinGame for new player in GameHub
 
                 return player;
             }
@@ -216,5 +208,7 @@ namespace PlanetWars.Services.ConcreteServices
             await _unitOfWork.CompleteAsync();
             return result ? session : null;
         }
+
+        //TODO: implement LeaveGame()
     }
 }

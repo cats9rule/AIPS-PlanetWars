@@ -32,7 +32,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //FIXME: all created planets have a resource if "has resource" is true
         public async Task<IEnumerable<PlanetDto>> CreatePlanets(CreateGameDto createGameDto, Guid GalaxyID)
         {
             using (_unitOfWork)
