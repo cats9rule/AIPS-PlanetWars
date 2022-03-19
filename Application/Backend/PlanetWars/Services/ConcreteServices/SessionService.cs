@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
+using PlanetWars.Communication;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
@@ -14,8 +16,9 @@ namespace PlanetWars.Services.ConcreteServices
     public class SessionService : ISessionService
     {
         #region Attributes
-        public readonly IUnitOfWork _unitOfWork;
-        public readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly HubService _hubService;
         #endregion
 
         public SessionService(IUnitOfWork uow, IMapper mapper)
@@ -168,6 +171,7 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
+                
                 return _mapper.Map<Session, SessionDto>(session);
             }
         }

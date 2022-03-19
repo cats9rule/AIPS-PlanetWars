@@ -7,6 +7,7 @@ namespace PlanetWars.DTOs
     //FIXME: firstAction, secondAction, ne nasledjuje CommunicationParam
     public class PlayedMoveDto : CommunicationParam
     {
+        public Guid SessionID { get; set; }
         public ActionDto attackAction { get; set; }
         public ActionDto movementAction { get; set; }
         public Dictionary<Guid, int> ReinforcementsPlacement { get; set; }

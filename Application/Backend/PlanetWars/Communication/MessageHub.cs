@@ -6,7 +6,7 @@ namespace PlanetWars.Communication
 {
     public class MessageHub : Hub
     {
-        public async Task<MessageResponseDto> JoinGameChat(JoinGameChatDto param)
+        public async Task<MessageResponseDto> JoinGameGroup(JoinSessionGroupDto param)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, param.SessionID);
             MessageDto mess = new MessageDto {
@@ -20,7 +20,7 @@ namespace PlanetWars.Communication
             return new MessageResponseDto { IsSuccessful = true, Message = "Joined Game." };
         }
 
-        public async Task<MessageResponseDto> LeaveGameChat(LeaveGameChatDto param)
+        public async Task<MessageResponseDto> LeaveGameGroup(LeaveSessionGroupDto param)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, param.SessionID.ToString());
             await Clients.Group(param.SessionID.ToString()).SendAsync(param.ClientHandler, param.UsernameWithTag + " has left the game!");

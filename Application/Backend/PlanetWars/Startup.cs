@@ -93,8 +93,7 @@ namespace PlanetWars
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<MessageHub>("/chat");
-                endpoints.MapHub<GameHub>("/gameupdates");
+                endpoints.MapHub<MessageHub>("/GameUpdates");
             });
         }
     }
