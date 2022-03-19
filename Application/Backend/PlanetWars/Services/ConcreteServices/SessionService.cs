@@ -28,7 +28,10 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<bool> Add(Session session)
         {
-            return await _unitOfWork.Sessions.Add(session);
+            using (_unitOfWork)
+            {
+                return await _unitOfWork.Sessions.Add(session);
+            }
         }
 
         public async Task<IEnumerable<SessionDto>> GetAllSessions()
@@ -215,11 +218,12 @@ namespace PlanetWars.Services.ConcreteServices
             {
                 Session session = await _unitOfWork.Sessions.GetById(dto.SessionID);
                 Player player = session.Players.Where(player => player.ID == dto.PlayerID).FirstOrDefault();
-                User user = await _unitOfWork.Users.GetById(player.UserID);
-                var success = await _unitOfWork.Players.Delete(dto.PlayerID);
-                if (success)
+                if (player != null)
                 {
-                    try
+                    User user = await _unitOfWork.Users.GetById(player.UserID);
+                    var success = await _unitOfWork.Players.Delete(dto.PlayerID);
+                    session.PlayerCount--;
+                    if (success)
                     {
                         await _unitOfWork.CompleteAsync();
                         var notification = new LeaveGameNotificationDto()
@@ -230,12 +234,7 @@ namespace PlanetWars.Services.ConcreteServices
                         };
                         await _hubService.NotifyPlayerLeft(notification);
                         return true;
-                    }
-                    catch (DbUpdateException e)
-                    {
-                        Console.Error.WriteLine(e.Message);
-                        Console.Error.WriteLine(e.StackTrace);
-                        return false;
+
                     }
                 }
                 return false;

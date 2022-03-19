@@ -6,6 +6,7 @@ using PlanetWars.DTOs;
 using PlanetWars.Services;
 using System.Net;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace PlanetWars.Controllers
 {
@@ -30,7 +31,7 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> CreateGame([FromBody] CreateGameDto createGameDto)
         {
             var sessionDto = await sessionService.CreateSession(createGameDto);
-            List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.GalaxyID));         
+            List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.GalaxyID));
             return sessionDto == null ? new StatusCodeResult(StatusCodes.Status500InternalServerError) : Ok(sessionDto);
         }
 
@@ -73,7 +74,7 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> UpdateSession([FromBody] UpdateSessionDto sessionDto)
         {
             var result = await sessionService.Update(sessionDto);
-            if(result == false)
+            if (result == false)
                 return BadRequest();
             return Ok(result);
         }
@@ -83,7 +84,7 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> DeleteSession(Guid sessionId)
         {
             var result = await sessionService.Delete(sessionId);
-            if(result == false)
+            if (result == false)
                 return BadRequest();
             return Ok(result);
         }
@@ -92,9 +93,29 @@ namespace PlanetWars.Controllers
         [HttpPut]
         public async Task<ActionResult> LeaveGame(LeaveGameDto dto)
         {
-            if (dto.PlayerID.ToString() == "" || dto.SessionID.ToString() == "") return BadRequest(false);
-            var result = await sessionService.LeaveGame(dto);
-            return result ? Ok(result) : new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            if (dto.PlayerID.ToString() == "" || dto.SessionID.ToString() == "")
+            {
+                return BadRequest(false);
+            }
+            try
+            {
+                var result = await sessionService.LeaveGame(dto);
+                if (result)
+                {
+                    var session = await sessionService.GetById(dto.SessionID);
+                    if (session.PlayerCount == 0)
+                    {
+                        result = await sessionService.Delete(dto.SessionID);
+                    }
+                }
+                return result ? Ok(result) : new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+            catch (DbUpdateException e)
+            {
+                Console.Error.WriteLine(e.Message);
+                Console.Error.WriteLine(e.StackTrace);
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
         }
 
         //TODO: implement methods for exchanging game state
