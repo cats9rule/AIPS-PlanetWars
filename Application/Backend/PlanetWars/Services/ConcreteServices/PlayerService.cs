@@ -19,11 +19,6 @@ namespace PlanetWars.Services.ConcreteServices
             _mapper = mapper;
         }
 
-        // public async Task<bool> Add(PlayerDto playerDto)
-        // {
-        //     return await _unitOfWork.Players.Add(DtoToModel(playerDto));
-        // }
-
         public async Task<bool> Delete(Guid id)
         {
             using(_unitOfWork)

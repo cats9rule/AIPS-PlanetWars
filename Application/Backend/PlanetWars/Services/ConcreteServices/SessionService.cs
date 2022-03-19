@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using PlanetWars.Communication;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
@@ -10,9 +12,6 @@ using PlanetWars.DTOs;
 
 namespace PlanetWars.Services.ConcreteServices
 {
-
-    //TODO: fix all methods to return SessionDtos instead of Session
-
     public class SessionService : ISessionService
     {
         #region Attributes
@@ -96,7 +95,6 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<bool> Delete(Guid id)
         {
-            //TODO: remove players from GameHub and MessageHub
             using (_unitOfWork)
             {
                 List<Planet> sessionPlanets = new List<Planet>(await _unitOfWork.Planets.GetForSession(id));
@@ -113,7 +111,7 @@ namespace PlanetWars.Services.ConcreteServices
                     {
                         await _unitOfWork.CompleteAsync();
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         await _unitOfWork.PlanetPlanets.AddAll(relations);
                         Console.Error.Write(e.Message);
@@ -127,7 +125,6 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<SessionDto> CreateSession(CreateGameDto dto)
         {
-            //TODO: call JoinGame for new player in GameHub
             using (_unitOfWork)
             {
                 GameMap gameMap = await _unitOfWork.GameMaps.GetById(dto.GameMapID);
@@ -171,7 +168,7 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                
+
                 return _mapper.Map<Session, SessionDto>(session);
             }
         }
@@ -190,8 +187,6 @@ namespace PlanetWars.Services.ConcreteServices
                 session.PlayerCount++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
-
-                //TODO: invoke JoinGame for new player in GameHub
 
                 return player;
             }
@@ -213,6 +208,38 @@ namespace PlanetWars.Services.ConcreteServices
             return result ? session : null;
         }
 
-        //TODO: implement LeaveGame()
+        //TODO: test this
+        public async Task<bool> LeaveGame(LeaveGameDto dto)
+        {
+            using (_unitOfWork)
+            {
+                Session session = await _unitOfWork.Sessions.GetById(dto.SessionID);
+                Player player = session.Players.Where(player => player.ID == dto.PlayerID).FirstOrDefault();
+                User user = await _unitOfWork.Users.GetById(player.UserID);
+                var success = await _unitOfWork.Players.Delete(dto.PlayerID);
+                if (success)
+                {
+                    try
+                    {
+                        await _unitOfWork.CompleteAsync();
+                        var notification = new LeaveGameNotificationDto()
+                        {
+                            Message = $"{user.Username}#{user.Tag} has left the game.",
+                            PlayerID = player.ID,
+                            SessionID = dto.SessionID
+                        };
+                        await _hubService.NotifyPlayerLeft(notification);
+                        return true;
+                    }
+                    catch (DbUpdateException e)
+                    {
+                        Console.Error.WriteLine(e.Message);
+                        Console.Error.WriteLine(e.StackTrace);
+                        return false;
+                    }
+                }
+                return false;
+            }
+        }
     }
 }

@@ -30,9 +30,7 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> CreateGame([FromBody] CreateGameDto createGameDto)
         {
             var sessionDto = await sessionService.CreateSession(createGameDto);
-
             List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.GalaxyID));         
-
             return sessionDto == null ? new StatusCodeResult(StatusCodes.Status500InternalServerError) : Ok(sessionDto);
         }
 
@@ -43,9 +41,6 @@ namespace PlanetWars.Controllers
             var session = await sessionService.GetById(playerDto.SessionID);
             var player = await playerService.CreatePlayer(playerDto.UserID, session.PlayerCount, session.ID);
             var result = await sessionService.AddPlayer(session.ID, player);
-
-            
-
             return Ok(result);
         }
 
@@ -93,9 +88,18 @@ namespace PlanetWars.Controllers
             return Ok(result);
         }
 
+        [Route("LeaveGame")]
+        [HttpPut]
+        public async Task<ActionResult> LeaveGame(LeaveGameDto dto)
+        {
+            if (dto.PlayerID.ToString() == "" || dto.SessionID.ToString() == "") return BadRequest(false);
+            var result = await sessionService.LeaveGame(dto);
+            return result ? Ok(result) : new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
+
         //TODO: implement methods for exchanging game state
 
-        
+
 
     }
 }
