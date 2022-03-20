@@ -10,8 +10,6 @@ namespace PlanetWars.Services
         public Task<UserDto> CreateUser(UserCreateDto user);
         public Task<UserDto> GetUser(Guid id);
         public Task<IEnumerable<UserDto>> GetAllUsers();
-        public Task<UserDto> GetUserByUsername(string username);
-        public Task<UserDto> GetUserByTag(string tag);
         public Task<UserDto> GetUserByUsernameAndTag(string username, string tag);
 
         public Task<bool> DeleteUser(Guid id);

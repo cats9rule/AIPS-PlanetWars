@@ -26,7 +26,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            
+
             random = new Random();
         }
 
@@ -57,13 +57,7 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                IEnumerable<User> users = await _unitOfWork.Users.GetAll();
-                List<UserDto> userDtos = new List<UserDto>();
-                foreach (User user in users)
-                {
-                    userDtos.Add(_mapper.Map<User, UserDto>(user));
-                }
-                return userDtos;
+                return _mapper.Map<List<UserDto>>(await _unitOfWork.Users.GetAll());
             }
         }
 
@@ -72,32 +66,6 @@ namespace PlanetWars.Services.ConcreteServices
             using (_unitOfWork)
             {
                 User user = await _unitOfWork.Users.GetById(id);
-                if (user != null)
-                {
-                    return _mapper.Map<User, UserDto>(user);
-                }
-                return null;
-            }
-        }
-
-        public async Task<UserDto> GetUserByTag(string tag)
-        {
-            using (_unitOfWork)
-            {
-                User user = await _unitOfWork.Users.GetByTag(tag);
-                if (user != null)
-                {
-                    return _mapper.Map<User, UserDto>(user);
-                }
-                return null;
-            }
-        }
-
-        public async Task<UserDto> GetUserByUsername(string username)
-        {
-            using (_unitOfWork)
-            {
-                User user = await _unitOfWork.Users.GetByUsername(username);
                 if (user != null)
                 {
                     return _mapper.Map<User, UserDto>(user);
@@ -128,7 +96,7 @@ namespace PlanetWars.Services.ConcreteServices
                 return retval;
             }
         }
-        
+
         public async Task<bool> DeleteUser(Guid id)
         {
             using (_unitOfWork)
