@@ -12,9 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { LoginService } from './login/login.service';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   imports: [
+    HttpClientModule,
+    BrowserModule,
     StoreModule.forFeature(Features.User, userReducer),
     MatCardModule,
     MatFormFieldModule,
@@ -25,6 +30,6 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   exports: [],
   declarations: [LoginFormComponent],
-  providers: [],
+  providers: [LoginService],
 })
 export class UserModule {}

@@ -1,12 +1,10 @@
-import { Maybe } from "src/app/core/utils/maybe.type";
-import { User } from "../interfaces/user";
+import { Maybe } from 'src/app/core/utils/maybe.type';
+import { User } from '../interfaces/user';
 
 export interface UserState {
-    loggedUser: Maybe<User>
-    isLogged: boolean
+  loggedUser: Maybe<User>;
 }
 
 export const initialState: UserState = {
-    loggedUser: null,
-    isLogged: false
-}
+  loggedUser: null,
+};
