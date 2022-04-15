@@ -6,6 +6,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { UserModule } from './feature/user/user.module';
+import { SnackbarMessageComponent } from './core/components/snackbar-message/snackbar-message.component';
+import { CoreModule } from './core/core.module';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,7 +17,12 @@ import { UserModule } from './feature/user/user.module';
     BrowserAnimationsModule,
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot([]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      autoPause: false,
+    }),
     UserModule,
+    CoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

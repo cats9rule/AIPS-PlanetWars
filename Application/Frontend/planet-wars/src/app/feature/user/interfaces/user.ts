@@ -1,5 +1,6 @@
 export interface User {
-    username: string;
-    tag: string;
-    displayedName: string;
+  id: string;
+  username: string;
+  tag: string;
+  displayedName: string;
 }

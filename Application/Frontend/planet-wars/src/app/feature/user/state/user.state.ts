@@ -1,4 +1,4 @@
-import { Maybe } from 'src/app/core/utils/maybe.type';
+import { Maybe } from 'src/app/core/utils/types/maybe.type';
 import { User } from '../interfaces/user';
 
 export interface UserState {

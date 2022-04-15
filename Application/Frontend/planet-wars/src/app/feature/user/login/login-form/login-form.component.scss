@@ -1,5 +1,5 @@
-@use "../../../core/styles/global";
-@use "../../../core/styles/colors";
+@use "../../../../core/styles/global.scss";
+@use "../../../../core/styles/colors.scss";
 
 .container .mat-form-field + .mat-form-field {
     margin-left: 8px;

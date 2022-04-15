@@ -1,0 +1,32 @@
+@use "../../styles/colors.scss" as colors;
+
+.card {
+    max-width: 400px;
+}
+
+
+@function resolve-color($type) {
+    @if $type == 'error' {
+        @return colors.$color-error;
+    }
+    @if $type == 'warning' {
+        @return colors.$color-warning;
+    }
+    @if $type == 'success' {
+        @return colors.$color-success;
+    }
+    @if $type == 'info' {
+        @return colors.$color-info;
+    }
+}
+
+@mixin header-color($type) {
+    .header-#{$type} {
+        background-color: resolve-color($type)
+    }
+  }
+        
+@include header-color("error");
+@include header-color("warning");
+@include header-color("success");
+@include header-color("info");
