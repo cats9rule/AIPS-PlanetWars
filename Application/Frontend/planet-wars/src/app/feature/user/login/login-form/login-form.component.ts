@@ -19,6 +19,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   public password: string = '';
   hide = true;
   private user$: Observable<Maybe<User>>;
+  private user: Maybe<User>;
   private userSubscription: Subscription = new Subscription();
 
   constructor(private store: Store<UserState>) {
@@ -29,7 +30,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.userSubscription = this.user$.subscribe({
       next: (user) => {
         if (isDefined(user)) {
-          alert(`Welcome, ${user?.displayedName}!`);
+          this.user = user;
         }
       },
       error: (err) => {

@@ -2,21 +2,26 @@
 
 .card {
     max-width: 400px;
+    margin: 0;
+}
+
+.snackbar {
+    padding: 0;
 }
 
 
 @function resolve-color($type) {
     @if $type == 'error' {
-        @return colors.$color-error;
+        @return colors.$error;
     }
     @if $type == 'warning' {
-        @return colors.$color-warning;
+        @return colors.$warning;
     }
     @if $type == 'success' {
-        @return colors.$color-success;
+        @return colors.$success;
     }
     @if $type == 'info' {
-        @return colors.$color-info;
+        @return colors.$info;
     }
 }
 

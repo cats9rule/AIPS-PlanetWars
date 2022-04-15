@@ -1,10 +1,16 @@
 @use "../../../../core/styles/global.scss";
-@use "../../../../core/styles/colors.scss";
+@use "../../../../core/styles/colors.scss" as colors;
+
+.container {
+  display: flex;
+  flex-direction: column;
+
+}
 
 .container .mat-form-field + .mat-form-field {
-    margin-left: 8px;
-    flex-direction: row;
-  }
+    flex-direction: column;
+    align-items: center;
+}
   
   .right-align {
     text-align: right;
@@ -18,3 +24,10 @@
   input.right-align {
     -moz-appearance: textfield;
   }
+
+.mat-card {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -1,12 +1,13 @@
-<mat-card class="card">
-  <mat-card-header
-    [ngClass]="{
-      'header-error': data.type == 'Error',
-      'header-warning': data.type == 'Warning',
-      'header-success': data.type == 'Success',
-      'header-info': data.type == 'Info'
-    }"
-  >
+<mat-card
+  class="card"
+  [ngClass]="{
+    'header-error': data.type == 'Error',
+    'header-warning': data.type == 'Warning',
+    'header-success': data.type == 'Success',
+    'header-info': data.type == 'Info'
+  }"
+>
+  <mat-card-header>
     <mat-card-title>{{ data.type }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>

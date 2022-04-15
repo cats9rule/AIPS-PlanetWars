@@ -41,7 +41,7 @@ export class LoginService {
     } else {
       this.log({
         type: 'Error',
-        contents: `Backend returned code ${error.status}, body was:  ${error.error}}`,
+        contents: `Backend returned code ${error.status}:  ${error.message}}`,
       });
     }
     return throwError(

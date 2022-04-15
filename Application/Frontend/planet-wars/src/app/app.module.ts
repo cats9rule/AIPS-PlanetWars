@@ -9,6 +9,7 @@ import { UserModule } from './feature/user/user.module';
 import { SnackbarMessageComponent } from './core/components/snackbar-message/snackbar-message.component';
 import { CoreModule } from './core/core.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,6 +22,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       maxAge: 25, // Retains last 25 states
       autoPause: false,
     }),
+    MatSidenavModule,
     UserModule,
     CoreModule,
   ],

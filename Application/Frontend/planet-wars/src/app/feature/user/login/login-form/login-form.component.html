@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card class="form">
   <div class="container">
     <mat-form-field appearance="fill" floatLabel="always">
       <mat-label>Enter your username</mat-label>
@@ -7,12 +7,18 @@
         type="text"
         class="right-align"
         placeholder="username#0000"
-        [(ngModel)]="username" name="username"
+        [(ngModel)]="username"
+        name="username"
       />
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Enter your password</mat-label>
-      <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" name="password"/>
+      <input
+        matInput
+        [type]="hide ? 'password' : 'text'"
+        [(ngModel)]="password"
+        name="password"
+      />
       <button
         mat-icon-button
         matSuffix
