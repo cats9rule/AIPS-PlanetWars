@@ -1,0 +1,14 @@
+<div *ngIf="isLogging; else elseBlock">
+    <app-login-form></app-login-form>
+    <p>
+        Don't have a profile? You can 
+        <button mat-button color="accent" class="no-padding" (click)="toggleView()">Sign Up</button>
+    </p>
+</div>
+<ng-template #elseBlock>
+    <p>Signup coming soon...</p>
+    <p>
+        Already have a profile? You can 
+        <button mat-button color="accent" class="no-padding" (click)="toggleView()">Log In</button>
+    </p>
+</ng-template>

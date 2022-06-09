@@ -12,12 +12,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { LoginService } from './login/login.service';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { CoreModule } from 'src/app/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './state/user.effects';
+import { AuthorizeComponent } from './authorize/authorize.component';
 
 @NgModule({
   imports: [
@@ -33,8 +33,8 @@ import { UserEffects } from './state/user.effects';
     FormsModule,
     MatButtonModule,
   ],
-  exports: [LoginFormComponent],
-  declarations: [LoginFormComponent],
+  exports: [LoginFormComponent, AuthorizeComponent],
+  declarations: [LoginFormComponent, AuthorizeComponent],
   providers: [],
 })
 export class UserModule {}
