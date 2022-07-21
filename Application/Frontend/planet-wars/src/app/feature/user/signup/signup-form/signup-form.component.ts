@@ -1,21 +1,24 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
-import { UserLoginDto } from '../../dtos/userLoginDto';
+import { UserCreateDto } from '../../dtos/userCreateDto';
 import { User } from '../../interfaces/user';
-import { userLogin } from '../../state/user.actions';
+import { userSignup } from '../../state/user.actions';
 import { getUserLogged } from '../../state/user.selectors';
 import { UserState } from '../../state/user.state';
 
+
 @Component({
-  selector: 'app-login-form',
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.scss'],
+  selector: 'app-signup-form',
+  templateUrl: './signup-form.component.html',
+  styleUrls: ['./signup-form.component.scss']
 })
-export class LoginFormComponent implements OnInit, OnDestroy {
+export class SignupFormComponent implements OnInit {
+
   public username: string = '';
   public password: string = '';
+  public displayedName: string = '';
   hide = true;
   private user$: Observable<Maybe<User>>;
   private user: Maybe<User>;
@@ -23,6 +26,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   constructor(private store: Store<UserState>) {
     this.user$ = this.store.select<Maybe<User>>(getUserLogged);
+
   }
 
   ngOnInit(): void {
@@ -42,16 +46,16 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
   }
 
-  public logIn() {
-    if (this.username != '' && this.password != '') {
-      const usernameAndTagArray = this.username.split('#');
-      const userLoginDto: UserLoginDto = {
+  public signUp() {
+    if (this.username != '' && this.password != '' && this.displayedName != '') {
+      const userCreateDto: UserCreateDto = {
         password: this.password,
-        tag: usernameAndTagArray[1],
-        username: usernameAndTagArray[0],
+        username: this.username,
+        displayedName: this.displayedName
       };
-      this.store.dispatch(userLogin({ userLoginDto }));
-      console.log(userLoginDto);
-    } else alert('Input username and password please!');
+      this.store.dispatch(userSignup({ userCreateDto }));
+      console.log(userCreateDto);
+    } else alert('Input username, password and nickname please!');
   }
+
 }

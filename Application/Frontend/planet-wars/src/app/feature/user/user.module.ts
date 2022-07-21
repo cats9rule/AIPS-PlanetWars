@@ -18,6 +18,7 @@ import { CoreModule } from 'src/app/core/core.module';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './state/user.effects';
 import { AuthorizeComponent } from './authorize/authorize.component';
+import { SignupFormComponent } from './signup/signup-form/signup-form.component';
 
 @NgModule({
   imports: [
@@ -33,8 +34,8 @@ import { AuthorizeComponent } from './authorize/authorize.component';
     FormsModule,
     MatButtonModule,
   ],
-  exports: [LoginFormComponent, AuthorizeComponent],
-  declarations: [LoginFormComponent, AuthorizeComponent],
+  exports: [LoginFormComponent, AuthorizeComponent, SignupFormComponent],
+  declarations: [LoginFormComponent, AuthorizeComponent, SignupFormComponent],
   providers: [],
 })
 export class UserModule {}

@@ -1,0 +1,46 @@
+<mat-card class="form">
+    <h1>Sign Up</h1>
+    <div class="container">
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Enter your username</mat-label>
+        <input
+          matInput
+          type="text"
+          class="left-align"
+          placeholder="username"
+          [(ngModel)]="username"
+          name="username"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Enter your password</mat-label>
+        <input
+          matInput
+          [type]="hide ? 'password' : 'text'"
+          [(ngModel)]="password"
+          name="password"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hide = !hide"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="fill" floatLabel="always">
+        <mat-label>Enter your nickname</mat-label>
+        <input
+          matInput
+          type="text"
+          class="left-align"
+          placeholder="John Smith"
+          [(ngModel)]="displayedName"
+          name="username"
+        />
+      </mat-form-field>
+    </div>
+    <button mat-flat-button color="primary" (click)="signUp()">Sign Up</button>
+  </mat-card>

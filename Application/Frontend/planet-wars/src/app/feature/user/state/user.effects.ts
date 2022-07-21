@@ -6,14 +6,16 @@ import { SnackbarService } from 'src/app/core/utils/services/snackbar.service';
 import { UserDto } from '../dtos/userDto';
 import { User } from '../interfaces/user';
 import { LoginService } from '../login/login.service';
-import { userLogin, userLoginSuccess } from './user.actions';
+import { SignupService } from '../signup/signup.service';
+import { userLogin, userLoginSuccess, userSignup, userSignupSuccess } from './user.actions';
 
 @Injectable()
 export class UserEffects {
   constructor(
     private actions$: Actions,
     private loginService: LoginService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private signupService: SignupService
   ) {}
 
   loginUser$ = createEffect(() =>
@@ -39,6 +41,42 @@ export class UserEffects {
   loginUserSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(userLoginSuccess),
+      mergeMap((action) => {
+        this.snackbarService.showMessage(
+          {
+            type: 'Success',
+            contents: `User ${action.user.username}#${action.user.tag} has successfully logged in.`,
+          },
+          'short'
+        );
+        return [noAction()];
+      })
+    )
+  );
+
+  signupUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(userSignup),
+      switchMap((action) => {
+        console.log('login user effect');
+        return this.signupService.signupUser(action.userCreateDto).pipe(
+          mergeMap((userDto: UserDto) => {
+            const user: User = {
+              displayedName: userDto.displayedName,
+              id: userDto.id,
+              tag: userDto.tag,
+              username: userDto.username,
+            };
+            return [userSignupSuccess({ user })];
+          })
+        );
+      })
+    )
+  );
+
+  signupUserSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(userSignupSuccess),
       mergeMap((action) => {
         this.snackbarService.showMessage(
           {

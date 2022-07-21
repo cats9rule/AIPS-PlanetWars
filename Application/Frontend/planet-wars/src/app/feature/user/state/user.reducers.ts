@@ -8,6 +8,10 @@ export const userReducer = createReducer(
     ...state,
     loggedUser: user,
   })),
+  on(userActions.userSignupSuccess, (state: UserState, { user }) => ({
+    ...state,
+    loggedUser: user,
+  })),
   on(userActions.userLogout, (state: UserState) => ({
     ...state,
     loggedUser: null,
