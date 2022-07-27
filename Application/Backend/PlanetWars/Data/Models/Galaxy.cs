@@ -24,5 +24,7 @@ namespace PlanetWars.Data.Models
         [JsonIgnore]
         public Session Session { get; set; }
 
+        public Guid GameMapID { get; set; }
+
     }
 }

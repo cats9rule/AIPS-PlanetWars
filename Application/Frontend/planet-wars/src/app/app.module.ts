@@ -10,6 +10,7 @@ import { SnackbarMessageComponent } from './core/components/snackbar-message/sna
 import { CoreModule } from './core/core.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { GameModule } from './feature/game/game.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,6 +26,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatSidenavModule,
     UserModule,
     CoreModule,
+    GameModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

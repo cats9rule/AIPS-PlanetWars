@@ -159,7 +159,8 @@ namespace PlanetWars.Services.ConcreteServices
                     PlanetCount = gameMap.PlanetCount,
                     Session = session,
                     SessionID = session.ID,
-                    Planets = new List<Planet>()
+                    Planets = new List<Planet>(),
+                    GameMapID = dto.GameMapID
                 };
                 var result = await _unitOfWork.Galaxies.Add(galaxy);
                 if (result)
