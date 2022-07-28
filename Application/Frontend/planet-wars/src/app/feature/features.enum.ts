@@ -1,5 +1,6 @@
 export enum Features {
-    User = 'user',
-    Game = 'game',
-    Lobby = 'lobby'
+  User = 'user',
+  Game = 'game',
+  Lobby = 'lobby',
+  Session = 'session',
 }

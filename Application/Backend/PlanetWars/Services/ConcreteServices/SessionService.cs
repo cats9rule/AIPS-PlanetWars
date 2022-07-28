@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
@@ -50,11 +52,11 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<IEnumerable<SessionDto>> GetByName(string name)
+        public async Task<SessionDto> GetByNameAndCode(string name, string code)
         {
             using (_unitOfWork)
             {
-                return _mapper.Map<List<Session>, List<SessionDto>>(new List<Session>(await _unitOfWork.Sessions.GetByName(name)));
+                return _mapper.Map<Session, SessionDto>(await _unitOfWork.Sessions.GetByNameAndCode(name, code));
             }
         }
 
@@ -131,10 +133,10 @@ namespace PlanetWars.Services.ConcreteServices
             using (_unitOfWork)
             {
                 GameMap gameMap = await _unitOfWork.GameMaps.GetById(dto.GameMapID);
-                User user = await _unitOfWork.Users.GetById(dto.UserId);
+                User user = await _unitOfWork.Users.GetById(dto.CreatorID);
                 if (gameMap == null || user == null) return null;
 
-                Session session = await InitSession(dto.Name, dto.Password, gameMap.MaxPlayers);
+                Session session = await InitSession(dto.Name, gameMap.MaxPlayers);
                 if (session == null) return null;
 
                 Player player = new Player()
@@ -195,14 +197,14 @@ namespace PlanetWars.Services.ConcreteServices
                 return player;
             }
         }
-        private async Task<Session> InitSession(string name, string password, int maxPlayers)
+        private async Task<Session> InitSession(string name, int maxPlayers)
         {
+
             Session session = new Session()
             {
                 Name = name,
                 MaxPlayers = maxPlayers,
-                Password = password,
-                IsPrivate = password == "" ? false : true,
+                GameCode = GetRandomString(6),
                 Players = new List<Player>(),
                 PlayerCount = 0,
                 CurrentTurnIndex = 0
@@ -241,5 +243,24 @@ namespace PlanetWars.Services.ConcreteServices
                 return false;
             }
         }
+
+        private string GetRandomString(int size) {
+            char[] chars =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
+            byte[] data = new byte[4*size];
+            using (var crypto = RandomNumberGenerator.Create())
+            {
+                crypto.GetBytes(data);
+            }
+            StringBuilder result = new StringBuilder(size);
+            for (int i = 0; i < size; i++)
+            {
+                var rnd = BitConverter.ToUInt32(data, i * 4);
+                var idx = rnd % chars.Length;
+                result.Append(chars[idx]);
+            }
+            return result.ToString();
+        }
+
     }
 }

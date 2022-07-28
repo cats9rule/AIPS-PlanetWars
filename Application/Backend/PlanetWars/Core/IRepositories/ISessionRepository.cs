@@ -7,6 +7,6 @@ namespace PlanetWars.Core.IRepositories
 {
     public interface ISessionRepository : IGenericRepository<Session>
     {
-        public Task<IEnumerable<Session>> GetByName(string name);
+        public Task<Session> GetByNameAndCode(string name, string gameCode);
     }
 }

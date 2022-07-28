@@ -14,9 +14,7 @@ namespace PlanetWars.Data.Models
 
         public string Name { get; set; }
 
-        public bool IsPrivate { get; set; }
-
-        public string Password { get; set; }
+        public string GameCode { get; set; }
 
         public int CurrentTurnIndex { get; set; }
 

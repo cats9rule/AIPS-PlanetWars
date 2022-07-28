@@ -22,7 +22,13 @@ namespace PlanetWars.DTOs.MappingProfiles
             CreateMap<Planet, PlanetDto>()
             .ReverseMap();
 
-            CreateMap<Player, PlayerDto>().ReverseMap();
+            CreateMap<Player, PlayerDto>()
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => 
+                src.User.Username 
+                + "#"
+                + src.User.Tag
+                ))
+            .ReverseMap();
 
             CreateMap<PlayerColor, PlayerColorDto>()
             .ForMember(dest => dest.HexColor, opt => opt.MapFrom(src=> src.ColorHexValue))
@@ -35,7 +41,8 @@ namespace PlanetWars.DTOs.MappingProfiles
             .ReverseMap();
 
             CreateMap<GameMap, GameMapDto>()
-            .ForMember(dest => dest.PlanetGraph, opt => opt.ConvertUsing(new PlanetGraphConverter(), src => src.PlanetGraph));
+            .ForMember(dest => dest.PlanetGraph, opt => opt.ConvertUsing(new PlanetGraphConverter(), src => src.PlanetGraph))
+            .ForMember(dest => dest.PlanetMatrix, opt => opt.MapFrom(src => src.PlanetMatrix.ToArray<Char>().Select(c => c == '1' ? true : false).ToList()));
 
         }
         

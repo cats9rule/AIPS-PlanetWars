@@ -9,6 +9,8 @@ namespace PlanetWars.DTOs
 
         public Guid UserID { get; set; }
 
+        public string Username { get; set; }
+
         public string PlayerColor { get; set; }
 
         public int TurnIndex { get; set; }

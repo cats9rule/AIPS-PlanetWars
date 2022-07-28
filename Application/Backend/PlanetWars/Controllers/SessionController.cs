@@ -35,14 +35,32 @@ namespace PlanetWars.Controllers
             return sessionDto == null ? new StatusCodeResult(StatusCodes.Status500InternalServerError) : Ok(sessionDto);
         }
 
-        [Route("AddPlayer")]
+        // [Route("AddPlayer")]
+        // [HttpPut]
+        // public async Task<ActionResult> AddPlayer([FromBody] PlayerDto playerDto)
+        // {
+        //     var session = await sessionService.GetById(playerDto.SessionID);
+        //     var player = await playerService.CreatePlayer(playerDto.UserID, session.PlayerCount, session.ID);
+        //     var result = await sessionService.AddPlayer(session.ID, player);
+        //     return Ok(result);
+        // }
+
+        [Route("JoinGame")]
         [HttpPut]
-        public async Task<ActionResult> AddPlayer([FromBody] PlayerDto playerDto)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> JoinGame([FromBody] JoinGameDto joinGameDto)
         {
-            var session = await sessionService.GetById(playerDto.SessionID);
-            var player = await playerService.CreatePlayer(playerDto.UserID, session.PlayerCount, session.ID);
-            var result = await sessionService.AddPlayer(session.ID, player);
-            return Ok(result);
+            var session = await sessionService.GetByNameAndCode(joinGameDto.SessionName, joinGameDto.GameCode);
+            if (session != null) 
+            {
+                var player = await playerService.CreatePlayer(joinGameDto.UserID, session.PlayerCount, session.ID);
+                var result = await sessionService.AddPlayer(session.ID, player);
+                if (result != null) return Ok(result);
+                else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            }
+            return new StatusCodeResult(StatusCodes.Status404NotFound);
         }
 
         [Route("GetSession/{id}")]
@@ -61,11 +79,11 @@ namespace PlanetWars.Controllers
             return Ok(result);
         }
 
-        [Route("GetByName/{name}")]
+        [Route("GetByName/{name}/{code}")]
         [HttpGet]
-        public async Task<ActionResult> GetByName(string name)
+        public async Task<ActionResult> GetByNameAndCode(string name, string code)
         {
-            var result = await sessionService.GetByName(name);
+            var result = await sessionService.GetByNameAndCode(name, code);
             return Ok(result);
         }
 

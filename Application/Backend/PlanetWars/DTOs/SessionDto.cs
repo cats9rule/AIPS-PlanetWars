@@ -9,7 +9,7 @@ namespace PlanetWars.DTOs
 
         public string Name { get; set; }
 
-        public string Password { get; set; }
+        public string GameCode { get; set; }
 
         public int CurrentTurnIndex { get; set; }
 

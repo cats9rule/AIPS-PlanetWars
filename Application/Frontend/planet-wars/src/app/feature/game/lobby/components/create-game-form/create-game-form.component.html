@@ -1,0 +1,75 @@
+<mat-card class="form">
+  <h1>Create Game</h1>
+  <div class="container">
+    <mat-form-field appearance="fill" floatLabel="always">
+      <mat-label>Session Name</mat-label>
+      <input
+        matInput
+        type="text"
+        class="left-align"
+        [(ngModel)]="sessionName"
+        name="sessionName"
+      />
+    </mat-form-field>
+
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Game Maps </mat-panel-title>
+          <mat-panel-description>
+            Choose a game map to play in.
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <table
+          mat-table
+          [dataSource]="gameMaps$"
+          class="mat-elevation-z8 demo-table"
+        >
+          <ng-container matColumnDef="id" class="invisible">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="planetCount">
+            <th mat-header-cell *matHeaderCellDef>Planet Count</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.planetCount }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="resourcePlanetRatio">
+            <th mat-header-cell *matHeaderCellDef>Resource-Planet Ratio</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.resourcePlanetRatio }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="maxPlayers">
+            <th mat-header-cell *matHeaderCellDef>Max Players</th>
+            <td mat-cell *matCellDef="let element">{{ element.maxPlayers }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.description }}
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            matRipple
+            (click)="onSelectRow(row)"
+            [class.demo-row-is-clicked]="isRowSelected(row)"
+            *matRowDef="let row; columns: displayedColumns"
+          ></tr>
+        </table>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+  <button mat-flat-button color="primary" (click)="createGame()">
+    Create Game
+  </button>
+</mat-card>

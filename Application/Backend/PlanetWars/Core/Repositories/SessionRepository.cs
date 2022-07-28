@@ -60,9 +60,9 @@ namespace PlanetWars.Core.Repositories
 
 
 
-        public async Task<IEnumerable<Session>> GetByName(string name)
+        public async Task<Session> GetByNameAndCode(string name, string gameCode)
         {
-            var exist = await dbSet.Where(x => x.Name == name).ToListAsync();
+            var exist = await dbSet.Where(x => x.Name == name && x.GameCode == gameCode).FirstOrDefaultAsync();
             return exist;   // if (exist == null) return exist;
         }
     }

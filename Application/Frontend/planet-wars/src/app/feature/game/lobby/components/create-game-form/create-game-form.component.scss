@@ -1,0 +1,81 @@
+@use "../../../../../core/styles/global.scss";
+@use "../../../../../core/styles/colors.scss" as colors;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.container .mat-form-field + .mat-form-field {
+  flex-direction: column;
+  align-items: center;
+}
+
+.left-align {
+  text-align: left;
+}
+
+input.left-align::-webkit-outer-spin-button,
+input.left-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.left-align {
+  -moz-appearance: textfield;
+  width: 80%;
+}
+
+.mat-card {
+  width: 90vmax;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.demo-table {
+  width: 100%;
+  background-color: colors.$accent;
+}
+
+.mat-row .mat-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+  cursor: pointer;
+}
+
+.mat-row:hover .mat-cell {
+  border-color: currentColor;
+}
+
+.mat-column-planetCount {
+  width: 15%;
+}
+
+.mat-column-resourcePlanetRatio {
+  width: 15%;
+}
+
+.mat-column-maxPlayers {
+  width: 15%;
+}
+
+.mat-column-description {
+  width: 55%;
+}
+
+.demo-row-is-clicked {
+  font-weight: bold;
+}
+
+.invisible {
+  display: none;
+}
+
+button.mat-flat-button {
+  margin: 5%;
+}

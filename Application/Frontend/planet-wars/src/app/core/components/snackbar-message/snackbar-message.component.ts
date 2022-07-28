@@ -7,9 +7,7 @@ import { SnackbarMessage } from '../../interfaces/snackbar-message';
   styleUrls: ['./snackbar-message.component.scss'],
 })
 export class SnackbarMessageComponent implements OnInit {
-  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: SnackbarMessage) {
-    console.log(data);
-  }
+  constructor(@Inject(MAT_SNACK_BAR_DATA) public data: SnackbarMessage) {}
 
   ngOnInit(): void {}
 }

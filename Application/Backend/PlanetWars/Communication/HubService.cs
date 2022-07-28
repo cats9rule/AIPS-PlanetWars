@@ -17,7 +17,7 @@ namespace PlanetWars.Communication
         {
             await _hubContext.Clients.Group(param.SessionID.ToString()).SendAsync(param.ClientHandler, param);
             return new MessageResponseDto { IsSuccessful = true, Message = "Turn Played." };
-            //FIXME: mislim da je ovaj message response dto suvisan, ne znam sta mi bilo da ga pravim uopste na cemu li sam ja...
+            //FIXME: mislim da je ovaj message response dto suvisan
         }
 
         public Task NotifyPlayerLeft(LeaveGameNotificationDto param)

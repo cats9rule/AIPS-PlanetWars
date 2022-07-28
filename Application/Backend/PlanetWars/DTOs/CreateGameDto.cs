@@ -7,17 +7,11 @@ namespace PlanetWars.DTOs
     {
         public Guid ID { get; set; }
 
-        public Guid UserId { get; set; }    //potrebno za kreiranje igraca
-
-        // public int PlanetCount { get; set; }    //potrebno za kreiranje galaksije
-
-        // public float ResourcePlanetRatio { get; set; }  //potrebno za kreiranje galaksije
+        public Guid CreatorID { get; set; }    //potrebno za kreiranje igraca
 
         public Guid GameMapID { get; set; }
 
         public string Name { get; set; }
-        
-        public string Password { get; set; }
 
         public int MaxPlayers { get; set; }
     }
