@@ -17,7 +17,6 @@ export class GameMapService {
   private url = environment.serverUrl + '/GameMap/GetAllGameMaps';
 
   loadGameMaps(): Observable<GameMap[]> {
-    console.log('Game Map Loading');
     return this.http
       .get<GameMap[]>(this.url)
       .pipe(catchError(this.errorHandler.handleError));

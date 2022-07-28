@@ -133,7 +133,8 @@ namespace PlanetWars.Services.ConcreteServices
             using (_unitOfWork)
             {
                 GameMap gameMap = await _unitOfWork.GameMaps.GetById(dto.GameMapID);
-                User user = await _unitOfWork.Users.GetById(dto.CreatorID);
+                User user = await _unitOfWork.Users.GetById(dto.UserID);
+                
                 if (gameMap == null || user == null) return null;
 
                 Session session = await InitSession(dto.Name, gameMap.MaxPlayers);

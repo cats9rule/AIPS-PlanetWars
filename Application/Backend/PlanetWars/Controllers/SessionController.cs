@@ -30,6 +30,7 @@ namespace PlanetWars.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateGame([FromBody] CreateGameDto createGameDto)
         {
+            
             var sessionDto = await sessionService.CreateSession(createGameDto);
             List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.GalaxyID));
             return sessionDto == null ? new StatusCodeResult(StatusCodes.Status500InternalServerError) : Ok(sessionDto);

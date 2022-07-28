@@ -24,3 +24,8 @@ export const getUserUsernameWithTag = createSelector(
     else return null;
   }
 );
+
+export const getUserID = createSelector(getUserState, (state: UserState) => {
+  if (isDefined(state.loggedUser)) return state.loggedUser!!.id;
+  else return '';
+});
