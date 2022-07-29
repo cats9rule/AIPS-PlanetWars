@@ -1,0 +1,14 @@
+<app-menu
+  *ngIf="isDisplayingMenu"
+  (clickedButtonEvent)="handleNavigation($event)"
+></app-menu>
+<app-create-game-form
+  *ngIf="isDisplayingCreateGame"
+  (onBackEvent)="handleNavigation($event)"
+  [userID]="userID"
+></app-create-game-form>
+<app-join-game-form
+  *ngIf="isDisplayingJoinGame"
+  (onBackEvent)="handleNavigation($event)"
+  [userID]="userID"
+></app-join-game-form>

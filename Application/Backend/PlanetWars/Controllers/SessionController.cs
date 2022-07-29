@@ -38,11 +38,11 @@ namespace PlanetWars.Controllers
 
         // [Route("AddPlayer")]
         // [HttpPut]
-        // public async Task<ActionResult> AddPlayer([FromBody] PlayerDto playerDto)
+        // public async Task<ActionResult> AddPlayer([FromBody] JoinGameDto joinGameDto)
         // {
-        //     var session = await sessionService.GetById(playerDto.SessionID);
-        //     var player = await playerService.CreatePlayer(playerDto.UserID, session.PlayerCount, session.ID);
-        //     var result = await sessionService.AddPlayer(session.ID, player);
+        //     var session = await sessionService.GetByNameAndCode(joinGameDto.SessionName, joinGameDto.GameCode);
+        //     var player = await playerService.CreatePlayer(joinGameDto.UserID, session.PlayerCount, session.ID);
+        //     var result = await sessionService.AddPlayer(session.ID, joinGameDto.UserID);
         //     return Ok(result);
         // }
 
@@ -56,8 +56,8 @@ namespace PlanetWars.Controllers
             var session = await sessionService.GetByNameAndCode(joinGameDto.SessionName, joinGameDto.GameCode);
             if (session != null) 
             {
-                var player = await playerService.CreatePlayer(joinGameDto.UserID, session.PlayerCount, session.ID);
-                var result = await sessionService.AddPlayer(session.ID, player);
+                //var player = await playerService.CreatePlayer(joinGameDto.UserID, session.PlayerCount, session.ID);
+                var result = await sessionService.AddPlayer(session.ID, joinGameDto.UserID);
                 if (result != null) return Ok(result);
                 else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }

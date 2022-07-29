@@ -112,13 +112,15 @@ namespace PlanetWars.Services.ConcreteServices
                 User user = await _unitOfWork.Users.GetById(userId);
                 Session session = await _unitOfWork.Sessions.GetById(sessionId);
 
+                Console.WriteLine("\n\n" + sessionId + "\n\n");
+
                 Player player = new Player();
                 player.User = user;
                 player.UserID = userId;
                 player.PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex);
                 player.IsActive = true;
-                // player.SessionID = sessionId;
-                // player.Session = session;
+                player.SessionID = sessionId;
+                player.Session = session;
                 player.Planets = new List<Planet>();
 
                 await _unitOfWork.Players.Add(player);

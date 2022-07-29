@@ -17,9 +17,12 @@ import { lobbyReducer } from './state/lobby.reducers';
 import { MatTableModule } from '@angular/material/table';
 import { EffectsModule } from '@ngrx/effects';
 import { LobbyEffects } from './state/lobby.effects';
+import { HomeComponent } from './components/home/home.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { JoinGameFormComponent } from './components/join-game-form/join-game-form.component';
 
 @NgModule({
-  declarations: [CreateGameFormComponent],
+  declarations: [CreateGameFormComponent, HomeComponent, MenuComponent, JoinGameFormComponent],
   imports: [
     CommonModule,
     HttpClientModule,
@@ -36,6 +39,6 @@ import { LobbyEffects } from './state/lobby.effects';
     MatExpansionModule,
     MatTableModule,
   ],
-  exports: [CreateGameFormComponent],
+  exports: [HomeComponent],
 })
 export class LobbyModule {}

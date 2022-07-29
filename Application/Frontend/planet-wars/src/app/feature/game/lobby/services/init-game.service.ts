@@ -19,7 +19,6 @@ export class InitGameService {
   private url = environment.serverUrl + '/Session/';
 
   createGame(createGameDto: CreateGameDto): Observable<SessionDto> {
-    console.log(createGameDto);
     return this.http
       .post<SessionDto>(this.url + 'CreateGame', createGameDto)
       .pipe(catchError(this.errorHandler.handleError));

@@ -3,7 +3,7 @@
     <p class="mat-display-1">{{ title }}</p>
     <app-authorize *ngIf="!isUserLogged; else elseBlock"></app-authorize>
     <ng-template #elseBlock>
-      <app-create-game-form></app-create-game-form>
+      <app-home></app-home>
     </ng-template>
   </mat-sidenav-content>
 </mat-sidenav-container>

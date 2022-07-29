@@ -11,6 +11,8 @@ import {
   createGame,
   createGameError,
   createGameSuccess,
+  joinGame,
+  joinGameSuccess,
   loadGameMaps,
   loadGameMapsError,
   loadGameMapsSuccess,
@@ -61,6 +63,33 @@ export class LobbyEffects {
         //TODO: open game screen
         alert(
           `Game has been created. Name: ${action.sessionDto.name}; Game Code: ${action.sessionDto.gameCode}`
+        );
+        return [noAction()];
+      })
+    )
+  );
+
+  joinGame$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(joinGame),
+      switchMap((action) => {
+        return this.initGameService.joinGame(action.joinGameDto).pipe(
+          mergeMap((sessionDto: SessionDto) => [
+            joinGameSuccess({ sessionDto }),
+          ]),
+          catchError((error) => [createGameError(error)])
+        );
+      })
+    )
+  );
+
+  joinGameSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(joinGameSuccess),
+      switchMap((action) => {
+        //TODO: open game screen
+        alert(
+          `Game has been joined. Name: ${action.sessionDto.name}; Game Code: ${action.sessionDto.gameCode}`
         );
         return [noAction()];
       })

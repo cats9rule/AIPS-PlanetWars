@@ -54,10 +54,9 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<SessionDto> GetByNameAndCode(string name, string code)
         {
-            using (_unitOfWork)
-            {
+
                 return _mapper.Map<Session, SessionDto>(await _unitOfWork.Sessions.GetByNameAndCode(name, code));
-            }
+
         }
 
         public async Task<bool> Update(UpdateSessionDto sessionDto)
@@ -180,22 +179,41 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<PlayerDto> AddPlayer(Guid sessionID, PlayerDto player)
+        public async Task<SessionDto> AddPlayer(Guid sessionID, Guid userID)
         {
             using (_unitOfWork)
             {
+
+                User user = await _unitOfWork.Users.GetById(userID);
                 Session session = await _unitOfWork.Sessions.GetById(sessionID);
+
                 if (session.PlayerCount == session.MaxPlayers)
                 {
                     return null;
                 }
-                player.TurnIndex = session.Players.Count;
-                session.Players.Add(_mapper.Map<PlayerDto, Player>(player));
+
+                Console.WriteLine("\n\n" + sessionID + "\n\n");
+
+                int turnIndex = session.PlayerCount;
+
+                Player player = new Player();
+                player.User = user;
+                player.UserID = userID;
+                player.PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex);
+                player.IsActive = true;
+                player.SessionID = sessionID;
+                player.Session = session;
+                player.Planets = new List<Planet>();
+
+                // await _unitOfWork.Players.Add(player);
+                // await _unitOfWork.CompleteAsync();
+
+                //session.Players.Add(player);
                 session.PlayerCount++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                return player;
+                return _mapper.Map<SessionDto>(session);
             }
         }
         private async Task<Session> InitSession(string name, int maxPlayers)
