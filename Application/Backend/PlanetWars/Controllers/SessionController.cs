@@ -32,8 +32,12 @@ namespace PlanetWars.Controllers
         {
             
             var sessionDto = await sessionService.CreateSession(createGameDto);
-            List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.GalaxyID));
-            return sessionDto == null ? new StatusCodeResult(StatusCodes.Status500InternalServerError) : Ok(sessionDto);
+            List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.Galaxy.ID));
+            if (sessionDto != null) {
+                sessionDto.Galaxy.Planets = planets;
+                return Ok(sessionDto);
+            }
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         // [Route("AddPlayer")]

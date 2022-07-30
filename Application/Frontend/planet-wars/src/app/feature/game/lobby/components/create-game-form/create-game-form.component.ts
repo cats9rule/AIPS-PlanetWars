@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { SnackbarService } from 'src/app/core/utils/services/snackbar.service';
-import { GameMap } from '../../../interfaces/gameMap';
+import { GameMapDto } from '../../../dtos/gameMapDto';
 import { createGame, loadGameMaps } from '../../state/lobby.actions';
 import { getGameMaps } from '../../state/lobby.selectors';
 import { LobbyState } from '../../state/lobby.state';
@@ -29,7 +29,7 @@ export class CreateGameFormComponent implements OnInit {
   @Input()
   public userID = '';
 
-  public gameMaps$: Observable<GameMap[]>;
+  public gameMaps$: Observable<GameMapDto[]>;
 
   private selectedMapID: string = '';
 
@@ -37,7 +37,7 @@ export class CreateGameFormComponent implements OnInit {
     private store: Store<LobbyState>,
     private snackbarService: SnackbarService
   ) {
-    this.gameMaps$ = this.store.select<GameMap[]>(getGameMaps);
+    this.gameMaps$ = this.store.select<GameMapDto[]>(getGameMaps);
     this.store.dispatch(loadGameMaps());
   }
 

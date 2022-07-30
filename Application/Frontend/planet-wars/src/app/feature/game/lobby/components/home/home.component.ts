@@ -16,9 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public isDisplayingJoinGame = false;
 
   private userID$: Observable<Maybe<string>>;
-
   private userIDSubscription: Subscription = new Subscription();
-
   public userID = '';
 
   constructor(private userStore: Store<UserState>) {

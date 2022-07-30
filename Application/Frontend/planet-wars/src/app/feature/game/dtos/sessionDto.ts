@@ -1,10 +1,13 @@
+import { GalaxyDto } from './galaxyDto';
+import { PlayerDto } from './playerDto';
+
 export interface SessionDto {
   ID: string;
   name: string;
   gameCode: string;
   currentTurnIndex: number;
-  playerIDs: string[];
+  players: PlayerDto[];
   playerCount: number;
-  galaxyID: string;
+  galaxy: GalaxyDto;
   maxPlayers: number;
 }

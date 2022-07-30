@@ -1,4 +1,4 @@
-export interface GameMap {
+export interface GameMapDto {
   id: string;
   planetCount: number;
   planetGraph: Map<number, number[]>;

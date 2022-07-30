@@ -1,0 +1,23 @@
+<mat-card class="form">
+  <div class="container">
+    <mat-list>
+      <mat-list-item *ngFor="let player of playersList">
+        <div class="player-item">
+          <span
+            ><mat-icon [ngStyle]="{ color: player.playerColor }"
+              >brightness_1</mat-icon
+            ></span
+          >
+          <p
+            [ngClass]="{
+              'player-on-turn': isPlayersTurn(player?.turnIndex),
+              disabled: !player?.isActive
+            }"
+          >
+            {{ player?.username }}
+          </p>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </div>
+</mat-card>

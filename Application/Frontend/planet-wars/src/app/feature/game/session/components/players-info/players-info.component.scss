@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+.mat-card {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-on-turn {
+  font-weight: 700 !important;
+}
+
+.player-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-items: center;
+}

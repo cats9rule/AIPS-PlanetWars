@@ -7,12 +7,8 @@ namespace PlanetWars.DTOs
     {
         public Guid ID { get; set; }
 
-        public List<Guid> Planets { get; set; }
+        public List<PlanetDto> Planets { get; set; }
 
-        public int PlanetCount { get; set; }
-
-        public float ResourcePlanetRatio { get; set; }
-
-        public Guid GameMapID { get; set; }
+        public GameMapDto GameMap { get; set; }
     }
 }

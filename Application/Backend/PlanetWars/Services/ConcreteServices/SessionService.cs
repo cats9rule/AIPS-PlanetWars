@@ -162,7 +162,7 @@ namespace PlanetWars.Services.ConcreteServices
                     Session = session,
                     SessionID = session.ID,
                     Planets = new List<Planet>(),
-                    GameMapID = dto.GameMapID
+                    GameMap = gameMap
                 };
                 var result = await _unitOfWork.Galaxies.Add(galaxy);
                 if (result)
@@ -192,8 +192,6 @@ namespace PlanetWars.Services.ConcreteServices
                     return null;
                 }
 
-                Console.WriteLine("\n\n" + sessionID + "\n\n");
-
                 int turnIndex = session.PlayerCount;
 
                 Player player = new Player();
@@ -208,7 +206,7 @@ namespace PlanetWars.Services.ConcreteServices
                 // await _unitOfWork.Players.Add(player);
                 // await _unitOfWork.CompleteAsync();
 
-                //session.Players.Add(player);
+                session.Players.Add(player);
                 session.PlayerCount++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();

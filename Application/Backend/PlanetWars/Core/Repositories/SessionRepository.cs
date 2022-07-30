@@ -25,13 +25,23 @@ namespace PlanetWars.Core.Repositories
 
         public async override Task<IEnumerable<Session>> GetAll()
         {
-            return await dbSet.Include(p => p.Galaxy).Include(p => p.Players).ToListAsync();
+            return await dbSet.Include(s => s.Galaxy).ThenInclude(g => g.GameMap)
+            .Include(s => s.Players).ThenInclude(p => p.User)
+            .Include(s => s.Players).ThenInclude(p => p.PlayerColor)
+            .Include(s => s.Players).ThenInclude(p => p.Planets)
+            .Include(a => a.Galaxy).ThenInclude(g => g.Planets).ToListAsync();
         }
 
         public async override Task<Session> GetById(Guid sessionId)
         {
             //return base.GetById(sessionId);
-            return await dbSet.Include(p => p.Galaxy).Include(p => p.Players).Where(session => session.ID == sessionId).FirstOrDefaultAsync();
+            return await dbSet.Where(s => s.ID == sessionId)
+            .Include(s => s.Galaxy).ThenInclude(g => g.GameMap)
+            .Include(s => s.Players).ThenInclude(p => p.User)
+            .Include(s => s.Players).ThenInclude(p => p.PlayerColor)
+            .Include(s => s.Players).ThenInclude(p => p.Planets)
+            .Include(a => a.Galaxy).ThenInclude(g => g.Planets)
+            .FirstOrDefaultAsync();
         }
 
         public override async Task<bool> Delete(Guid id)

@@ -15,7 +15,7 @@ namespace PlanetWars.DTOs
 
         public int TurnIndex { get; set; }
 
-        public virtual List<Guid> PlanetIDs { get; set; }
+        public virtual List<PlanetDto> Planets { get; set; }
 
         public bool IsActive { get; set; }
 

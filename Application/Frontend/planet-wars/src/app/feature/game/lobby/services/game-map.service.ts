@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
 import { ServerErrorHandlerService } from 'src/app/core/utils/services/server-error-handler.service';
 import { environment } from 'src/environments/environment.prod';
-import { GameMap } from '../../interfaces/gameMap';
+import { GameMapDto } from '../../dtos/gameMapDto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +16,9 @@ export class GameMapService {
 
   private url = environment.serverUrl + '/GameMap/GetAllGameMaps';
 
-  loadGameMaps(): Observable<GameMap[]> {
+  loadGameMaps(): Observable<GameMapDto[]> {
     return this.http
-      .get<GameMap[]>(this.url)
+      .get<GameMapDto[]>(this.url)
       .pipe(catchError(this.errorHandler.handleError));
   }
 }

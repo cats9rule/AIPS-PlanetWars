@@ -1,10 +1,10 @@
-export interface Player {
+export interface PlayerDto {
   id: string;
   userID: string;
   username: string;
   playerColor: string; //hex value
   turnIndex: number;
-  ownedPlanetIDs: string[];
+  planetIDs: string[];
   isActive: boolean;
   sessionID: string;
 }

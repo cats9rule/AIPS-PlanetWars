@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import { getIsInSession } from './feature/game/session/state/session.selectors';
+import { SessionState } from './feature/game/session/state/session.state';
 import { getIsUserLogged } from './feature/user/state/user.selectors';
 import { UserState } from './feature/user/state/user.state';
 
@@ -16,8 +18,18 @@ export class AppComponent implements OnInit, OnDestroy {
   public isUserLogged: boolean = false;
   private userSubscription: Subscription = new Subscription();
 
-  constructor(private store: Store<UserState>) {
-    this.isUserLogged$ = this.store.select<boolean>(getIsUserLogged);
+  private isInGame$: Observable<boolean>;
+  public isInGame: boolean = false;
+  private isInGameSubscription: Subscription = new Subscription();
+
+  public isLightTheme = false;
+
+  constructor(
+    private userStore: Store<UserState>,
+    private sessionStore: Store<SessionState>
+  ) {
+    this.isUserLogged$ = this.userStore.select<boolean>(getIsUserLogged);
+    this.isInGame$ = this.sessionStore.select<boolean>(getIsInSession);
   }
 
   ngOnInit(): void {
@@ -29,9 +41,18 @@ export class AppComponent implements OnInit, OnDestroy {
         console.error(err);
       },
     });
+    this.isInGameSubscription = this.isInGame$.subscribe({
+      next: (isInGame) => {
+        this.isInGame = isInGame;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
+    this.isInGameSubscription.unsubscribe();
   }
 }

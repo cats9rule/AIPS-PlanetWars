@@ -1,7 +1,7 @@
-import { GameMap } from '../../interfaces/gameMap';
+import { GameMapDto } from '../../dtos/gameMapDto';
 
 export interface LobbyState {
-  gameMaps: GameMap[];
+  gameMaps: GameMapDto[];
 }
 
 export const initialLobbyState: LobbyState = {

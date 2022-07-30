@@ -34,7 +34,7 @@ import { SignupFormComponent } from './signup/signup-form/signup-form.component'
     FormsModule,
     MatButtonModule,
   ],
-  exports: [LoginFormComponent, AuthorizeComponent, SignupFormComponent],
+  exports: [AuthorizeComponent],
   declarations: [LoginFormComponent, AuthorizeComponent, SignupFormComponent],
   providers: [],
 })

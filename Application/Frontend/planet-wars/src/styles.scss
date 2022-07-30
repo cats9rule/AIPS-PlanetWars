@@ -1,9 +1,9 @@
-
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 // Plus imports for other components in your app.
 @import "@angular/material/prebuilt-themes/purple-green.css";
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -19,34 +19,72 @@ $planet-wars-accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
 // The warn palette is optional (defaults to red).
 $planet-wars-warn: mat.define-palette(mat.$orange-palette);
 
+$planet-wars-primary-light: mat.define-palette(mat.$deep-purple-palette);
+$planet-wars-accent-light: mat.define-palette(
+  mat.$deep-orange-palette,
+  A200,
+  A100,
+  A400
+);
+
+// The warn palette is optional (defaults to red).
+$planet-wars-warn-light: mat.define-palette(mat.$red-palette);
+
 $planet-wars-typography: mat.define-typography-config(
-  $font-family: 'Roboto',
-  $display-4: mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
-  $display-3: mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
-  $display-2: mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+  $font-family: "Roboto",
+  $display-4:
+    mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+  $display-3:
+    mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+  $display-2:
+    mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
   $display-1: mat.define-typography-level(34px, 40px, 400),
-  $headline:  mat.define-typography-level(24px, 32px, 400)
+  $headline: mat.define-typography-level(24px, 32px, 400),
 );
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$planet-wars-theme: mat.define-dark-theme((
-  color: (
-    primary: $planet-wars-primary,
-    accent: $planet-wars-accent,
-    warn: $planet-wars-warn,
-  ),
-  typography: $planet-wars-typography
-));
+$planet-wars-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $planet-wars-primary,
+      accent: $planet-wars-accent,
+      warn: $planet-wars-warn,
+    ),
+    typography: $planet-wars-typography,
+  )
+);
+
+$planet-wars-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $planet-wars-primary-light,
+      accent: $planet-wars-accent-light,
+      warn: $planet-wars-warn-light,
+    ),
+    typography: $planet-wars-typography,
+  )
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include mat.all-component-themes($planet-wars-theme);
 
+.my-light-theme {
+  @include mat.core-color($planet-wars-light-theme);
+  @include mat.button-color($planet-wars-light-theme);
+  @include mat.all-component-themes($planet-wars-light-theme);
+}
+
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+}
 .mat-snack-bar-container {
   padding: 0 !important;
 }

@@ -1,9 +1,15 @@
-<mat-sidenav-container>
+<mat-sidenav-container [ngClass]="{ 'my-light-theme': isLightTheme }">
   <mat-sidenav-content class="login-form">
     <p class="mat-display-1">{{ title }}</p>
-    <app-authorize *ngIf="!isUserLogged; else elseBlock"></app-authorize>
-    <ng-template #elseBlock>
-      <app-home></app-home>
+    <!-- <mat-slide-toggle ngModel name="isLightTheme"
+      >Enable Light Theme</mat-slide-toggle
+    > -->
+    <app-authorize *ngIf="!isUserLogged; else loggedInBlock"></app-authorize>
+    <ng-template #loggedInBlock>
+      <app-session-main *ngIf="isInGame; else homeBlock"></app-session-main>
+      <ng-template #homeBlock>
+        <app-home></app-home>
+      </ng-template>
     </ng-template>
   </mat-sidenav-content>
 </mat-sidenav-container>

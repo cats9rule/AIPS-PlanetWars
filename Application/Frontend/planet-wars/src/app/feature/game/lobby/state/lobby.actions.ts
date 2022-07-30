@@ -1,9 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { Galaxy } from '../../interfaces/galaxy';
-import { GameMap } from '../../interfaces/gameMap';
+import { GameMapDto } from '../../dtos/gameMapDto';
 import { CreateGameDto } from '../dtos/createGameDto';
 import { JoinGameDto } from '../dtos/joinGameDto';
-import { SessionDto } from '../dtos/sessionDto';
+import { SessionDto } from '../../dtos/sessionDto';
 
 export const createGame = createAction(
   '[Lobby] Create Game',
@@ -35,43 +34,11 @@ export const joinGameError = createAction(
   props<{ errorMessage: string }>()
 );
 
-export const loadGalaxy = createAction(
-  '[Lobby] Load Galaxy',
-  props<{ galaxyID: string }>()
-);
-
-export const loadGalaxySuccess = createAction(
-  '[Lobby] Load Galaxy Success',
-  props<{ galaxyDto: Galaxy }>
-);
-
-export const loadGalaxyError = createAction(
-  '[Lobby] Load Galaxy Error',
-  props<{ errorMessage: string }>()
-);
-
-export const loadGameMap = createAction(
-  '[Lobby] Load Game Map',
-  props<{gameMapID: string}>()
-);
-
-export const loadGameMapSuccess = createAction(
-  '[Lobby] Load Game Map Success',
-  props<{ gameMapDto: GameMap }>()
-);
-
-export const loadGameMapError = createAction(
-  '[Lobby] Load Game Map Error',
-  props<{ errorMessage: string }>()
-);
-
-export const loadGameMaps = createAction(
-  '[Lobby] Load Game Maps'
-);
+export const loadGameMaps = createAction('[Lobby] Load Game Maps');
 
 export const loadGameMapsSuccess = createAction(
   '[Lobby] Load Game Maps Success',
-  props<{ gameMapDtos: GameMap[] }>()
+  props<{ gameMapDtos: GameMapDto[] }>()
 );
 
 export const loadGameMapsError = createAction(

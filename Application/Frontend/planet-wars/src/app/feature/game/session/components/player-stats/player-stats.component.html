@@ -1,0 +1,25 @@
+<mat-card class="form">
+  <h3>Player Stats</h3>
+  <div class="container">
+    <mat-list>
+      <mat-list-item>
+        <p>
+          Total planets: <span class="mat-body-strong">{{ planetCount }}</span>
+        </p>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item
+        ><p>
+          Total armies: <span class="mat-body-strong">{{ armyCount }}</span>
+        </p></mat-list-item
+      >
+      <mat-divider></mat-divider>
+      <mat-list-item
+        ><p>
+          Armies next turn:
+          <span class="mat-body-strong">{{ armiesNextTurn }}</span>
+        </p></mat-list-item
+      >
+    </mat-list>
+  </div>
+</mat-card>

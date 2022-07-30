@@ -1,19 +1,13 @@
 import { Maybe } from 'src/app/core/utils/types/maybe.type';
-import { Galaxy } from '../../interfaces/galaxy';
-import { GameMap } from '../../interfaces/gameMap';
-import { Player } from '../../interfaces/player';
-import { Session } from '../../interfaces/session';
+import { PlayerDto } from '../../dtos/playerDto';
+import { SessionDto } from '../../dtos/sessionDto';
 
 export interface SessionState {
-  session: Maybe<Session>;
-  galaxy: Maybe<Galaxy>;
-  gameMap: Maybe<GameMap>;
-  players: Player[];
+  session: Maybe<SessionDto>;
+  player: Maybe<PlayerDto>;
 }
 
-export const initialState: SessionState = {
-  galaxy: null,
+export const initialSessionState: SessionState = {
   session: null,
-  gameMap: null,
-  players: [],
+  player: null,
 };

@@ -5,7 +5,7 @@ import { ServerErrorHandlerService } from 'src/app/core/utils/services/server-er
 import { environment } from 'src/environments/environment.prod';
 import { CreateGameDto } from '../dtos/createGameDto';
 import { JoinGameDto } from '../dtos/joinGameDto';
-import { SessionDto } from '../dtos/sessionDto';
+import { SessionDto } from '../../dtos/sessionDto';
 
 @Injectable({
   providedIn: 'root',

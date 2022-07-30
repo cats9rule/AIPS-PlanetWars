@@ -3,8 +3,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, mergeMap, switchMap } from 'rxjs';
 import { noAction } from 'src/app/core/state/common.actions';
 import { SnackbarService } from 'src/app/core/utils/services/snackbar.service';
-import { GameMap } from '../../interfaces/gameMap';
-import { SessionDto } from '../dtos/sessionDto';
+import { GameMapDto } from '../../dtos/gameMapDto';
+import { SessionDto } from '../../dtos/sessionDto';
 import { GameMapService } from '../services/game-map.service';
 import { InitGameService } from '../services/init-game.service';
 import {
@@ -31,7 +31,7 @@ export class LobbyEffects {
       ofType(loadGameMaps),
       switchMap((action) => {
         return this.gameMapService.loadGameMaps().pipe(
-          mergeMap((gameMapDtos: GameMap[]) => {
+          mergeMap((gameMapDtos: GameMapDto[]) => {
             return [loadGameMapsSuccess({ gameMapDtos })];
           }),
           catchError((error) => {

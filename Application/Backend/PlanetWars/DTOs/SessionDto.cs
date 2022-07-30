@@ -13,11 +13,11 @@ namespace PlanetWars.DTOs
 
         public int CurrentTurnIndex { get; set; }
 
-        public List<Guid> PlayerIDs { get; set; }
+        public List<PlayerDto> Players { get; set; }
         
         public int PlayerCount { get; set; }
 
-        public Guid GalaxyID { get; set; }
+        public GalaxyDto Galaxy { get; set; }
 
         public int MaxPlayers { get; set; }
     }
