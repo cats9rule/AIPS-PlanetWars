@@ -1,13 +1,27 @@
-@use "../../../../core/styles/global.scss";
-@use "../../../../core/styles/colors.scss" as colors;
-
 .container {
   display: flex;
   flex-direction: column;
 }
 .mat-card {
-  width: 300px;
+  width: 220px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  margin: 10px;
+}
+
+p {
+  font-size: smaller;
+  margin: 1px;
+  padding: 0px;
+}
+
+.list-item {
+  margin: 1px;
+  padding: 0px !important;
+}
+
+.stats-list {
+  margin: 0px;
+  padding: 0px;
 }

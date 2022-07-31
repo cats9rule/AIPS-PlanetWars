@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { PlayerStatsComponent } from './components/player-stats/player-stats.component';
 import { SessionMainComponent } from './components/session-main/session-main.component';
 import { PlayersInfoComponent } from './components/players-info/players-info.component';
@@ -15,6 +16,7 @@ import { SessionInfoComponent } from './components/session-info/session-info.com
 import { sessionReducer } from './state/session.reducers';
 import { StoreModule } from '@ngrx/store';
 import { Features } from '../../features.enum';
+import { ActionsConfirmationComponent } from './components/actions-confirmation/actions-confirmation.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { Features } from '../../features.enum';
     PlayersInfoComponent,
     ActionsComponent,
     SessionInfoComponent,
+    ActionsConfirmationComponent,
   ],
   imports: [
     CommonModule,
@@ -34,6 +37,7 @@ import { Features } from '../../features.enum';
     FormsModule,
     MatButtonModule,
     MatListModule,
+    MatGridListModule,
   ],
   exports: [SessionMainComponent],
 })

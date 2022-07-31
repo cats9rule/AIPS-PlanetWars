@@ -1,7 +1,16 @@
-<app-player-stats></app-player-stats>
-<app-players-info
-  [playersList]="session?.players"
-  [currentTurnIndex]="
-    session != null && session != undefined ? session.currentTurnIndex : 0
-  "
-></app-players-info>
+<div class="columns">
+  <div class="info-column">
+    <app-player-stats></app-player-stats>
+    <app-players-info
+      [playersList]="session?.players"
+      [currentTurnIndex]="
+        session != null && session != undefined ? session.currentTurnIndex : 0
+      "
+    ></app-players-info>
+    <app-actions></app-actions>
+    <app-actions-confirmation></app-actions-confirmation>
+    <div class="map-column">
+      <div class="map"></div>
+    </div>
+  </div>
+</div>

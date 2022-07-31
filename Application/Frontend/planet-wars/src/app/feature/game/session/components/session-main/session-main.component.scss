@@ -1,0 +1,38 @@
+// mat-grid-list {
+//   height: 900px;
+//   width: 90px;
+// }
+
+.columns {
+  display: flex;
+  flex-direction: row;
+  width: 1000;
+  height: fit-content;
+  align-self: flex-start;
+}
+
+.info-column {
+  display: flex;
+  width: 300px;
+  flex-direction: column;
+}
+
+.map-column {
+  display: flex;
+  width: max-content;
+  flex-direction: column;
+}
+
+.map {
+  display: block;
+  width: 600px;
+  height: 600px;
+}
+
+.action-confirmation {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: end;
+}
