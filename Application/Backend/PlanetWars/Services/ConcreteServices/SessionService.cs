@@ -127,6 +127,29 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
+        public async Task<bool> DeleteAll() {
+            using (_unitOfWork)
+            {
+                var relations = await _unitOfWork.PlanetPlanets.DeleteAll();
+                await _unitOfWork.CompleteAsync();
+                await _unitOfWork.Players.DeleteAll();
+                await _unitOfWork.Planets.DeleteAll();
+                await _unitOfWork.Galaxies.DeleteAll();
+                await _unitOfWork.Sessions.DeleteAll();
+                try
+                    {
+                        await _unitOfWork.CompleteAsync();
+                    }
+                    catch (Exception e)
+                    {
+                        await _unitOfWork.PlanetPlanets.AddAll(relations.ToList());
+                        Console.Error.Write(e.Message);
+                        Console.Error.Write(e.StackTrace);
+                    }
+                return true;
+            }
+        }
+
         public async Task<SessionDto> CreateSession(CreateGameDto dto)
         {
             using (_unitOfWork)

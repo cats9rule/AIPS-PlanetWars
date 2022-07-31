@@ -75,12 +75,6 @@ namespace PlanetWars.Core.Repositories
             //TODO: implement this
         }
 
-        public async Task<bool> DeleteAll()
-        {
-            dbSet.RemoveRange(await dbSet.ToArrayAsync());
-            return true;
-        }
-
         public async Task<IEnumerable<Planet>> GetForSession(Guid sessionID)
         {
             return await dbSet.Where(p => p.Galaxy.SessionID == sessionID).ToListAsync();

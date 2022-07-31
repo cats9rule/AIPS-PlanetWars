@@ -44,5 +44,11 @@ namespace PlanetWars.Core.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public virtual async Task<bool> DeleteAll()
+        {
+            dbSet.RemoveRange(await dbSet.ToArrayAsync());
+            return true;
+        }
     }
 }

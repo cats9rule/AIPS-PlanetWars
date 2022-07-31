@@ -112,6 +112,16 @@ namespace PlanetWars.Controllers
             return Ok(result);
         }
 
+        [Route("DeleteAll")]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAllSessions()
+        {
+            var result = await sessionService.DeleteAll();
+            if (result == false)
+                return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+            return Ok(result);
+        }
+
         [Route("LeaveGame")]
         [HttpPut]
         public async Task<ActionResult> LeaveGame(LeaveGameDto dto)

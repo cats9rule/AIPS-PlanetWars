@@ -11,5 +11,6 @@ namespace PlanetWars.Core.IRepositories
         Task<bool> Add(T entity);
         Task<bool> Update(T entity);
         Task<bool> Delete(Guid id);
+        Task<bool> DeleteAll();
     }
 }

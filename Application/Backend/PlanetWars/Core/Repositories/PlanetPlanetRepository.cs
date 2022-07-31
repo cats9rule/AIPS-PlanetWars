@@ -57,12 +57,6 @@ namespace PlanetWars.Core.Repositories
 
         }
 
-        public async Task<bool> DeleteAll()
-        {
-            dbSet.RemoveRange(await dbSet.ToArrayAsync());
-            return true;
-        }
-
         public async Task<IEnumerable<PlanetPlanet>> DeleteAllRelationsForPlanet(Guid planetID)
         {
             List<PlanetPlanet> relationsToDelete = await dbSet.Where(relation => relation.PlanetFromID == planetID).ToListAsync();
@@ -74,6 +68,13 @@ namespace PlanetWars.Core.Repositories
         {
             await dbSet.AddRangeAsync(relations);
             return true;
+        }
+
+        public async Task<IEnumerable<PlanetPlanet>> DeleteAll()
+        {
+            var dbset = await dbSet.ToArrayAsync();
+            dbSet.RemoveRange(dbset);
+            return dbSet;
         }
     }
 }

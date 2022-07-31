@@ -17,5 +17,6 @@ namespace PlanetWars.Services
         public Task<bool> Delete(Guid id);
         public Task<SessionDto> AddPlayer(Guid sessionID, Guid userID);
         public Task<bool> LeaveGame(LeaveGameDto dto);
+        public Task<bool> DeleteAll();
     } 
 }
