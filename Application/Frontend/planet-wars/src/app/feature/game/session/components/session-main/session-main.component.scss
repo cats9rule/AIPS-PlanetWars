@@ -13,8 +13,10 @@
 
 .info-column {
   display: flex;
-  width: 300px;
+  width: 18vw;
   flex-direction: column;
+  flex-wrap: wrap;
+  height: 100vh;
 }
 
 .map-column {
@@ -25,8 +27,9 @@
 
 .map {
   display: block;
-  width: 600px;
-  height: 600px;
+  width: 70vw;
+  height: 90vh;
+  margin-top: 10px;
 }
 
 .action-confirmation {

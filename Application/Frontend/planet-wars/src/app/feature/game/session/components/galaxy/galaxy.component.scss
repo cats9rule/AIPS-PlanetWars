@@ -1,0 +1,12 @@
+.galaxy {
+    height: 87vh;
+    width: 75vw;
+}
+
+@media screen and (max-height:720px) {
+    .galaxy {
+        height: 87vh;
+        margin-top: 10px;
+        width: 75vw;
+    }
+}

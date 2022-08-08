@@ -17,6 +17,7 @@ import { sessionReducer } from './state/session.reducers';
 import { StoreModule } from '@ngrx/store';
 import { Features } from '../../features.enum';
 import { ActionsConfirmationComponent } from './components/actions-confirmation/actions-confirmation.component';
+import { GalaxyComponent } from './components/galaxy/galaxy.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ActionsConfirmationComponent } from './components/actions-confirmation/
     ActionsComponent,
     SessionInfoComponent,
     ActionsConfirmationComponent,
+    GalaxyComponent,
   ],
   imports: [
     CommonModule,

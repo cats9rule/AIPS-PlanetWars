@@ -3,7 +3,6 @@
   flex-direction: column;
 }
 .mat-card {
-  width: 220px;
   height: 200px;
   display: flex;
   flex-direction: column;
@@ -20,4 +19,9 @@
   flex-direction: row;
   align-items: flex-start;
   justify-items: center;
+}
+
+ul {
+  padding: 0px;
+  font-size: small;
 }
