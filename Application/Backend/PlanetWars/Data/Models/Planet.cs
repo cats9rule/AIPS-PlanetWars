@@ -26,8 +26,10 @@ namespace PlanetWars.Data.Models
         // [JsonIgnore]
         // public virtual List<PlanetPlanet> PlanetRelations { get; set; }
 
-        public int MovementBoost { get; set; }
-        public int AttackBoost { get; set; }
-        public int DefenseBoost { get; set; }
+        // public int MovementBoost { get; set; }
+        // public int AttackBoost { get; set; }
+        // public int DefenseBoost { get; set; }
+
+        public string Extras { get; set; }
     }
 }

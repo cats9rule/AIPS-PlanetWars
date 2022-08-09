@@ -20,3 +20,8 @@ export const getIsInSession = createSelector(
     else return false;
   }
 );
+
+export const getGalaxy = createSelector(
+  getSessionState,
+  (state: SessionState) => state.session?.galaxy
+);

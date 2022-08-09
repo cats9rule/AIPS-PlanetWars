@@ -1,1 +1,8 @@
-<p class="galaxy">galaxy works!</p>
+<div class="galaxy">
+  <ul>
+    <li>Planets: {{ galaxy?.planets?.length }}</li>
+    <li *ngFor="let planet of galaxy?.planets">
+      Planet {{ planet.indexInGalaxy + 1 }} resources: {{ planet.extras }}
+    </li>
+  </ul>
+</div>

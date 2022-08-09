@@ -43,10 +43,14 @@ namespace PlanetWars.Services.ConcreteServices
 
                 for (int i = 0; i < gameMap.PlanetCount; i++)
                 {
-                    Planet planet = i < planetsWithResource ? await CreatePlanet(true, i, GalaxyID) : await CreatePlanet(false, i, GalaxyID);
-                    planetList.Add(/*_mapper.Map<Planet, PlanetDto>(planet)*/ planet);
-                    var retval = await _unitOfWork.Planets.Add(planet);
+                    Planet planet = i < planetsWithResource ? await CreatePlanet(true, -1, GalaxyID) : await CreatePlanet(false, -1, GalaxyID);
+                    planetList.Add(planet);
+
+                    
                 }
+                ShufflePlanets(planetList);
+                var retval = await _unitOfWork.Planets.AddMany(planetList);
+
                 //await _unitOfWork.CompleteAsync();
 
                 GameMapDto gameMapDto = _mapper.Map<GameMapDto>(gameMap);
@@ -86,17 +90,17 @@ namespace PlanetWars.Services.ConcreteServices
                 int num = rnd.Next();
                 if (num % 3 == 0)
                 {
-                    planet.DefenseBoost = defBoost;
+                    planet.Extras += "def,";
                     madeResource = true;
                 }
                 if (num % 4 == 0)
                 {
-                    planet.AttackBoost = atkBoost;
+                    planet.Extras += "atk,";
                     madeResource = true;
                 }
                 if (num % 5 == 0)
                 {
-                    planet.MovementBoost = movBoost;
+                    planet.Extras = "mov,";
                     madeResource = true;
                 }
             }
@@ -203,5 +207,23 @@ namespace PlanetWars.Services.ConcreteServices
                 return true;
             }
         }
+
+        #region Helpers 
+        private List<Planet> ShufflePlanets(List<Planet> planets) {
+            int count = planets.Count;
+            Random rnd = new Random(count);
+            for(int i = 0; i< count; i++)
+            {
+                int next = rnd.Next() % count;
+                Planet p = planets[i];
+                planets[i] = planets[next];
+                planets[next] = p;
+            }
+            for(int i = 0; i< count; i++) {
+                planets[i].IndexInGalaxy = i;
+            }
+            return planets;
+        }
+        #endregion
     }
 }

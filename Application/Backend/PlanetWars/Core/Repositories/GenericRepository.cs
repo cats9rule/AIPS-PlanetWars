@@ -25,6 +25,11 @@ namespace PlanetWars.Core.Repositories
             return true;
         }
 
+        public virtual async Task<bool> AddMany(List<T> entities) {
+            await dbSet.AddRangeAsync(entities);
+            return true;
+        }
+
         public virtual async Task<IEnumerable<T>> GetAll()
         {
             return await dbSet.ToListAsync();
