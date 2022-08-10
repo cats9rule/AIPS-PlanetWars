@@ -18,6 +18,7 @@ import { StoreModule } from '@ngrx/store';
 import { Features } from '../../features.enum';
 import { ActionsConfirmationComponent } from './components/actions-confirmation/actions-confirmation.component';
 import { GalaxyComponent } from './components/galaxy/galaxy.component';
+import { GalaxyConstructorService } from './services/galaxy-constructor.service';
 
 @NgModule({
   declarations: [
