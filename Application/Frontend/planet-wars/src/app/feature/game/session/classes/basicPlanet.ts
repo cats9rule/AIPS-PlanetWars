@@ -17,11 +17,11 @@ export class BasicPlanet implements Planet {
     this._indexInGalaxy = planetDto.indexInGalaxy;
   }
 
-  public get id(): string {
+  public getID(): string {
     return this._id;
   }
 
-  public get ownerID(): Maybe<string> {
+  public getOwnerID(): Maybe<string> {
     return this._ownerID;
   }
   public set ownerID(v: Maybe<string>) {
@@ -35,7 +35,7 @@ export class BasicPlanet implements Planet {
     this._armyCount = v;
   }
 
-  public get indexInGalaxy(): number {
+  public getIndexInGalaxy(): number {
     return this._indexInGalaxy;
   }
 

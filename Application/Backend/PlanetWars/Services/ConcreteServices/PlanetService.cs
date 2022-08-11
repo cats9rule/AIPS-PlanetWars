@@ -81,7 +81,8 @@ namespace PlanetWars.Services.ConcreteServices
                 OwnerID = null,
                 IndexInGalaxy = planetIndex,
                 GalaxyID = GalaxyID,
-                Galaxy = await _unitOfWork.Galaxies.GetById(GalaxyID)
+                Galaxy = await _unitOfWork.Galaxies.GetById(GalaxyID),
+                Extras = ""
             };
             bool madeResource = !hasResource;
             while (!madeResource)

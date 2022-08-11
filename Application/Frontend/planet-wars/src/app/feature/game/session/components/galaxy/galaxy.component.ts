@@ -12,6 +12,7 @@ import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { GalaxyDto } from '../../../dtos/galaxyDto';
 import { PlanetConnectionInfo } from '../../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../../interfaces/planetRenderInfo';
+import { GalaxyConstructorService } from '../../services/galaxy-constructor.service';
 import { getGalaxy } from '../../state/session.selectors';
 import { SessionState } from '../../state/session.state';
 @Component({
@@ -30,7 +31,10 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   public planetRenderInfoArray: PlanetRenderInfo[] = [];
   public planetConnectionsArray: PlanetConnectionInfo[] = [];
 
-  constructor(private store: Store<SessionState>) {
+  constructor(
+    private store: Store<SessionState>,
+    private galaxyConstructor: GalaxyConstructorService
+  ) {
     this.galaxy$ = this.store.select<Maybe<GalaxyDto>>(getGalaxy);
   }
 
@@ -50,8 +54,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     const width = this.galaxyMatrix?.nativeElement.clientWidth;
     const height = this.galaxyMatrix?.nativeElement.clientHeight;
-    console.log(`Galaxy dims: ${width}, ${height}`);
-    console.log(this.galaxyMatrix);
+    this.galaxyConstructor.constructGalaxy(this.galaxy, width, height);
   }
 
   private generatePlanetRenderInfoArray() {}
