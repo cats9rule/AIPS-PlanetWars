@@ -55,6 +55,7 @@ export class BasicPlanet implements Planet {
     matrixCell: PlanetMatrixCell,
     ownerColor: string
   ): PlanetRenderInfo[] {
+    console.log('Basic Planet render info');
     const x = matrixCell.x;
     const y = matrixCell.y;
     const renderInfo: PlanetRenderInfo = {
@@ -68,5 +69,13 @@ export class BasicPlanet implements Planet {
       strokeColor: ownerColor,
     };
     return [renderInfo];
+  }
+
+  incrementArmyCount(diff: number): void {
+    this._armyCount += diff;
+  }
+
+  setOwnerID(id: string): void {
+    this._ownerID = id;
   }
 }

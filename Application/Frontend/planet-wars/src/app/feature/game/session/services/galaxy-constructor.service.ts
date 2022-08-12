@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Maybe } from 'src/app/core/utils/types/maybe.type';
+import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { GalaxyDto } from '../../dtos/galaxyDto';
 import { GameMapDto } from '../../dtos/gameMapDto';
 import { PlanetDto } from '../../dtos/planetDto';
@@ -15,6 +15,13 @@ import { PlanetBuilderService } from './planet-builder.service';
 export class GalaxyConstructorService {
   private nextPlanetIndex = 0;
 
+  private planets: Planet[] = [];
+  private planetsRenderInfo: Map<number, PlanetRenderInfo[]> = new Map();
+
+  private _matrixWidth = 0;
+  private _matrixHeight = 0;
+  private _gameMap: Maybe<GameMapDto>;
+
   constructor(private planetBuilder: PlanetBuilderService) {}
 
   public constructGalaxy(
@@ -24,42 +31,65 @@ export class GalaxyConstructorService {
   ) {
     if (galaxy != undefined) {
       const planets: Planet[] = [];
-      const planetsRenderInfo: PlanetRenderInfo[] = [];
 
       galaxy.planets.forEach((planetDto) => {
         const planet = this.createPlanetFromDto(planetDto);
         planets.push(planet);
       });
 
-      const cellWidth = (matrixWidth / (galaxy.gameMap.columns * 2 + 1)) * 2;
-      const cellHeight = (matrixHeight / (galaxy.gameMap.rows * 2 + 1)) * 2;
+      this.planets = planets;
 
-      galaxy.gameMap.planetMatrix.forEach(
+      this._gameMap = galaxy.gameMap;
+      this._matrixHeight = matrixHeight;
+      this._matrixWidth = matrixWidth;
+
+      this.getRenderInfoForGalaxy();
+      console.log(this.planets);
+      console.log(this.planetsRenderInfo);
+    }
+  }
+
+  public getRenderInfoForGalaxy() {
+    if (isDefined(this._gameMap)) {
+      this._gameMap!!.planetMatrix.forEach(
         (indicator: boolean, index: number) => {
           if (indicator == true) {
-            const planet = planets[this.nextPlanetIndex++];
-            const row = index / galaxy.gameMap.rows;
-            const column = index % galaxy.gameMap.rows;
-
-            const matCell: PlanetMatrixCell = {
-              dx:
-                row % 2 == 0
-                  ? column * cellWidth
-                  : column * cellWidth + cellWidth / 2,
-              dy: row * cellHeight,
-              x: cellWidth,
-              y: cellHeight,
-            };
-            //TODO: resolve ownercolor
-            const ownerColor = 'white';
-            planetsRenderInfo.concat(
+            const planet = this.planets[this.nextPlanetIndex++];
+            const matCell = this.getMatrixCellInfo(index);
+            const ownerColor = this.resolveOwnerColor(planet.getOwnerID());
+            this.planetsRenderInfo.set(
+              planet.getIndexInGalaxy(),
               planet.getPlanetRenderInfo(matCell, ownerColor)
+            );
+            console.log(
+              `Planet ${
+                planet.getIndexInGalaxy() + 1
+              } attack: ${planet.getAttack()}, defense: ${planet.getDefense()}, movement: ${planet.getMovement()}`
             );
           }
         }
       );
-      console.log(planets);
-      console.log(planetsRenderInfo);
+    }
+  }
+
+  public updatePlanetOwnership(planetIndex: number, ownerID: string): void {
+    if (planetIndex >= 0) {
+      this.planets[planetIndex].setOwnerID(ownerID);
+      //TODO: summon upon the server!
+      this.planetsRenderInfo.set(
+        planetIndex,
+        this.planets[planetIndex].getPlanetRenderInfo(
+          this.getMatrixCellInfo(planetIndex),
+          this.resolveOwnerColor(ownerID)
+        )
+      );
+    }
+  }
+
+  public updatePlanetArmyCount(planetIndex: number, armyDiff: number): void {
+    if (planetIndex >= 0) {
+      this.planets[planetIndex].incrementArmyCount(armyDiff);
+      //TODO: summon upon the server!
     }
   }
 
@@ -77,9 +107,25 @@ export class GalaxyConstructorService {
     return this.planetBuilder.build();
   }
 
-  private getPlanetRenderInfo(
-    planet: Planet,
-    matIndex: number,
-    totalRows: number
-  ) {}
+  private getMatrixCellInfo(index: number): PlanetMatrixCell {
+    const row = index / this._gameMap!!.rows;
+    const column = index % this._gameMap!!.rows;
+    const cellWidth =
+      (this._matrixWidth / (this._gameMap!!.columns * 2 + 1)) * 2;
+    const cellHeight =
+      (this._matrixHeight / (this._gameMap!!.rows * 2 + 1)) * 2;
+
+    return {
+      dx:
+        row % 2 == 0 ? column * cellWidth : column * cellWidth + cellWidth / 2,
+      dy: row * cellHeight,
+      x: cellWidth,
+      y: cellHeight,
+    } as PlanetMatrixCell;
+  }
+
+  private resolveOwnerColor(ownerID: Maybe<string>): string {
+    return 'white';
+    //TODO: implement
+  }
 }

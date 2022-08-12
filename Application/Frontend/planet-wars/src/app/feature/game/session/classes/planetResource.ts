@@ -38,7 +38,17 @@ export class PlanetResource implements Planet {
     matrixCell: PlanetMatrixCell,
     ownerColor: string
   ): PlanetRenderInfo[] {
+    console.log('Resource Planet render info');
+
     //TODO: implement
     return [];
+  }
+
+  incrementArmyCount(diff: number): void {
+    this._wrappee.incrementArmyCount(diff);
+  }
+
+  setOwnerID(id: string): void {
+    this._wrappee.setOwnerID(id);
   }
 }

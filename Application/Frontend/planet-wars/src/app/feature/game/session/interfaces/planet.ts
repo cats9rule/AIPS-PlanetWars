@@ -13,4 +13,7 @@ export interface Planet {
   getIndexInGalaxy(): number;
   getOwnerID(): Maybe<string>;
   getID(): string;
+
+  setOwnerID(id: string): void;
+  incrementArmyCount(diff: number): void;
 }

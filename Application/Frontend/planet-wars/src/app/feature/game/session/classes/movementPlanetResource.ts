@@ -18,6 +18,7 @@ export class MovementPlanetResource extends PlanetResource {
     matrixCell: PlanetMatrixCell,
     ownerColor: string
   ): PlanetRenderInfo[] {
+    console.log('Movement Planet render info');
     return this.getMovementRenderInfo(matrixCell, ownerColor).concat(
       this._wrappee.getPlanetRenderInfo(matrixCell, ownerColor)
     );
