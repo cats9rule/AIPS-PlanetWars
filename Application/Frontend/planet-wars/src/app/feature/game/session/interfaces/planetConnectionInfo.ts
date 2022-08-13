@@ -4,6 +4,6 @@ export interface PlanetConnectionInfo {
   x2: number;
   y2: number;
   color: string;
-  strokeWidth: number;
+  strokeWidth: string;
   strokeDasharray: string;
 }

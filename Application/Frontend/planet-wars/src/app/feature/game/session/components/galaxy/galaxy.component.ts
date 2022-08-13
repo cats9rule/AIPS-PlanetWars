@@ -31,6 +31,9 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   public planetRenderInfoArray: PlanetRenderInfo[] = [];
   public planetConnectionsArray: PlanetConnectionInfo[] = [];
 
+  public drawGalaxy = false;
+  public lines: Line[] = [];
+
   constructor(
     private store: Store<SessionState>,
     private galaxyConstructor: GalaxyConstructorService
@@ -54,7 +57,33 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     const width = this.galaxyMatrix?.nativeElement.clientWidth;
     const height = this.galaxyMatrix?.nativeElement.clientHeight;
-    this.galaxyConstructor.constructGalaxy(this.galaxy, width, height);
+    const info = this.galaxyConstructor.constructGalaxy(
+      this.galaxy,
+      width,
+      height
+    );
+    info.forEach((entry) => {
+      this.planetRenderInfoArray = this.planetRenderInfoArray.concat(entry);
+    });
+    // const lines: Line[] = [];
+    // lines.push({ x1: 0, y1: 0, x2: 0, y2: height });
+
+    // const cellHeight = height / this.galaxy!!.gameMap.rows;
+    // const cellWidth = width / this.galaxy!!.gameMap.columns;
+
+    // for (let i = 0; i < this.galaxy!!.gameMap.columns; i++) {
+    //   lines.push({ x1: cellWidth * i, y1: 0, x2: cellWidth * i, y2: height });
+    // }
+
+    // for (let i = 0; i < this.galaxy!!.gameMap.rows; i++) {
+    //   lines.push({ x1: 0, y1: cellHeight * i, x2: width, y2: cellHeight * i });
+    // }
+    // this.lines = lines;
+
+    this.planetConnectionsArray =
+      this.galaxyConstructor.getConnectionsRenderInfo();
+
+    this.drawGalaxy = true;
   }
 
   private generatePlanetRenderInfoArray() {}
@@ -64,4 +93,11 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.galaxySubscription.unsubscribe();
   }
+}
+
+interface Line {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
 }

@@ -5,16 +5,16 @@ using AutoMapper;
 
 namespace PlanetWars.DTOs.MappingProfiles
 {
-    public class PlanetGraphConverter : IValueConverter<string, Dictionary<int, List<int>>>
+    public class PlanetGraphConverter : IValueConverter<string, Dictionary<string, List<int>>>
     {
-        public Dictionary<int, List<int>> Convert(string sourceMember, ResolutionContext context)
+        public Dictionary<string, List<int>> Convert(string sourceMember, ResolutionContext context)
         {
             List<string> entries = new List<string>(sourceMember.Split('|'));
-            Dictionary<int, List<int>> dict = new Dictionary<int, List<int>>();
+            Dictionary<string, List<int>> dict = new Dictionary<string, List<int>>();
             foreach (string entry in entries)
             {
                 string[] keyval = entry.Split(':');
-                int key = Int32.Parse(keyval[0]);
+                string key = keyval[0];
                 List<int> values = (new List<string>(keyval[1].Split(','))).Select(str => Int32.Parse(str)).ToList();
                 dict.Add(key, values);
             }

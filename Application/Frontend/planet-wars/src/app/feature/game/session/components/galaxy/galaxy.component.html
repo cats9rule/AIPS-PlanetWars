@@ -1,8 +1,24 @@
 <div class="galaxy" #galaxyMatrix>
-  <ul>
-    <li>Planets: {{ galaxy?.planets?.length }}</li>
-    <li *ngFor="let planet of galaxy?.planets">
-      Planet {{ planet.indexInGalaxy + 1 }} resources: {{ planet.extras }}
-    </li>
-  </ul>
+  <svg class="galaxy" *ngIf="drawGalaxy">
+    <line
+      *ngFor="let connection of planetConnectionsArray"
+      [attr.x1]="connection.x1"
+      [attr.y1]="connection.y1"
+      [attr.x2]="connection.x2"
+      [attr.y2]="connection.y2"
+      [attr.stroke]="connection.color"
+      [attr.stroke-width]="connection.strokeWidth"
+      [attr.stroke-dasharray]="connection.strokeDasharray"
+    ></line>
+    <circle
+      *ngFor="let planet of planetRenderInfoArray"
+      [attr.cx]="planet.cx"
+      [attr.cy]="planet.cy"
+      [attr.r]="planet.r"
+      [attr.stroke]="planet.strokeColor"
+      [attr.stroke-width]="planet.strokeWidth"
+      [attr.fill]="planet.color"
+      [attr.stroke-dasharray]="planet.strokeDasharray"
+    ></circle>
+  </svg>
 </div>

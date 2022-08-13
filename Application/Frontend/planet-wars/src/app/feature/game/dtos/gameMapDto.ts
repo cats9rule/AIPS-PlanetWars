@@ -1,7 +1,7 @@
 export interface GameMapDto {
   id: string;
   planetCount: number;
-  planetGraph: Map<number, number[]>;
+  planetGraph: any;
   planetMatrix: boolean[];
   rows: number;
   columns: number;

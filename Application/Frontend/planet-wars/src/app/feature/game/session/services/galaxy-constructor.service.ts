@@ -5,6 +5,7 @@ import { GameMapDto } from '../../dtos/gameMapDto';
 import { PlanetDto } from '../../dtos/planetDto';
 import { PlanetResources } from '../enums/planetResources';
 import { Planet } from '../interfaces/planet';
+import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetMatrixCell } from '../interfaces/planetMatrixCell';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
 import { PlanetBuilderService } from './planet-builder.service';
@@ -17,6 +18,7 @@ export class GalaxyConstructorService {
 
   private planets: Planet[] = [];
   private planetsRenderInfo: Map<number, PlanetRenderInfo[]> = new Map();
+  private connectionsRenderInfo: PlanetConnectionInfo[] = [];
 
   private _matrixWidth = 0;
   private _matrixHeight = 0;
@@ -46,7 +48,9 @@ export class GalaxyConstructorService {
       this.getRenderInfoForGalaxy();
       console.log(this.planets);
       console.log(this.planetsRenderInfo);
+      return this.planetsRenderInfo;
     }
+    return [];
   }
 
   public getRenderInfoForGalaxy() {
@@ -61,15 +65,52 @@ export class GalaxyConstructorService {
               planet.getIndexInGalaxy(),
               planet.getPlanetRenderInfo(matCell, ownerColor)
             );
-            console.log(
-              `Planet ${
-                planet.getIndexInGalaxy() + 1
-              } attack: ${planet.getAttack()}, defense: ${planet.getDefense()}, movement: ${planet.getMovement()}`
-            );
           }
         }
       );
     }
+  }
+
+  public getConnectionsRenderInfo() {
+    if (isDefined(this._gameMap)) {
+      let renderInfos: PlanetRenderInfo[] = [];
+      this.planetsRenderInfo.forEach((value) => {
+        renderInfos = renderInfos.concat(value);
+      });
+      const graph = this._gameMap!!.planetGraph;
+      console.log(graph);
+
+      for (const key in graph) {
+        const planetFrom = renderInfos.find(
+          (planet) => planet.indexInGalaxy.toString() == key
+        );
+        if (planetFrom != undefined) {
+          const connection: PlanetConnectionInfo = {
+            x1: planetFrom.cx,
+            y1: planetFrom.cy,
+            x2: 0,
+            y2: 0,
+            color: 'white',
+            strokeDasharray: '10 5',
+            strokeWidth: '2px',
+          };
+          const value = graph[key];
+          value!!.forEach((connectedPlanetIndex: number) => {
+            const planetTo = renderInfos.find(
+              (planet) => planet.indexInGalaxy == connectedPlanetIndex
+            );
+            if (planetTo != undefined) {
+              connection.x2 = planetTo.cx;
+              connection.y2 = planetTo.cy;
+              this.connectionsRenderInfo.push(connection);
+            }
+          });
+        }
+      }
+
+      return this.connectionsRenderInfo;
+    }
+    return [];
   }
 
   public updatePlanetOwnership(planetIndex: number, ownerID: string): void {
@@ -108,14 +149,17 @@ export class GalaxyConstructorService {
   }
 
   private getMatrixCellInfo(index: number): PlanetMatrixCell {
-    const row = index / this._gameMap!!.rows;
-    const column = index % this._gameMap!!.rows;
+    const row = index % this._gameMap!!.rows;
+    const column = index % this._gameMap!!.columns;
     const cellWidth =
       (this._matrixWidth / (this._gameMap!!.columns * 2 + 1)) * 2;
-    const cellHeight =
-      (this._matrixHeight / (this._gameMap!!.rows * 2 + 1)) * 2;
+    // const cellWidth = this._matrixWidth / this._gameMap!!.columns;
+    const cellHeight = this._matrixHeight / this._gameMap!!.rows;
+
+    console.log(row + ' ' + column);
 
     return {
+      // column * cellWidth,
       dx:
         row % 2 == 0 ? column * cellWidth : column * cellWidth + cellWidth / 2,
       dy: row * cellHeight,
