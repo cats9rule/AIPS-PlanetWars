@@ -34,8 +34,8 @@ export class MovementPlanetResource extends PlanetResource {
       {
         cx: x / 2 + matrixCell.dx,
         cy: y / 2 + matrixCell.dy,
-        indexInGalaxy: -1,
-        r: (x < y ? x : y) / 4 + 10,
+        indexInGalaxy: this.getIndexInGalaxy(),
+        r: (x < y ? x : y) / 4 + 12,
         color: 'transparent',
         strokeDasharray: '2',
         strokeWidth: '1px',

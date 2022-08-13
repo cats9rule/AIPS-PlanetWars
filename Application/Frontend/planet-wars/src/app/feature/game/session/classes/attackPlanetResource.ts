@@ -34,8 +34,8 @@ export class AttackPlanetResource extends PlanetResource {
       {
         cx: x / 2 + matrixCell.dx,
         cy: y / 2 + matrixCell.dy,
-        indexInGalaxy: -1,
-        r: (x < y ? x : y) / 4 + 14,
+        indexInGalaxy: this.getIndexInGalaxy(),
+        r: (x < y ? x : y) / 4 + 18,
         color: 'transparent',
         strokeDasharray: '10 5',
         strokeWidth: '1px',

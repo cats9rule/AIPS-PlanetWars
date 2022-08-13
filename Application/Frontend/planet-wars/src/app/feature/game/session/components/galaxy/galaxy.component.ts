@@ -86,6 +86,11 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.drawGalaxy = true;
   }
 
+  public onPlanetClick(index: number) {
+    alert('i was clicked: ' + index);
+    event?.preventDefault();
+  }
+
   private generatePlanetRenderInfoArray() {}
 
   private generatePlanetConnectionsArray() {}

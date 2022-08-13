@@ -6,4 +6,5 @@ export interface PlanetConnectionInfo {
   color: string;
   strokeWidth: string;
   strokeDasharray: string;
+  identifier: string;
 }

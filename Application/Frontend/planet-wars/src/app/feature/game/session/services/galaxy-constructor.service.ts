@@ -73,6 +73,7 @@ export class GalaxyConstructorService {
 
   public getConnectionsRenderInfo() {
     if (isDefined(this._gameMap)) {
+      const connections: PlanetConnectionInfo[] = [];
       let renderInfos: PlanetRenderInfo[] = [];
       this.planetsRenderInfo.forEach((value) => {
         renderInfos = renderInfos.concat(value);
@@ -85,28 +86,46 @@ export class GalaxyConstructorService {
           (planet) => planet.indexInGalaxy.toString() == key
         );
         if (planetFrom != undefined) {
-          const connection: PlanetConnectionInfo = {
-            x1: planetFrom.cx,
-            y1: planetFrom.cy,
-            x2: 0,
-            y2: 0,
-            color: 'white',
-            strokeDasharray: '10 5',
-            strokeWidth: '2px',
-          };
           const value = graph[key];
           value!!.forEach((connectedPlanetIndex: number) => {
             const planetTo = renderInfos.find(
               (planet) => planet.indexInGalaxy == connectedPlanetIndex
             );
             if (planetTo != undefined) {
-              connection.x2 = planetTo.cx;
-              connection.y2 = planetTo.cy;
-              this.connectionsRenderInfo.push(connection);
+              const connection: PlanetConnectionInfo = {
+                x1: planetFrom.cx,
+                y1: planetFrom.cy,
+                x2: planetTo.cx,
+                y2: planetTo.cy,
+                color: 'white',
+                strokeDasharray: '2',
+                strokeWidth: '2px',
+                identifier:
+                  planetFrom.indexInGalaxy.toString() +
+                  planetTo.indexInGalaxy.toString(),
+              };
+              console.log(planetFrom);
+              console.log(planetTo);
+              console.log(connection);
+
+              if (
+                connections.find(
+                  (c) =>
+                    c.identifier ==
+                      planetFrom.indexInGalaxy.toString() +
+                        planetTo.indexInGalaxy.toString() ||
+                    c.identifier ==
+                      planetTo.indexInGalaxy.toString() +
+                        planetFrom.indexInGalaxy.toString()
+                ) == undefined
+              ) {
+                connections.push(connection);
+              }
             }
           });
         }
       }
+      this.connectionsRenderInfo = connections;
 
       return this.connectionsRenderInfo;
     }
@@ -149,7 +168,7 @@ export class GalaxyConstructorService {
   }
 
   private getMatrixCellInfo(index: number): PlanetMatrixCell {
-    const row = index % this._gameMap!!.rows;
+    const row = Math.floor(index / this._gameMap!!.columns);
     const column = index % this._gameMap!!.columns;
     const cellWidth =
       (this._matrixWidth / (this._gameMap!!.columns * 2 + 1)) * 2;

@@ -19,6 +19,17 @@
       [attr.stroke-width]="planet.strokeWidth"
       [attr.fill]="planet.color"
       [attr.stroke-dasharray]="planet.strokeDasharray"
+      (click)="onPlanetClick(planet.indexInGalaxy)"
     ></circle>
+    <text
+      *ngFor="let planet of planetRenderInfoArray"
+      [attr.x]="planet.cx"
+      [attr.y]="planet.cy"
+      text-align="middle"
+      alignment-baseline="middle"
+      fill="black"
+    >
+      {{ planet.indexInGalaxy }}
+    </text>
   </svg>
 </div>

@@ -38,9 +38,6 @@ export class PlanetResource implements Planet {
     matrixCell: PlanetMatrixCell,
     ownerColor: string
   ): PlanetRenderInfo[] {
-    console.log('Resource Planet render info');
-
-    //TODO: implement
     return [];
   }
 

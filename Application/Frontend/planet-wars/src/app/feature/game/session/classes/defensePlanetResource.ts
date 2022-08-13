@@ -33,7 +33,7 @@ export class DefensePlanetResource extends PlanetResource {
     const renderInfo1: PlanetRenderInfo = {
       cx: x / 2 + matrixCell.dx,
       cy: y / 2 + matrixCell.dy,
-      indexInGalaxy: -1,
+      indexInGalaxy: this.getIndexInGalaxy(),
       r: (x < y ? x : y) / 4 + 4,
       color: 'transparent',
       strokeDasharray: '',
@@ -43,7 +43,7 @@ export class DefensePlanetResource extends PlanetResource {
     const renderInfo2: PlanetRenderInfo = {
       cx: x / 2 + matrixCell.dx,
       cy: y / 2 + matrixCell.dy,
-      indexInGalaxy: -1,
+      indexInGalaxy: this.getIndexInGalaxy(),
       r: (x < y ? x : y) / 4 + 6,
       color: 'transparent',
       strokeDasharray: '',
