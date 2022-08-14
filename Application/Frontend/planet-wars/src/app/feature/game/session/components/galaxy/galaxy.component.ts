@@ -13,7 +13,13 @@ import { GalaxyDto } from '../../../dtos/galaxyDto';
 import { PlanetConnectionInfo } from '../../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../../interfaces/planetRenderInfo';
 import { GalaxyConstructorService } from '../../services/galaxy-constructor.service';
-import { getGalaxy } from '../../state/session.selectors';
+import { constructGalaxy } from '../../state/session.actions';
+import {
+  canDrawGalaxy,
+  getGalaxy,
+  getPlanetConnectionsRenderInfo,
+  getPlanetsRenderInfo,
+} from '../../state/session.selectors';
 import { SessionState } from '../../state/session.state';
 @Component({
   selector: 'app-galaxy',
@@ -24,6 +30,13 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   public galaxy$: Observable<Maybe<GalaxyDto>>;
   public galaxy: Maybe<GalaxyDto>;
   private galaxySubscription: Subscription = new Subscription();
+
+  private planetsRenderInfo$: Observable<Map<number, PlanetRenderInfo[]>>;
+  private planetsRenderinfoSubscription: Subscription = new Subscription();
+
+  public planetConnectionsRenderInfo$: Observable<PlanetConnectionInfo[]>;
+
+  public canDrawGalaxy$: Observable<boolean>;
 
   @ViewChild('galaxyMatrix')
   private galaxyMatrix?: ElementRef;
@@ -39,6 +52,13 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     private galaxyConstructor: GalaxyConstructorService
   ) {
     this.galaxy$ = this.store.select<Maybe<GalaxyDto>>(getGalaxy);
+    this.planetsRenderInfo$ =
+      this.store.select<Map<number, PlanetRenderInfo[]>>(getPlanetsRenderInfo);
+    this.planetConnectionsRenderInfo$ = this.store.select<
+      PlanetConnectionInfo[]
+    >(getPlanetConnectionsRenderInfo);
+
+    this.canDrawGalaxy$ = this.store.select<boolean>(canDrawGalaxy);
   }
 
   ngOnInit(): void {
@@ -52,19 +72,33 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error(err);
       },
     });
+
+    this.planetsRenderinfoSubscription = this.planetsRenderInfo$.subscribe({
+      next: (renderInfoMap) => {
+        let renderInfos: PlanetRenderInfo[] = [];
+        renderInfoMap.forEach((value) => {
+          renderInfos = renderInfos.concat(value);
+        });
+        this.planetRenderInfoArray = renderInfos;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
     const width = this.galaxyMatrix?.nativeElement.clientWidth;
     const height = this.galaxyMatrix?.nativeElement.clientHeight;
-    const info = this.galaxyConstructor.constructGalaxy(
-      this.galaxy,
-      width,
-      height
-    );
-    info.forEach((entry) => {
-      this.planetRenderInfoArray = this.planetRenderInfoArray.concat(entry);
-    });
+    if (isDefined(this.galaxy)) {
+      this.store.dispatch(
+        constructGalaxy({
+          galaxyDto: this.galaxy!!,
+          matrixWidth: width,
+          matrixHeight: height,
+        })
+      );
+    }
     // const lines: Line[] = [];
     // lines.push({ x1: 0, y1: 0, x2: 0, y2: height });
 
@@ -97,6 +131,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.galaxySubscription.unsubscribe();
+    this.planetsRenderinfoSubscription.unsubscribe();
   }
 }
 

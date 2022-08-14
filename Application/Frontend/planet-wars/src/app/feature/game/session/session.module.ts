@@ -19,6 +19,8 @@ import { Features } from '../../features.enum';
 import { ActionsConfirmationComponent } from './components/actions-confirmation/actions-confirmation.component';
 import { GalaxyComponent } from './components/galaxy/galaxy.component';
 import { GalaxyConstructorService } from './services/galaxy-constructor.service';
+import { EffectsModule } from '@ngrx/effects';
+import { SessionEffects } from './state/session.effects';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { GalaxyConstructorService } from './services/galaxy-constructor.service'
   imports: [
     CommonModule,
     StoreModule.forFeature(Features.Session, sessionReducer),
+    EffectsModule.forFeature([SessionEffects]),
     MatCardModule,
     MatFormFieldModule,
     MatIconModule,

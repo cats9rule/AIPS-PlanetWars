@@ -30,7 +30,7 @@ export class GalaxyConstructorService {
     galaxy: Maybe<GalaxyDto>,
     matrixWidth: number,
     matrixHeight: number
-  ) {
+  ): Planet[] {
     if (galaxy != undefined) {
       const planets: Planet[] = [];
 
@@ -45,10 +45,7 @@ export class GalaxyConstructorService {
       this._matrixHeight = matrixHeight;
       this._matrixWidth = matrixWidth;
 
-      this.getRenderInfoForGalaxy();
-      console.log(this.planets);
-      console.log(this.planetsRenderInfo);
-      return this.planetsRenderInfo;
+      return this.planets;
     }
     return [];
   }
@@ -69,6 +66,7 @@ export class GalaxyConstructorService {
         }
       );
     }
+    return this.planetsRenderInfo;
   }
 
   public getConnectionsRenderInfo() {

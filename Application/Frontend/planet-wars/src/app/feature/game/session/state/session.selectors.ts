@@ -25,3 +25,23 @@ export const getGalaxy = createSelector(
   getSessionState,
   (state: SessionState) => state.session?.galaxy
 );
+
+export const getPlanets = createSelector(
+  getSessionState,
+  (state: SessionState) => state.planets
+);
+
+export const getPlanetsRenderInfo = createSelector(
+  getSessionState,
+  (state: SessionState) => state.planetsRenderInfo
+);
+
+export const getPlanetConnectionsRenderInfo = createSelector(
+  getSessionState,
+  (state: SessionState) => state.planetConnectionsInfo
+);
+
+export const canDrawGalaxy = createSelector(
+  getSessionState,
+  (state: SessionState) => state.planetConnectionsInfo.length != 0
+);

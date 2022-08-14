@@ -7,7 +7,12 @@ import { UserDto } from '../dtos/userDto';
 import { User } from '../interfaces/user';
 import { LoginService } from '../login/login.service';
 import { SignupService } from '../signup/signup.service';
-import { userLogin, userLoginSuccess, userSignup, userSignupSuccess } from './user.actions';
+import {
+  userLogin,
+  userLoginSuccess,
+  userSignup,
+  userSignupSuccess,
+} from './user.actions';
 
 @Injectable()
 export class UserEffects {
@@ -22,7 +27,6 @@ export class UserEffects {
     this.actions$.pipe(
       ofType(userLogin),
       switchMap((action) => {
-        console.log('login user effect');
         return this.loginService.loginUser(action.userLoginDto).pipe(
           mergeMap((userDto: UserDto) => {
             const user: User = {

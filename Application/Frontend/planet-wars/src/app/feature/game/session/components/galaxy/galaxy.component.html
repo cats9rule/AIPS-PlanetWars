@@ -1,7 +1,7 @@
 <div class="galaxy" #galaxyMatrix>
-  <svg class="galaxy" *ngIf="drawGalaxy">
+  <svg class="galaxy" *ngIf="canDrawGalaxy$ | async">
     <line
-      *ngFor="let connection of planetConnectionsArray"
+      *ngFor="let connection of planetConnectionsRenderInfo$ | async"
       [attr.x1]="connection.x1"
       [attr.y1]="connection.y1"
       [attr.x2]="connection.x2"
