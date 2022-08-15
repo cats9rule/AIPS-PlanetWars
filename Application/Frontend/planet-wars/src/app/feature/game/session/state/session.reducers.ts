@@ -8,6 +8,7 @@ import {
   constructGalaxySuccess,
   constructPlanetConnectionsRenderInfoSuccess,
   constructPlanetRenderInfoSuccess,
+  updatePlanetOwner,
 } from './session.actions';
 import { initialSessionState, SessionState } from './session.state';
 
@@ -42,7 +43,10 @@ export const sessionReducer = createReducer(
         planetConnectionsInfo: connectionsRenderInfo,
       };
     }
-  )
+  ),
+  on(updatePlanetOwner, (state: SessionState, { planetID, newOwnerID }) => {
+    return updatePlanetOwnership(state, planetID, newOwnerID);
+  })
 );
 
 const setSession = (state: SessionState, sessionDto: SessionDto) => {
@@ -50,4 +54,18 @@ const setSession = (state: SessionState, sessionDto: SessionDto) => {
     ...state,
     session: sessionDto,
   };
+};
+
+const updatePlanetOwnership = (
+  state: SessionState,
+  planetID: string,
+  newOwnerID: string
+): SessionState => {
+  const planetIndex = state.planets.findIndex((p) => p.getID() == planetID);
+  if (planetIndex != -1) {
+    const newState = state;
+    newState.planets[planetIndex].setOwnerID(newOwnerID);
+    return newState;
+  }
+  return state;
 };

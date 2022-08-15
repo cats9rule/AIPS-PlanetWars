@@ -60,7 +60,6 @@ export class LobbyEffects {
     this.actions$.pipe(
       ofType(createGameSuccess),
       switchMap((action) => {
-        //TODO: open game screen
         alert(
           `Game has been created. Name: ${action.sessionDto.name}; Game Code: ${action.sessionDto.gameCode}`
         );
@@ -87,7 +86,6 @@ export class LobbyEffects {
     this.actions$.pipe(
       ofType(joinGameSuccess),
       switchMap((action) => {
-        //TODO: open game screen
         alert(
           `Game has been joined. Name: ${action.sessionDto.name}; Game Code: ${action.sessionDto.gameCode}`
         );

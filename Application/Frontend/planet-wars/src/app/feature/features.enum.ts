@@ -3,4 +3,5 @@ export enum Features {
   Game = 'game',
   Lobby = 'lobby',
   Session = 'session',
+  Chat = 'chat',
 }

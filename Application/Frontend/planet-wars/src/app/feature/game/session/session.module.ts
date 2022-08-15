@@ -21,6 +21,7 @@ import { GalaxyComponent } from './components/galaxy/galaxy.component';
 import { GalaxyConstructorService } from './services/galaxy-constructor.service';
 import { EffectsModule } from '@ngrx/effects';
 import { SessionEffects } from './state/session.effects';
+import { ChatModule } from '../chat/chat.module';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { SessionEffects } from './state/session.effects';
     MatButtonModule,
     MatListModule,
     MatGridListModule,
+    ChatModule,
   ],
   exports: [SessionMainComponent],
 })

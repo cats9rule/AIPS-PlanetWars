@@ -31,3 +31,8 @@ export const constructPlanetConnectionsRenderInfoSuccess = createAction(
   '[Galaxy] Construct Planet Connections Render Info Success',
   props<{ connectionsRenderInfo: PlanetConnectionInfo[] }>()
 );
+
+export const updatePlanetOwner = createAction(
+  '[Galaxy] Update Planet Owner',
+  props<{ planetID: string; newOwnerID: string }>()
+);

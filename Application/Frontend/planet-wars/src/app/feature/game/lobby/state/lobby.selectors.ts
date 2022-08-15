@@ -8,5 +8,3 @@ export const getGameMaps = createSelector(
   getLobbyState,
   (state: LobbyState) => state.gameMaps
 );
-
-//TODO: razmisli o tome koji selektor treba da uzima ovo

@@ -170,13 +170,11 @@ export class GalaxyConstructorService {
     const column = index % this._gameMap!!.columns;
     const cellWidth =
       (this._matrixWidth / (this._gameMap!!.columns * 2 + 1)) * 2;
-    // const cellWidth = this._matrixWidth / this._gameMap!!.columns;
     const cellHeight = this._matrixHeight / this._gameMap!!.rows;
 
     console.log(row + ' ' + column);
 
     return {
-      // column * cellWidth,
       dx:
         row % 2 == 0 ? column * cellWidth : column * cellWidth + cellWidth / 2,
       dy: row * cellHeight,

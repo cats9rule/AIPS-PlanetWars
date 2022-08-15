@@ -122,6 +122,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public onPlanetClick(index: number) {
     alert('i was clicked: ' + index);
+
     event?.preventDefault();
   }
 

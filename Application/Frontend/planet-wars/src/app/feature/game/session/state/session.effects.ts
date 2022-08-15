@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap, switchMap } from 'rxjs';
-import { noAction } from 'src/app/core/state/common.actions';
+import { mergeMap } from 'rxjs';
 import { GalaxyConstructorService } from '../services/galaxy-constructor.service';
 import {
   constructGalaxy,
@@ -10,6 +9,7 @@ import {
   constructPlanetConnectionsRenderInfoSuccess,
   constructPlanetRenderInfo,
   constructPlanetRenderInfoSuccess,
+  updatePlanetOwner,
 } from './session.actions';
 
 @Injectable()
@@ -61,6 +61,15 @@ export class SessionEffects {
             connectionsRenderInfo,
           }),
         ];
+      })
+    )
+  );
+
+  updatePlanetOwner$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updatePlanetOwner),
+      mergeMap(() => {
+        return [constructPlanetRenderInfo()];
       })
     )
   );
