@@ -6,10 +6,9 @@ export const chatReducer = createReducer(
   initialChatState,
   on(receiveChatMessage, (state: ChatState, { chatMessage }) => {
     const messages = state.messages;
-    messages.push(chatMessage);
     return {
       ...state,
-      messages: messages,
+      messages: [...messages, chatMessage],
     };
   })
 );

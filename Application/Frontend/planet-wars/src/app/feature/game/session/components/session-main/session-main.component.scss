@@ -25,10 +25,22 @@
   flex-direction: column;
 }
 
+.info-chat {
+  display: flex;
+  flex-direction: row;
+  width: 70vw;
+  height: 5vh;
+  margin-top: 10px;
+}
+
+.chat-container {
+  justify-self: flex-end;
+}
+
 .map {
   display: block;
   width: 70vw;
-  height: 90vh;
+  height: 80vh;
   margin-top: 10px;
 }
 

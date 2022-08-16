@@ -13,6 +13,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { LobbyModule } from './feature/game/lobby/lobby.module';
 import { SessionModule } from './feature/game/session/session.module';
+import { GameModule } from './feature/game/game.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +32,7 @@ import { SessionModule } from './feature/game/session/session.module';
     CoreModule,
     LobbyModule,
     SessionModule,
+    GameModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

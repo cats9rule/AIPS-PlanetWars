@@ -1,8 +1,15 @@
 import { createAction, props } from '@ngrx/store';
+import { Maybe } from 'src/app/core/utils/types/maybe.type';
+import { User } from 'src/app/feature/user/interfaces/user';
 import { GalaxyDto } from '../../dtos/galaxyDto';
 import { Planet } from '../interfaces/planet';
 import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
+
+export const joinSessionGroup = createAction(
+  '[Session] Join Session Group',
+  props<{ user: Maybe<User>; sessionID: string }>()
+);
 
 export const constructGalaxy = createAction(
   '[Galaxy] Construct Galaxy',

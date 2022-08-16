@@ -8,6 +8,7 @@
       <app-session-main
         *ngIf="isInGame; else homeBlock"
         class="session-main"
+        [user]="user$ | async"
       ></app-session-main>
       <ng-template #homeBlock>
         <app-home></app-home>

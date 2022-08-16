@@ -15,7 +15,7 @@ import { ChatState } from '../../state/chat.state';
 })
 export class ChatComponent implements OnInit {
   public messages$: Observable<MessageDto[]>;
-  public panelOpenState = false;
+  public isOpen = false;
 
   @Input()
   public user: Maybe<User>;
@@ -33,15 +33,17 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {}
 
   public sendMessage() {
-    if (isDefined(this.user)) {
+    if (isDefined(this.user) && this.sessionID != '') {
       const messageDto: MessageDto = {
         clientHandler: this.clientHandler,
         contents: this.messageToSend,
         sessionID: this.sessionID,
         userID: this.user!!.id,
-        usernameWithTag: this.user!!.displayedName + '#' + this.user!!.tag,
+        usernameWithTag: this.user!!.username + '#' + this.user!!.tag,
       };
       this.store.dispatch(sendChatMessage({ messageDto }));
+
+      this.messageToSend = '';
     }
   }
 }

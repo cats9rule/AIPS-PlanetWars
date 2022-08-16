@@ -9,9 +9,21 @@
     ></app-players-info>
     <app-actions></app-actions>
     <app-actions-confirmation></app-actions-confirmation>
-    
   </div>
   <div class="map-column">
+    <div class="info-chat">
+      <app-session-info
+        [sessionName]="session != null ? session.name : ''"
+        [totalPlanets]="
+          session != null ? session.galaxy.gameMap.planetCount : 0
+        "
+      ></app-session-info>
+      <app-chat
+        class="chat-container"
+        [user]="user"
+        [sessionID]="session != null ? session.id : ''"
+      ></app-chat>
+    </div>
     <div class="map"><app-galaxy></app-galaxy></div>
   </div>
 </div>

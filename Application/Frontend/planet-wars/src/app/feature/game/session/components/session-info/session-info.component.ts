@@ -9,8 +9,6 @@ export class SessionInfoComponent implements OnInit {
   @Input()
   public sessionName = '';
   @Input()
-  public currentPlayerUsername = '';
-  @Input()
   public totalPlanets = 0;
 
   constructor() {}

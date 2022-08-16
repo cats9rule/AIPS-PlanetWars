@@ -2,7 +2,7 @@ import { GalaxyDto } from './galaxyDto';
 import { PlayerDto } from './playerDto';
 
 export interface SessionDto {
-  ID: string;
+  id: string;
   name: string;
   gameCode: string;
   currentTurnIndex: number;

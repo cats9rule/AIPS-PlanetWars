@@ -197,8 +197,13 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
+                Console.WriteLine("\n\n" + session.ID.ToString() + "\n\n");
 
-                return _mapper.Map<Session, SessionDto>(session);
+                var s = _mapper.Map<Session, SessionDto>(session);
+
+                Console.WriteLine("\n\n" + s.ID.ToString() + "\n\n");
+
+                return s;
             }
         }
 
@@ -233,6 +238,8 @@ namespace PlanetWars.Services.ConcreteServices
                 session.PlayerCount++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
+
+                Console.WriteLine("\n\n" + session.ID.ToString() + "\n\n");
 
                 return _mapper.Map<SessionDto>(session);
             }

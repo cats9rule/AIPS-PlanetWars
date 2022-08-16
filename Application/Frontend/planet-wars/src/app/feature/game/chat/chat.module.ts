@@ -9,7 +9,11 @@ import { StoreModule } from '@ngrx/store';
 import { Features } from '../../features.enum';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { EffectsModule } from '@ngrx/effects';
+import { ChatEffects } from './state/chat.effects';
 
 @NgModule({
   declarations: [MessageComponent, ChatComponent],
@@ -19,8 +23,12 @@ import { FormsModule } from '@angular/forms';
     MatExpansionModule,
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     FormsModule,
     StoreModule.forFeature(Features.Chat, chatReducer),
+    EffectsModule.forFeature([ChatEffects]),
+    OverlayModule,
   ],
+  exports: [ChatComponent],
 })
 export class ChatModule {}

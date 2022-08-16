@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
+import { User } from 'src/app/feature/user/interfaces/user';
 import { SessionDto } from '../../../dtos/sessionDto';
 import { getSession } from '../../state/session.selectors';
 import { SessionState } from '../../state/session.state';
@@ -17,7 +18,7 @@ export class SessionMainComponent implements OnInit, OnDestroy {
   public session: Maybe<SessionDto>;
 
   @Input()
-  private userID: string = '';
+  public user: Maybe<User>;
 
   constructor(private store: Store<SessionState>) {
     this.session$ = this.store.select<Maybe<SessionDto>>(getSession);

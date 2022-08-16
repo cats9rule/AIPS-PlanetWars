@@ -1,9 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import { Maybe } from './core/utils/types/maybe.type';
 import { getIsInSession } from './feature/game/session/state/session.selectors';
 import { SessionState } from './feature/game/session/state/session.state';
-import { getIsUserLogged } from './feature/user/state/user.selectors';
+import { User } from './feature/user/interfaces/user';
+import {
+  getIsUserLogged,
+  getUserLogged,
+} from './feature/user/state/user.selectors';
 import { UserState } from './feature/user/state/user.state';
 
 @Component({
@@ -22,6 +27,8 @@ export class AppComponent implements OnInit, OnDestroy {
   public isInGame: boolean = false;
   private isInGameSubscription: Subscription = new Subscription();
 
+  public user$: Observable<Maybe<User>>;
+
   public isLightTheme = false;
 
   constructor(
@@ -30,6 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {
     this.isUserLogged$ = this.userStore.select<boolean>(getIsUserLogged);
     this.isInGame$ = this.sessionStore.select<boolean>(getIsInSession);
+    this.user$ = this.userStore.select<Maybe<User>>(getUserLogged);
   }
 
   ngOnInit(): void {
