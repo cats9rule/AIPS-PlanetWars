@@ -45,3 +45,8 @@ export const canDrawGalaxy = createSelector(
   getSessionState,
   (state: SessionState) => state.planetConnectionsInfo.length != 0
 );
+
+export const getPlayer = createSelector(
+  getSessionState,
+  (state: SessionState) => state.player
+);

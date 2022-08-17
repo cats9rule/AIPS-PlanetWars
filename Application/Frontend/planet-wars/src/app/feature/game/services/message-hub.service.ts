@@ -10,6 +10,8 @@ import { SnackbarMessage } from 'src/app/core/interfaces/snackbar-message';
 import { MessageDto } from '../chat/dtos/messageDto';
 import { ChatService } from '../chat/services/chat.service';
 import { ClientHandlers } from '../enums/clientHandlers.enum';
+import { SessionService } from '../session/services/session.service';
+import { NewPlayerDto } from '../dtos/newPlayerDto';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,7 @@ export class MessageHubService {
   private hubConnection: Maybe<signalR.HubConnection>;
   constructor(
     private chatService: ChatService,
+    private sessionService: SessionService,
     private snackbarService: SnackbarService
   ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -27,10 +30,7 @@ export class MessageHubService {
 
   public startHubConnection(user: Maybe<User>, sessionID: string) {
     if (isDefined(this.hubConnection)) {
-      this.hubConnection!!.on(
-        ClientHandlers.receiveMessage,
-        (messageDto: MessageDto) => this.receiveMessage(messageDto)
-      );
+      this.setClientHandlers();
 
       this.hubConnection!!.start()
         .then(() => {
@@ -65,6 +65,21 @@ export class MessageHubService {
         };
         this.snackbarService.showMessage(msg, 'short');
       });
+  }
+
+  private setClientHandlers() {
+    this.hubConnection!!.on(
+      ClientHandlers.receiveMessage,
+      (messageDto: MessageDto) => this.receiveMessage(messageDto)
+    );
+
+    this.hubConnection!!.on(
+      ClientHandlers.onNewPlayer,
+      (newPlayerDto: NewPlayerDto) => {
+        console.log('ON NEW PLAYER');
+        this.sessionService.addPlayer(newPlayerDto.newPlayer);
+      }
+    );
   }
 
   private receiveMessage(messageDto: MessageDto) {

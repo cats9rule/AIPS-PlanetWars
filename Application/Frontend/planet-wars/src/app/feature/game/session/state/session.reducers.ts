@@ -1,10 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
+import { isDefined } from 'src/app/core/utils/types/maybe.type';
 import { SessionDto } from '../../dtos/sessionDto';
 import {
   createGameSuccess,
   joinGameSuccess,
 } from '../../lobby/state/lobby.actions';
 import {
+  addNewPlayer,
   constructGalaxySuccess,
   constructPlanetConnectionsRenderInfoSuccess,
   constructPlanetRenderInfoSuccess,
@@ -14,11 +16,11 @@ import { initialSessionState, SessionState } from './session.state';
 
 export const sessionReducer = createReducer(
   initialSessionState,
-  on(createGameSuccess, (state: SessionState, { sessionDto }) => {
-    return setSession(state, sessionDto);
+  on(createGameSuccess, (state: SessionState, { sessionDto, userID }) => {
+    return setSession(state, sessionDto, userID);
   }),
-  on(joinGameSuccess, (state: SessionState, { sessionDto }) => {
-    return setSession(state, sessionDto);
+  on(joinGameSuccess, (state: SessionState, { sessionDto, userID }) => {
+    return setSession(state, sessionDto, userID);
   }),
   on(constructGalaxySuccess, (state: SessionState, { planets }) => {
     return {
@@ -44,15 +46,40 @@ export const sessionReducer = createReducer(
       };
     }
   ),
+  on(addNewPlayer, (state: SessionState, { playerDto }) => {
+    if (isDefined(state.session)) {
+      const session: SessionDto = {
+        currentTurnIndex: state.session!!.currentTurnIndex,
+        galaxy: state.session!!.galaxy,
+        gameCode: state.session!!.gameCode,
+        id: state.session!!.id,
+        maxPlayers: state.session!!.maxPlayers,
+        name: state.session!!.name,
+        playerCount: state.session!!.playerCount + 1,
+        players: [...state.session!!.players, playerDto],
+      };
+
+      return {
+        ...state,
+        session: session,
+      };
+    }
+    return state;
+  }),
   on(updatePlanetOwner, (state: SessionState, { planetID, newOwnerID }) => {
     return updatePlanetOwnership(state, planetID, newOwnerID);
   })
 );
 
-const setSession = (state: SessionState, sessionDto: SessionDto) => {
+const setSession = (
+  state: SessionState,
+  sessionDto: SessionDto,
+  userID: string
+) => {
   return {
     ...state,
     session: sessionDto,
+    player: sessionDto.players.find((p) => p.userID == userID),
   };
 };
 

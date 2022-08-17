@@ -3,8 +3,9 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { User } from 'src/app/feature/user/interfaces/user';
+import { PlayerDto } from '../../../dtos/playerDto';
 import { SessionDto } from '../../../dtos/sessionDto';
-import { getSession } from '../../state/session.selectors';
+import { getPlayer, getSession } from '../../state/session.selectors';
 import { SessionState } from '../../state/session.state';
 
 @Component({
@@ -17,11 +18,14 @@ export class SessionMainComponent implements OnInit, OnDestroy {
   private sessionSubscription: Subscription = new Subscription();
   public session: Maybe<SessionDto>;
 
+  public player$: Observable<Maybe<PlayerDto>>;
+
   @Input()
   public user: Maybe<User>;
 
   constructor(private store: Store<SessionState>) {
     this.session$ = this.store.select<Maybe<SessionDto>>(getSession);
+    this.player$ = this.store.select<Maybe<PlayerDto>>(getPlayer);
   }
 
   ngOnInit(): void {

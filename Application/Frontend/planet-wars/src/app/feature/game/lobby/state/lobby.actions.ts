@@ -11,7 +11,7 @@ export const createGame = createAction(
 
 export const createGameSuccess = createAction(
   '[Lobby] Create Game Success',
-  props<{ sessionDto: SessionDto }>()
+  props<{ sessionDto: SessionDto; userID: string }>()
 );
 
 export const createGameError = createAction(
@@ -26,7 +26,7 @@ export const joinGame = createAction(
 
 export const joinGameSuccess = createAction(
   '[Lobby] Join Game Success',
-  props<{ sessionDto: SessionDto }>()
+  props<{ sessionDto: SessionDto; userID: string }>()
 );
 
 export const joinGameError = createAction(

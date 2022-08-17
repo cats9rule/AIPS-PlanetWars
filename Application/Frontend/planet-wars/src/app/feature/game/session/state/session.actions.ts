@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store';
 import { Maybe } from 'src/app/core/utils/types/maybe.type';
 import { User } from 'src/app/feature/user/interfaces/user';
 import { GalaxyDto } from '../../dtos/galaxyDto';
+import { PlayerDto } from '../../dtos/playerDto';
 import { Planet } from '../interfaces/planet';
 import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
@@ -37,6 +38,11 @@ export const constructPlanetConnectionsRenderInfo = createAction(
 export const constructPlanetConnectionsRenderInfoSuccess = createAction(
   '[Galaxy] Construct Planet Connections Render Info Success',
   props<{ connectionsRenderInfo: PlanetConnectionInfo[] }>()
+);
+
+export const addNewPlayer = createAction(
+  '[Session] Add New Player',
+  props<{ playerDto: PlayerDto }>()
 );
 
 export const updatePlanetOwner = createAction(

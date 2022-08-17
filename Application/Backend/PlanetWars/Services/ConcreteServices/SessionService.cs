@@ -5,12 +5,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using PlanetWars.Communication;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
+using PlanetWars.DTOs.Communication;
 
 namespace PlanetWars.Services.ConcreteServices
 {
@@ -22,10 +21,11 @@ namespace PlanetWars.Services.ConcreteServices
         private readonly HubService _hubService;
         #endregion
 
-        public SessionService(IUnitOfWork uow, IMapper mapper)
+        public SessionService(IUnitOfWork uow, IMapper mapper, HubService hubService)
         {
             _unitOfWork = uow;
             _mapper = mapper;
+            _hubService = hubService;
         }
 
         public async Task<bool> Add(Session session)
@@ -155,8 +155,8 @@ namespace PlanetWars.Services.ConcreteServices
             using (_unitOfWork)
             {
                 GameMap gameMap = await _unitOfWork.GameMaps.GetById(dto.GameMapID);
-                User user = await _unitOfWork.Users.GetById(dto.UserID);
                 
+                User user = await _unitOfWork.Users.GetById(dto.UserID);
                 if (gameMap == null || user == null) return null;
 
                 Session session = await InitSession(dto.Name, gameMap.MaxPlayers);
@@ -196,13 +196,7 @@ namespace PlanetWars.Services.ConcreteServices
 
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
-
-                Console.WriteLine("\n\n" + session.ID.ToString() + "\n\n");
-
                 var s = _mapper.Map<Session, SessionDto>(session);
-
-                Console.WriteLine("\n\n" + s.ID.ToString() + "\n\n");
-
                 return s;
             }
         }
@@ -222,24 +216,31 @@ namespace PlanetWars.Services.ConcreteServices
 
                 int turnIndex = session.PlayerCount;
 
-                Player player = new Player();
-                player.User = user;
-                player.UserID = userID;
-                player.PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex);
-                player.IsActive = true;
-                player.SessionID = sessionID;
-                player.Session = session;
-                player.Planets = new List<Planet>();
-
-                // await _unitOfWork.Players.Add(player);
-                // await _unitOfWork.CompleteAsync();
+                Player player = new Player()
+                {
+                    User = user,
+                    UserID = userID,
+                    PlayerColor = await _unitOfWork.PlayerColors.GetByTurnIndex(turnIndex),
+                    IsActive = true,
+                    SessionID = sessionID,
+                    Session = session,
+                    Planets = new List<Planet>()
+                };
 
                 session.Players.Add(player);
                 session.PlayerCount++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                Console.WriteLine("\n\n" + session.ID.ToString() + "\n\n");
+                NewPlayerDto newPlayer = new NewPlayerDto()
+                {
+                    ClientHandler = "onNewPlayer",
+                    NewPlayer = _mapper.Map<PlayerDto>(player),
+                    SessionID = sessionID.ToString(),
+                    UserID = userID.ToString()
+                };
+
+                await _hubService.NotifyOnNewPlayer(newPlayer);
 
                 return _mapper.Map<SessionDto>(session);
             }

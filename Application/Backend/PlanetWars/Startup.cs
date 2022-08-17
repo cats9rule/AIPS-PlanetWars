@@ -43,6 +43,9 @@ namespace PlanetWars
             services.AddTransient<IPlayerService, PlayerService>();
             services.AddTransient<IGameMapService, GameMapService>();
 
+            services.AddScoped<HubService>();
+
+
             services.AddAutoMapper(typeof(Mappings));
 
             services.AddControllers();

@@ -50,10 +50,11 @@ export class LobbyEffects {
   createGame$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createGame),
+      withLatestFrom(this.userStore.select(getUserLogged)),
       switchMap((action) => {
-        return this.initGameService.createGame(action.createGameDto).pipe(
+        return this.initGameService.createGame(action[0].createGameDto).pipe(
           mergeMap((sessionDto: SessionDto) => [
-            createGameSuccess({ sessionDto }),
+            createGameSuccess({ sessionDto, userID: action[1]!!.id }),
           ]),
           catchError((error) => [createGameError(error)])
         );
@@ -82,10 +83,11 @@ export class LobbyEffects {
   joinGame$ = createEffect(() =>
     this.actions$.pipe(
       ofType(joinGame),
+      withLatestFrom(this.userStore.select(getUserLogged)),
       switchMap((action) => {
-        return this.initGameService.joinGame(action.joinGameDto).pipe(
+        return this.initGameService.joinGame(action[0].joinGameDto).pipe(
           mergeMap((sessionDto: SessionDto) => [
-            joinGameSuccess({ sessionDto }),
+            joinGameSuccess({ sessionDto, userID: action[1]!!.id }),
           ]),
           catchError((error) => [createGameError(error)])
         );
