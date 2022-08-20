@@ -25,6 +25,14 @@ namespace PlanetWars.Core.Configuration
 
         public IGameMapRepository GameMaps { get; private set; }
 
+        public PlanetWarsDbContext Context
+        {
+            get
+            {
+                return _context;
+            }
+        }
+
         public UnitOfWork(PlanetWarsDbContext context)
         {
             _context = context;
@@ -48,5 +56,6 @@ namespace PlanetWars.Core.Configuration
         {
             _context.Dispose();
         }
+
     }
 }

@@ -21,7 +21,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<bool> Delete(Guid id)
         {
-            using(_unitOfWork)
+            using (_unitOfWork)
             {
                 var retval = await _unitOfWork.Players.Delete(id);
                 await _unitOfWork.CompleteAsync();
@@ -31,7 +31,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<IEnumerable<PlayerDto>> GetAll()
         {
-            using(_unitOfWork)
+            using (_unitOfWork)
             {
                 return _mapper.Map<List<Player>, List<PlayerDto>>(
                     new List<Player>(await _unitOfWork.Players.GetAll())
@@ -81,19 +81,19 @@ namespace PlanetWars.Services.ConcreteServices
 
                 var player = await _unitOfWork.Players.GetById(playerDto.PlayerID);
 
-                if(playerDto.ShouldAddPlanet == true)
+                if (playerDto.ShouldAddPlanet == true)
                 {
                     var planet = await _unitOfWork.Planets.GetById(playerDto.AddPlanetID);
                     player.Planets.Add(planet);
                 }
 
-                if(playerDto.ShouldRemovePlanet == true)
+                if (playerDto.ShouldRemovePlanet == true)
                 {
                     var planet = await _unitOfWork.Planets.GetById(playerDto.RemovePlayerID);
                     player.Planets.Remove(planet);
                 }
 
-                if(playerDto.ChangeActivity == true)
+                if (playerDto.ChangeActivity == true)
                 {
                     player.IsActive = !player.IsActive;
                 }
@@ -107,7 +107,7 @@ namespace PlanetWars.Services.ConcreteServices
         public async Task<PlayerDto> CreatePlayer(Guid userId, int turnIndex, Guid sessionId)
         {
             //TODO: check this method if its needed
-            using(_unitOfWork)
+            using (_unitOfWork)
             {
                 User user = await _unitOfWork.Users.GetById(userId);
                 Session session = await _unitOfWork.Sessions.GetById(sessionId);
@@ -127,6 +127,39 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.CompleteAsync();
 
                 return _mapper.Map<Player, PlayerDto>(player);
+            }
+        }
+
+        public async Task<SessionDto> SpawnPlayer(Guid sessionID, Guid playerID)
+        {
+            using (_unitOfWork)
+            {
+                var session = await _unitOfWork.Sessions.GetById(sessionID);
+                if (session != null)
+                {
+                    var player = await _unitOfWork.Players.GetById(playerID);
+                    if (player != null)
+                    {
+                        int planetCount = session.Galaxy.PlanetCount;
+                        Random random = new Random();
+                        bool notSpawned = true;
+                        int randomPlanet = 0;
+                        while (notSpawned)
+                        {
+                            randomPlanet = random.Next() % planetCount;
+                            Console.WriteLine("\n\n Planet count: " + planetCount + ", planet index: " + randomPlanet + "\n\n");
+                            if (session.Galaxy.Planets[randomPlanet].OwnerID.ToString() != Guid.Empty.ToString())
+                            {
+                                notSpawned = false;
+                            }
+                        }
+                        session.Galaxy.Planets[randomPlanet].Owner = player;
+                        await _unitOfWork.Sessions.Update(session);
+                        await _unitOfWork.CompleteAsync();
+                        return _mapper.Map<SessionDto>(session);
+                    }
+                }
+                return null;
             }
         }
     }

@@ -72,41 +72,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        private async Task<Planet> CreatePlanet(bool hasResource, int planetIndex, Guid GalaxyID)
-        {
-            Planet planet = new Planet()
-            {
-                ArmyCount = 0,
-                Owner = null,
-                OwnerID = null,
-                IndexInGalaxy = planetIndex,
-                GalaxyID = GalaxyID,
-                Galaxy = await _unitOfWork.Galaxies.GetById(GalaxyID),
-                Extras = ""
-            };
-            bool madeResource = !hasResource;
-            while (!madeResource)
-            {
-                Random rnd = new Random();
-                int num = rnd.Next();
-                if (num % 3 == 0)
-                {
-                    planet.Extras += "def,";
-                    madeResource = true;
-                }
-                if (num % 4 == 0)
-                {
-                    planet.Extras += "atk,";
-                    madeResource = true;
-                }
-                if (num % 5 == 0)
-                {
-                    planet.Extras = "mov,";
-                    madeResource = true;
-                }
-            }
-            return planet;
-        }
+       
 
         public async Task<bool> Delete(Guid id)
         {
@@ -179,6 +145,14 @@ namespace PlanetWars.Services.ConcreteServices
                 return _unitOfWork.Planets.UpdateOwnership(id, ownerID);
             }
         }
+
+        public Task<bool> UpdateOwnership(int planetIndex, Guid galaxyID, Guid ownerID)
+        {
+            using (_unitOfWork)
+            {
+                return _unitOfWork.Planets.UpdateOwnership(planetIndex, galaxyID, ownerID);
+            }
+        }
         public async Task<IEnumerable<PlanetDto>> GetRelatedPlanets(Guid planetID)
         {
             using (_unitOfWork)
@@ -207,6 +181,41 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.CompleteAsync();
                 return true;
             }
+        }
+        private async Task<Planet> CreatePlanet(bool hasResource, int planetIndex, Guid GalaxyID)
+        {
+            Planet planet = new Planet()
+            {
+                ArmyCount = 0,
+                Owner = null,
+                OwnerID = null,
+                IndexInGalaxy = planetIndex,
+                GalaxyID = GalaxyID,
+                Galaxy = await _unitOfWork.Galaxies.GetById(GalaxyID),
+                Extras = ""
+            };
+            bool madeResource = !hasResource;
+            while (!madeResource)
+            {
+                Random rnd = new Random();
+                int num = rnd.Next();
+                if (num % 3 == 0)
+                {
+                    planet.Extras += "def,";
+                    madeResource = true;
+                }
+                if (num % 4 == 0)
+                {
+                    planet.Extras += "atk,";
+                    madeResource = true;
+                }
+                if (num % 5 == 0)
+                {
+                    planet.Extras = "mov,";
+                    madeResource = true;
+                }
+            }
+            return planet;
         }
 
         #region Helpers 

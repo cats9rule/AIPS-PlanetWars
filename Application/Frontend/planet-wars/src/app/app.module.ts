@@ -11,8 +11,6 @@ import { CoreModule } from './core/core.module';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { LobbyModule } from './feature/game/lobby/lobby.module';
-import { SessionModule } from './feature/game/session/session.module';
 import { GameModule } from './feature/game/game.module';
 
 @NgModule({
@@ -29,9 +27,6 @@ import { GameModule } from './feature/game/game.module';
     MatSidenavModule,
     MatSlideToggleModule,
     UserModule,
-    CoreModule,
-    LobbyModule,
-    SessionModule,
     GameModule,
   ],
   providers: [],

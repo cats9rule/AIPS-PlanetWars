@@ -55,7 +55,7 @@ namespace PlanetWars.Services.ConcreteServices
         public async Task<SessionDto> GetByNameAndCode(string name, string code)
         {
 
-                return _mapper.Map<Session, SessionDto>(await _unitOfWork.Sessions.GetByNameAndCode(name, code));
+            return _mapper.Map<Session, SessionDto>(await _unitOfWork.Sessions.GetByNameAndCode(name, code));
 
         }
 
@@ -127,7 +127,8 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<bool> DeleteAll() {
+        public async Task<bool> DeleteAll()
+        {
             using (_unitOfWork)
             {
                 var relations = await _unitOfWork.PlanetPlanets.DeleteAll();
@@ -137,15 +138,15 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Galaxies.DeleteAll();
                 await _unitOfWork.Sessions.DeleteAll();
                 try
-                    {
-                        await _unitOfWork.CompleteAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        await _unitOfWork.PlanetPlanets.AddAll(relations.ToList());
-                        Console.Error.Write(e.Message);
-                        Console.Error.Write(e.StackTrace);
-                    }
+                {
+                    await _unitOfWork.CompleteAsync();
+                }
+                catch (Exception e)
+                {
+                    await _unitOfWork.PlanetPlanets.AddAll(relations.ToList());
+                    Console.Error.Write(e.Message);
+                    Console.Error.Write(e.StackTrace);
+                }
                 return true;
             }
         }
@@ -155,7 +156,7 @@ namespace PlanetWars.Services.ConcreteServices
             using (_unitOfWork)
             {
                 GameMap gameMap = await _unitOfWork.GameMaps.GetById(dto.GameMapID);
-                
+
                 User user = await _unitOfWork.Users.GetById(dto.UserID);
                 if (gameMap == null || user == null) return null;
 
@@ -292,10 +293,11 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        private string GetRandomString(int size) {
+        private string GetRandomString(int size)
+        {
             char[] chars =
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-            byte[] data = new byte[4*size];
+            byte[] data = new byte[4 * size];
             using (var crypto = RandomNumberGenerator.Create())
             {
                 crypto.GetBytes(data);

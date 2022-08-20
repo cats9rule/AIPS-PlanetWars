@@ -1,12 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
+import { isDefined, Maybe } from 'core/utils/types/maybe.type';
 import { User } from 'src/app/feature/user/interfaces/user';
 import { MessageDto } from '../../dtos/messageDto';
 import { sendChatMessage } from '../../state/chat.actions';
 import { getChatMessages } from '../../state/chat.selectors';
 import { ChatState } from '../../state/chat.state';
+import 'extensions/string.extensions';
+import { ClientHandlers } from '../../../enums/clientHandlers.enum';
 
 @Component({
   selector: 'app-chat',
@@ -24,8 +26,6 @@ export class ChatComponent implements OnInit {
 
   public messageToSend: string = '';
 
-  private clientHandler = 'receiveMessage';
-
   constructor(private store: Store<ChatState>) {
     this.messages$ = this.store.select<MessageDto[]>(getChatMessages);
   }
@@ -33,9 +33,13 @@ export class ChatComponent implements OnInit {
   ngOnInit(): void {}
 
   public sendMessage() {
-    if (isDefined(this.user) && this.sessionID != '') {
+    if (
+      isDefined(this.user) // &&
+      // !this.sessionID.isBlankOrEmpty() &&
+      // !this.messageToSend.isBlankOrEmpty()
+    ) {
       const messageDto: MessageDto = {
-        clientHandler: this.clientHandler,
+        clientHandler: ClientHandlers.receiveMessage,
         contents: this.messageToSend,
         sessionID: this.sessionID,
         userID: this.user!!.id,

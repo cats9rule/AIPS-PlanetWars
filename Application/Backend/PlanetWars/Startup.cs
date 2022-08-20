@@ -57,9 +57,10 @@ namespace PlanetWars
             services.AddDbContext<PlanetWarsDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("PlanetWars"));
-            }, ServiceLifetime.Transient);
+            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
-            services.AddCors(options => {
+            services.AddCors(options =>
+            {
                 options.AddPolicy("CORS", builder =>
                 {
                     builder.AllowAnyHeader()

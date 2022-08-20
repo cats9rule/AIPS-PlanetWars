@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlanetWars.Core.IRepositories;
+using PlanetWars.Data.Context;
 
 namespace PlanetWars.Core.Configuration
 {
@@ -17,6 +18,9 @@ namespace PlanetWars.Core.Configuration
         ISessionRepository Sessions { get; }
 
         IGameMapRepository GameMaps { get; }
+
+        public PlanetWarsDbContext Context { get; }
+
         Task CompleteAsync();
     }
 }

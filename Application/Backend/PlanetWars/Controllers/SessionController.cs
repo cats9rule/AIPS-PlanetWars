@@ -7,6 +7,7 @@ using PlanetWars.Services;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace PlanetWars.Controllers
 {
@@ -30,12 +31,18 @@ namespace PlanetWars.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateGame([FromBody] CreateGameDto createGameDto)
         {
-            
+
             var sessionDto = await sessionService.CreateSession(createGameDto);
             List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.Galaxy.ID));
-            if (sessionDto != null) {
+            if (sessionDto != null)
+            {
                 sessionDto.Galaxy.Planets = planets;
-                return Ok(sessionDto);
+                sessionDto = await playerService.SpawnPlayer(sessionDto.ID, sessionDto.Players[sessionDto.PlayerCount - 1].ID);
+                if (sessionDto != null)
+                {
+                    sessionDto.Galaxy.Planets = sessionDto.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
+                    return Ok(sessionDto);
+                }
             }
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
@@ -58,11 +65,18 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> JoinGame([FromBody] JoinGameDto joinGameDto)
         {
             var session = await sessionService.GetByNameAndCode(joinGameDto.SessionName, joinGameDto.GameCode);
-            if (session != null) 
+            if (session != null)
             {
                 //var player = await playerService.CreatePlayer(joinGameDto.UserID, session.PlayerCount, session.ID);
                 var result = await sessionService.AddPlayer(session.ID, joinGameDto.UserID);
-                if (result != null) return Ok(result);
+                if (result != null)
+                {
+                    result = await playerService.SpawnPlayer(result.ID, result.Players[result.PlayerCount - 1].ID);
+                    if (result != null)
+                    {
+                        return Ok(result);
+                    }
+                }
                 else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
             return new StatusCodeResult(StatusCodes.Status404NotFound);

@@ -50,3 +50,8 @@ export const getPlayer = createSelector(
   getSessionState,
   (state: SessionState) => state.player
 );
+
+export const getAllPlayers = createSelector(
+  getSessionState,
+  (state: SessionState) => state.session?.players
+);

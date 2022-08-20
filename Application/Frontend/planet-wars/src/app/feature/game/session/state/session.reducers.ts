@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { isDefined } from 'src/app/core/utils/types/maybe.type';
+import { GalaxyDto } from '../../dtos/galaxyDto';
 import { SessionDto } from '../../dtos/sessionDto';
 import {
   createGameSuccess,
@@ -76,9 +77,19 @@ const setSession = (
   sessionDto: SessionDto,
   userID: string
 ) => {
+  let planets = sessionDto.galaxy.planets.slice();
+  planets.sort((p1, p2) => p1.indexInGalaxy - p2.indexInGalaxy);
+  const gal: GalaxyDto = {
+    ...sessionDto.galaxy,
+    planets: planets
+  }
+  const session: SessionDto = {
+    ...sessionDto,
+    galaxy: gal
+  }
   return {
     ...state,
-    session: sessionDto,
+    session: session,
     player: sessionDto.players.find((p) => p.userID == userID),
   };
 };

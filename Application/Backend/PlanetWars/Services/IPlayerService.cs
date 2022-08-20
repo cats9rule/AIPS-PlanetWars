@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using PlanetWars.DTOs;
 using PlanetWars.Data.Models;
 
-    //CreatePlayer vraca Task<Player> 
+//CreatePlayer vraca Task<Player> 
 
 namespace PlanetWars.Services
 {
@@ -18,5 +18,6 @@ namespace PlanetWars.Services
         public Task<bool> Update(UpdatePlayerDto playerDto);
         public Task<bool> Delete(Guid id);
         public Task<PlayerDto> CreatePlayer(Guid userId, int turnIndex, Guid sessionId);
+        public Task<SessionDto> SpawnPlayer(Guid sessionID, Guid playerID);
     }
 }

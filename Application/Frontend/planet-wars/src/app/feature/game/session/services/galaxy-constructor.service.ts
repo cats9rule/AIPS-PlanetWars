@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { GalaxyDto } from '../../dtos/galaxyDto';
 import { GameMapDto } from '../../dtos/gameMapDto';
 import { PlanetDto } from '../../dtos/planetDto';
+import { PlayerDto } from '../../dtos/playerDto';
 import { PlanetResources } from '../enums/planetResources';
 import { Planet } from '../interfaces/planet';
 import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetMatrixCell } from '../interfaces/planetMatrixCell';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
+import { getAllPlayers } from '../state/session.selectors';
+import { SessionState } from '../state/session.state';
 import { PlanetBuilderService } from './planet-builder.service';
 
 @Injectable({
@@ -24,7 +30,23 @@ export class GalaxyConstructorService {
   private _matrixHeight = 0;
   private _gameMap: Maybe<GameMapDto>;
 
-  constructor(private planetBuilder: PlanetBuilderService) {}
+  private players: PlayerDto[] = [];
+  private players$: Observable<Maybe<PlayerDto[]>>;
+  private playerSubscription = new Subscription();
+
+  constructor(
+    private planetBuilder: PlanetBuilderService,
+    private sessionStore: Store<SessionState>
+  ) {
+    this.players$ = this.sessionStore.select<Maybe<PlayerDto[]>>(getAllPlayers);
+    this.playerSubscription = this.players$.subscribe({
+      next: (players) => {
+        if (isDefined(players)) {
+          this.players = players!!;
+        }
+      },
+    });
+  }
 
   public constructGalaxy(
     galaxy: Maybe<GalaxyDto>,
@@ -77,7 +99,6 @@ export class GalaxyConstructorService {
         renderInfos = renderInfos.concat(value);
       });
       const graph = this._gameMap!!.planetGraph;
-      console.log(graph);
 
       for (const key in graph) {
         const planetFrom = renderInfos.find(
@@ -102,10 +123,6 @@ export class GalaxyConstructorService {
                   planetFrom.indexInGalaxy.toString() +
                   planetTo.indexInGalaxy.toString(),
               };
-              console.log(planetFrom);
-              console.log(planetTo);
-              console.log(connection);
-
               if (
                 connections.find(
                   (c) =>
@@ -133,7 +150,6 @@ export class GalaxyConstructorService {
   public updatePlanetOwnership(planetIndex: number, ownerID: string): void {
     if (planetIndex >= 0) {
       this.planets[planetIndex].setOwnerID(ownerID);
-      //TODO: summon upon the server!
       this.planetsRenderInfo.set(
         planetIndex,
         this.planets[planetIndex].getPlanetRenderInfo(
@@ -147,7 +163,6 @@ export class GalaxyConstructorService {
   public updatePlanetArmyCount(planetIndex: number, armyDiff: number): void {
     if (planetIndex >= 0) {
       this.planets[planetIndex].incrementArmyCount(armyDiff);
-      //TODO: summon upon the server!
     }
   }
 
@@ -172,8 +187,6 @@ export class GalaxyConstructorService {
       (this._matrixWidth / (this._gameMap!!.columns * 2 + 1)) * 2;
     const cellHeight = this._matrixHeight / this._gameMap!!.rows;
 
-    console.log(row + ' ' + column);
-
     return {
       dx:
         row % 2 == 0 ? column * cellWidth : column * cellWidth + cellWidth / 2,
@@ -184,7 +197,10 @@ export class GalaxyConstructorService {
   }
 
   private resolveOwnerColor(ownerID: Maybe<string>): string {
+    const owner = this.players.find((p) => p.id == ownerID);
+    if (owner != undefined) {
+      return owner.playerColor;
+    }
     return 'white';
-    //TODO: implement
   }
 }

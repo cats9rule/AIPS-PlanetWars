@@ -8,7 +8,7 @@ namespace PlanetWars.Services
 {
     public interface ISessionService
     {
-        public Task<SessionDto> CreateSession( CreateGameDto dto);
+        public Task<SessionDto> CreateSession(CreateGameDto dto);
         public Task<bool> Add(Session session);
         public Task<IEnumerable<SessionDto>> GetAllSessions();
         public Task<SessionDto> GetById(Guid id);
@@ -18,5 +18,6 @@ namespace PlanetWars.Services
         public Task<SessionDto> AddPlayer(Guid sessionID, Guid userID);
         public Task<bool> LeaveGame(LeaveGameDto dto);
         public Task<bool> DeleteAll();
-    } 
+        //public Task<bool> SpawnPlayer(Guid sessionID, Guid playerID);
+    }
 }

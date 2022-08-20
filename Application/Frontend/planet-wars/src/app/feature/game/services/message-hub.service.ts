@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import * as signalR from '@microsoft/signalr';
 import { User } from '../../user/interfaces/user';
-import { ChatState } from '../chat/state/chat.state';
-import { Store } from '@ngrx/store';
 import { SnackbarService } from 'src/app/core/utils/services/snackbar.service';
 import { JoinSessionGroupDto } from '../dtos/joinSessionGroupDto';
 import { SnackbarMessage } from 'src/app/core/interfaces/snackbar-message';
