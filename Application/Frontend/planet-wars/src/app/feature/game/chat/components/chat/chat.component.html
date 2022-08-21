@@ -13,7 +13,7 @@
   [cdkConnectedOverlayOrigin]="trigger"
   [cdkConnectedOverlayOpen]="isOpen"
 >
-  <mat-card class="chat">
+  <mat-card class="chat-card scrollable">
     <app-message
       *ngFor="let message of messages$ | async"
       [messageDto]="message"

@@ -1,6 +1,9 @@
 .container {
   display: flex;
   flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  width: inherit;
 }
 .mat-card {
   width: 220px;
@@ -14,4 +17,9 @@
 
 .margin-5 {
   margin: 5px;
+}
+
+.centered {
+  align-self: center;
+  justify-content: center;
 }
