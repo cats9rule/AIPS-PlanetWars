@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { Observable } from 'rxjs';
@@ -12,18 +12,18 @@ import { Planet } from '../interfaces/planet';
 import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetMatrixCell } from '../interfaces/planetMatrixCell';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
-import { getAllPlayers } from '../state/session.selectors';
+import { getAllPlayers, getPlanets } from '../state/session.selectors';
 import { SessionState } from '../state/session.state';
 import { PlanetBuilderService } from './planet-builder.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class GalaxyConstructorService {
+export class GalaxyConstructorService implements OnDestroy {
   private nextPlanetIndex = 0;
 
   private planets: Planet[] = [];
-  private planetsRenderInfo: Map<number, PlanetRenderInfo[]> = new Map();
+  private planetsRenderInfo: PlanetRenderInfo[] = [];
   private connectionsRenderInfo: PlanetConnectionInfo[] = [];
 
   private _matrixWidth = 0;
@@ -33,6 +33,10 @@ export class GalaxyConstructorService {
   private players: PlayerDto[] = [];
   private players$: Observable<Maybe<PlayerDto[]>>;
   private playerSubscription = new Subscription();
+
+  private statePlanets: Planet[] = [];
+  private statePlanets$: Observable<Maybe<Planet[]>>;
+  private statePlanetsSubscription = new Subscription();
 
   constructor(
     private planetBuilder: PlanetBuilderService,
@@ -45,6 +49,18 @@ export class GalaxyConstructorService {
           this.players = players!!;
         }
       },
+    });
+
+    this.statePlanets$ = this.sessionStore.select<Planet[]>(getPlanets);
+    this.statePlanetsSubscription = this.statePlanets$.subscribe({
+      next: (planets) => {
+        if (isDefined(planets)) {
+          this.statePlanets = planets!!;
+
+        }
+        
+      }
+
     });
   }
 
@@ -77,16 +93,16 @@ export class GalaxyConstructorService {
       this._gameMap!!.planetMatrix.forEach(
         (indicator: boolean, index: number) => {
           if (indicator == true) {
-            const planet = this.planets[this.nextPlanetIndex++];
+            const planet = this.statePlanets[this.nextPlanetIndex++];
             const matCell = this.getMatrixCellInfo(index);
             const ownerColor = this.resolveOwnerColor(planet.getOwnerID());
-            this.planetsRenderInfo.set(
-              planet.getIndexInGalaxy(),
+            this.planetsRenderInfo = this.planetsRenderInfo.concat(
               planet.getPlanetRenderInfo(matCell, ownerColor)
             );
           }
         }
       );
+      this.nextPlanetIndex = 0;
     }
     return this.planetsRenderInfo;
   }
@@ -150,8 +166,7 @@ export class GalaxyConstructorService {
   public updatePlanetOwnership(planetIndex: number, ownerID: string): void {
     if (planetIndex >= 0) {
       this.planets[planetIndex].setOwnerID(ownerID);
-      this.planetsRenderInfo.set(
-        planetIndex,
+      this.planetsRenderInfo = this.planetsRenderInfo.concat(
         this.planets[planetIndex].getPlanetRenderInfo(
           this.getMatrixCellInfo(planetIndex),
           this.resolveOwnerColor(ownerID)
@@ -166,7 +181,7 @@ export class GalaxyConstructorService {
     }
   }
 
-  private createPlanetFromDto(planetDto: PlanetDto): Planet {
+  public createPlanetFromDto(planetDto: PlanetDto): Planet {
     this.planetBuilder.createPlanet(planetDto);
     if (planetDto.extras.search(PlanetResources.attack) != -1) {
       this.planetBuilder.withAttackResource();
@@ -202,5 +217,10 @@ export class GalaxyConstructorService {
       return owner.playerColor;
     }
     return 'white';
+  }
+
+  ngOnDestroy(): void {
+    this.playerSubscription.unsubscribe();
+    this.statePlanetsSubscription.unsubscribe();
   }
 }

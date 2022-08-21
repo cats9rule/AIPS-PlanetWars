@@ -40,7 +40,7 @@ namespace PlanetWars.Controllers
                 sessionDto = await playerService.SpawnPlayer(sessionDto.ID, sessionDto.Players[sessionDto.PlayerCount - 1].ID);
                 if (sessionDto != null)
                 {
-                    sessionDto.Galaxy.Planets = sessionDto.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
+                    //sessionDto.Galaxy.Planets = sessionDto.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
                     return Ok(sessionDto);
                 }
             }
@@ -74,6 +74,7 @@ namespace PlanetWars.Controllers
                     result = await playerService.SpawnPlayer(result.ID, result.Players[result.PlayerCount - 1].ID);
                     if (result != null)
                     {
+                        //result.Galaxy.Planets = result.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
                         return Ok(result);
                     }
                 }

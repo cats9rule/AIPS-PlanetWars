@@ -31,7 +31,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   public galaxy: Maybe<GalaxyDto>;
   private galaxySubscription: Subscription = new Subscription();
 
-  private planetsRenderInfo$: Observable<Map<number, PlanetRenderInfo[]>>;
+  public planetsRenderInfo$: Observable<PlanetRenderInfo[]>;
   private planetsRenderinfoSubscription: Subscription = new Subscription();
 
   public planetConnectionsRenderInfo$: Observable<PlanetConnectionInfo[]>;
@@ -53,7 +53,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.galaxy$ = this.store.select<Maybe<GalaxyDto>>(getGalaxy);
     this.planetsRenderInfo$ =
-      this.store.select<Map<number, PlanetRenderInfo[]>>(getPlanetsRenderInfo);
+      this.store.select<PlanetRenderInfo[]>(getPlanetsRenderInfo);
     this.planetConnectionsRenderInfo$ = this.store.select<
       PlanetConnectionInfo[]
     >(getPlanetConnectionsRenderInfo);
@@ -73,18 +73,19 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     });
 
-    this.planetsRenderinfoSubscription = this.planetsRenderInfo$.subscribe({
-      next: (renderInfoMap) => {
-        let renderInfos: PlanetRenderInfo[] = [];
-        renderInfoMap.forEach((value) => {
-          renderInfos = renderInfos.concat(value);
-        });
-        this.planetRenderInfoArray = renderInfos;
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+    // this.planetsRenderinfoSubscription = this.planetsRenderInfo$.subscribe({
+    //   next: (renderInfoMap) => {
+    //     console.log("Render info sub from Galaxy Component");
+    //     let renderInfos: PlanetRenderInfo[] = [];
+    //     renderInfoMap.forEach((value) => {
+    //       renderInfos = renderInfos.concat(value);
+    //     });
+    //     this.planetRenderInfoArray = renderInfos;
+    //   },
+    //   error: (err) => {
+    //     console.error(err);
+    //   },
+    // });
   }
 
   ngAfterViewInit(): void {
@@ -114,10 +115,8 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     // }
     // this.lines = lines;
 
-    this.planetConnectionsArray =
-      this.galaxyConstructor.getConnectionsRenderInfo();
-
-    this.drawGalaxy = true;
+    // this.planetConnectionsArray =
+    //   this.galaxyConstructor.getConnectionsRenderInfo();
   }
 
   public onPlanetClick(index: number) {

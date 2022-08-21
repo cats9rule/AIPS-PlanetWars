@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { mergeMap } from 'rxjs';
+import { concatMap, mergeMap } from 'rxjs';
 import { noAction } from 'src/app/core/state/common.actions';
 import { MessageHubService } from '../../services/message-hub.service';
 import { GalaxyConstructorService } from '../services/galaxy-constructor.service';
 import {
+  addNewPlayer,
   constructGalaxy,
   constructGalaxySuccess,
   constructPlanetConnectionsRenderInfo,
@@ -12,6 +13,7 @@ import {
   constructPlanetRenderInfo,
   constructPlanetRenderInfoSuccess,
   joinSessionGroup,
+  updatePlanet,
   updatePlanetOwner,
 } from './session.actions';
 
@@ -56,6 +58,7 @@ export class SessionEffects {
       mergeMap(() => {
         const planetsRenderInfo =
           this.galaxyConstructor.getRenderInfoForGalaxy();
+          console.log(planetsRenderInfo);
         return [
           constructPlanetRenderInfoSuccess({ planetsRenderInfo }),
           constructPlanetConnectionsRenderInfo(),
@@ -79,9 +82,20 @@ export class SessionEffects {
     )
   );
 
-  updatePlanetOwner$ = createEffect(() =>
+  addNewPlayer$ = createEffect(() => 
+      this.actions$.pipe(
+        ofType(addNewPlayer),
+        mergeMap((action) => {
+          console.log(action.playerDto.planets[0]);
+          const planet = this.galaxyConstructor.createPlanetFromDto(action.playerDto.planets[0]);
+          return [updatePlanet({planet})]
+        })
+      )
+  )
+
+  updatePlanet$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(updatePlanetOwner),
+      ofType(updatePlanet),
       mergeMap(() => {
         return [constructPlanetRenderInfo()];
       })

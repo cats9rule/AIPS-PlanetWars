@@ -9,7 +9,7 @@ export interface SessionState {
   session: Maybe<SessionDto>;
   player: Maybe<PlayerDto>;
   planets: Planet[];
-  planetsRenderInfo: Map<number, PlanetRenderInfo[]>;
+  planetsRenderInfo: PlanetRenderInfo[];
   planetConnectionsInfo: PlanetConnectionInfo[];
 }
 
@@ -17,6 +17,6 @@ export const initialSessionState: SessionState = {
   session: null,
   player: null,
   planets: [],
-  planetsRenderInfo: new Map(),
+  planetsRenderInfo: [],
   planetConnectionsInfo: [],
 };

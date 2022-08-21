@@ -8,7 +8,7 @@ namespace PlanetWars.DTOs.MappingProfiles
     public class Mappings : Profile
     {
         //TODO: check all mappings if they work as expected
-        public Mappings() 
+        public Mappings()
         {
             // works
             CreateMap<User, UserDto>().ReverseMap();
@@ -23,17 +23,18 @@ namespace PlanetWars.DTOs.MappingProfiles
             .ReverseMap();
 
             CreateMap<Player, PlayerDto>()
-            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => 
-                src.User.Username 
+            .ForMember(dest => dest.Username, opt => opt.MapFrom(src =>
+                src.User.Username
                 + "#"
                 + src.User.Tag
                 ))
             .ForMember(dest => dest.PlayerColor, opt => opt.MapFrom(src => src.PlayerColor.ColorHexValue))
             .ForMember(dest => dest.TurnIndex, opt => opt.MapFrom(dest => dest.PlayerColor.TurnIndex))
+            .ForMember(dest => dest.Planets, opt => opt.MapFrom(src => src.Planets))
             .ReverseMap();
 
             CreateMap<PlayerColor, PlayerColorDto>()
-            .ForMember(dest => dest.HexColor, opt => opt.MapFrom(src=> src.ColorHexValue))
+            .ForMember(dest => dest.HexColor, opt => opt.MapFrom(src => src.ColorHexValue))
             .ReverseMap();
 
             // works
@@ -45,6 +46,6 @@ namespace PlanetWars.DTOs.MappingProfiles
             .ForMember(dest => dest.PlanetMatrix, opt => opt.MapFrom(src => src.PlanetMatrix.ToArray<Char>().Select(c => c == '1' ? true : false).ToList()));
 
         }
-        
+
     }
 }

@@ -55,7 +55,6 @@ export class BasicPlanet implements Planet {
     matrixCell: PlanetMatrixCell,
     ownerColor: string
   ): PlanetRenderInfo[] {
-    console.log('Basic Planet render info');
     const x = matrixCell.x;
     const y = matrixCell.y;
     const renderInfo: PlanetRenderInfo = {

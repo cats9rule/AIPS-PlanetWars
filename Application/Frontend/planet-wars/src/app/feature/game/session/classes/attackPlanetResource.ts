@@ -18,7 +18,6 @@ export class AttackPlanetResource extends PlanetResource {
     matrixCell: PlanetMatrixCell,
     ownerColor: string
   ): PlanetRenderInfo[] {
-    console.log('Attack Planet render info');
     return this.getAttackRenderInfo(matrixCell, ownerColor).concat(
       this._wrappee.getPlanetRenderInfo(matrixCell, ownerColor)
     );

@@ -6,6 +6,8 @@ using AutoMapper;
 using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
+using PlanetWars.DTOs.Communication;
+using PlanetWars.Communication;
 
 namespace PlanetWars.Services.ConcreteServices
 {
@@ -13,10 +15,12 @@ namespace PlanetWars.Services.ConcreteServices
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public PlayerService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly HubService _hubService;
+        public PlayerService(IUnitOfWork unitOfWork, IMapper mapper, HubService hubService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _hubService = hubService;
         }
 
         public async Task<bool> Delete(Guid id)
@@ -148,14 +152,28 @@ namespace PlanetWars.Services.ConcreteServices
                         {
                             randomPlanet = random.Next() % planetCount;
                             Console.WriteLine("\n\n Planet count: " + planetCount + ", planet index: " + randomPlanet + "\n\n");
-                            if (session.Galaxy.Planets[randomPlanet].OwnerID.ToString() != Guid.Empty.ToString())
+                            if (session.Galaxy.Planets[randomPlanet].Owner == null)
                             {
                                 notSpawned = false;
                             }
                         }
                         session.Galaxy.Planets[randomPlanet].Owner = player;
+                        session.Galaxy.Planets = session.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
                         await _unitOfWork.Sessions.Update(session);
+                        //await _unitOfWork.Planets.Update(session.Galaxy.Planets[randomPlanet]);
                         await _unitOfWork.CompleteAsync();
+                        if (session.PlayerCount > 1)
+                        {
+                            NewPlayerDto newPlayer = new NewPlayerDto()
+                            {
+                                ClientHandler = "onNewPlayer",
+                                NewPlayer = _mapper.Map<PlayerDto>(player),
+                                SessionID = sessionID.ToString(),
+                                UserID = player.UserID.ToString()
+                            };
+
+                            await _hubService.NotifyOnNewPlayer(newPlayer);
+                        }
                         return _mapper.Map<SessionDto>(session);
                     }
                 }

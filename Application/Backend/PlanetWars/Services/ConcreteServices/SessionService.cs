@@ -233,15 +233,15 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                NewPlayerDto newPlayer = new NewPlayerDto()
-                {
-                    ClientHandler = "onNewPlayer",
-                    NewPlayer = _mapper.Map<PlayerDto>(player),
-                    SessionID = sessionID.ToString(),
-                    UserID = userID.ToString()
-                };
+                // NewPlayerDto newPlayer = new NewPlayerDto()
+                // {
+                //     ClientHandler = "onNewPlayer",
+                //     NewPlayer = _mapper.Map<PlayerDto>(player),
+                //     SessionID = sessionID.ToString(),
+                //     UserID = userID.ToString()
+                // };
 
-                await _hubService.NotifyOnNewPlayer(newPlayer);
+                // await _hubService.NotifyOnNewPlayer(newPlayer);
 
                 return _mapper.Map<SessionDto>(session);
             }

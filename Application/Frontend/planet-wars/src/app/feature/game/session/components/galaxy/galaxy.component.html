@@ -11,7 +11,7 @@
       [attr.stroke-dasharray]="connection.strokeDasharray"
     ></line>
     <circle
-      *ngFor="let planet of planetRenderInfoArray"
+      *ngFor="let planet of planetsRenderInfo$ | async"
       [attr.cx]="planet.cx"
       [attr.cy]="planet.cy"
       [attr.r]="planet.r"
@@ -22,7 +22,7 @@
       (click)="onPlanetClick(planet.indexInGalaxy)"
     ></circle>
     <text
-      *ngFor="let planet of planetRenderInfoArray"
+      *ngFor="let planet of planetsRenderInfo$ | async"
       [attr.x]="planet.cx"
       [attr.y]="planet.cy"
       text-align="middle"
