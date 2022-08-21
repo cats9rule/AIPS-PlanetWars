@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { placingArmies } from '../../state/session.actions';
+import { SessionState } from '../../state/session.state';
 
 @Component({
   selector: 'app-actions',
@@ -6,16 +9,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./actions.component.scss'],
 })
 export class ActionsComponent implements OnInit {
-  public placingArmies = false;
+  //public placingArmies = false;
   public movingArmies = false;
   public attackingPlanet = false;
 
-  constructor() {}
+  public notPlacedArmies = true;
+
+  constructor(private sessionStore: Store<SessionState>) {}
 
   ngOnInit(): void {}
 
   onPlaceArmies() {
-    this.placingArmies = true;
+    this.sessionStore.dispatch(placingArmies({ placingArmies: true }));
   }
   onMoveArmies() {
     this.movingArmies = true;

@@ -13,6 +13,7 @@ import {
   constructGalaxySuccess,
   constructPlanetConnectionsRenderInfoSuccess,
   constructPlanetRenderInfoSuccess,
+  placingArmies,
   updatePlanet,
   updatePlanetOwner,
 } from './session.actions';
@@ -46,7 +47,6 @@ export const sessionReducer = createReducer(
   on(
     constructPlanetConnectionsRenderInfoSuccess,
     (state: SessionState, { connectionsRenderInfo }) => {
-      
       return {
         ...state,
         planetConnectionsInfo: connectionsRenderInfo,
@@ -76,7 +76,17 @@ export const sessionReducer = createReducer(
   on(updatePlanetOwner, (state: SessionState, { planet, newOwnerID }) => {
     return updatePlanetOwnership(state, planet, newOwnerID);
   }),
-  on(updatePlanet, (state: SessionState, {planet}) => {return updatePlanetInState(state, planet)})
+  on(updatePlanet, (state: SessionState, { planet }) => {
+    return updatePlanetInState(state, planet);
+  }),
+  on(placingArmies, (state: SessionState, { placingArmies }) => {
+    const sessionInfo = { ...state.sessionInfo };
+    sessionInfo.placingArmies = placingArmies;
+    return {
+      ...state,
+      sessionInfo: sessionInfo,
+    };
+  })
 );
 
 const setSession = (
@@ -88,12 +98,12 @@ const setSession = (
   //planets.sort((p1, p2) => p1.indexInGalaxy - p2.indexInGalaxy);
   const gal: GalaxyDto = {
     ...sessionDto.galaxy,
-    planets: planets
-  }
+    planets: planets,
+  };
   const session: SessionDto = {
     ...sessionDto,
-    galaxy: gal
-  }
+    galaxy: gal,
+  };
   return {
     ...state,
     session: session,
@@ -108,9 +118,7 @@ const updatePlanetOwnership = (
 ): SessionState => {
   const planetIndex = state.planets.findIndex((p) => p.getID() == planet.id);
   if (planetIndex != -1) {
-
-
-    const newState = {...state};
+    const newState = { ...state };
     newState.planets[planetIndex].setOwnerID(newOwnerID);
     return newState;
   }
@@ -118,14 +126,16 @@ const updatePlanetOwnership = (
 };
 
 const updatePlanetInState = (state: SessionState, planet: Planet) => {
-  const planetIndex = state.planets.findIndex((p) => p.getID() == planet.getID());
+  const planetIndex = state.planets.findIndex(
+    (p) => p.getID() == planet.getID()
+  );
   if (planetIndex != -1) {
     const planets = state.planets.slice();
     planets[planetIndex] = planet;
     return {
       ...state,
-      planets: planets
-    }
+      planets: planets,
+    };
   }
   return state;
-}
+};

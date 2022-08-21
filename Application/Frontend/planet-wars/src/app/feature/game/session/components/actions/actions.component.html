@@ -7,10 +7,10 @@
 
     <mat-divider></mat-divider>
 
-    <button mat-flat-button color="accent" (click)="onMoveArmies()">
+    <button mat-flat-button color="accent" (click)="onMoveArmies()" [disabled]="notPlacedArmies">
       Move Armies
     </button>
-    <button mat-flat-button color="accent" (click)="onAttackPlanet()">
+    <button mat-flat-button color="accent" (click)="onAttackPlanet()" [disabled]="notPlacedArmies">
       Attack Planet
     </button>
   </div>

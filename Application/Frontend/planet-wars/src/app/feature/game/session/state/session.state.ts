@@ -4,6 +4,7 @@ import { SessionDto } from '../../dtos/sessionDto';
 import { Planet } from '../interfaces/planet';
 import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
+import { SessionInfo } from '../interfaces/sessionInfo';
 
 export interface SessionState {
   session: Maybe<SessionDto>;
@@ -11,6 +12,7 @@ export interface SessionState {
   planets: Planet[];
   planetsRenderInfo: PlanetRenderInfo[];
   planetConnectionsInfo: PlanetConnectionInfo[];
+  sessionInfo: SessionInfo;
 }
 
 export const initialSessionState: SessionState = {
@@ -19,4 +21,10 @@ export const initialSessionState: SessionState = {
   planets: [],
   planetsRenderInfo: [],
   planetConnectionsInfo: [],
+  sessionInfo: {
+    attackingPlanet: false,
+    movingArmies: false,
+    placedArmies: false,
+    placingArmies: false,
+  },
 };

@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { GalaxyDto } from '../../../dtos/galaxyDto';
+import { PlayerDto } from '../../../dtos/playerDto';
 import { PlanetConnectionInfo } from '../../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../../interfaces/planetRenderInfo';
 import { GalaxyConstructorService } from '../../services/galaxy-constructor.service';
@@ -17,8 +18,10 @@ import { constructGalaxy } from '../../state/session.actions';
 import {
   canDrawGalaxy,
   getGalaxy,
+  getPlacingArmies,
   getPlanetConnectionsRenderInfo,
   getPlanetsRenderInfo,
+  getPlayer,
 } from '../../state/session.selectors';
 import { SessionState } from '../../state/session.state';
 @Component({
@@ -47,10 +50,15 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   public drawGalaxy = false;
   public lines: Line[] = [];
 
-  constructor(
-    private store: Store<SessionState>,
-    private galaxyConstructor: GalaxyConstructorService
-  ) {
+  private placingArmies$: Observable<boolean>;
+  private placingArmies: boolean = false;
+  private placingArmiesSubscription = new Subscription();
+
+  private player$: Observable<Maybe<PlayerDto>>;
+  private player: Maybe<PlayerDto>;
+  private playerSubscription = new Subscription();
+
+  constructor(private store: Store<SessionState>) {
     this.galaxy$ = this.store.select<Maybe<GalaxyDto>>(getGalaxy);
     this.planetsRenderInfo$ =
       this.store.select<PlanetRenderInfo[]>(getPlanetsRenderInfo);
@@ -59,6 +67,8 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     >(getPlanetConnectionsRenderInfo);
 
     this.canDrawGalaxy$ = this.store.select<boolean>(canDrawGalaxy);
+    this.placingArmies$ = this.store.select<boolean>(getPlacingArmies);
+    this.player$ = this.store.select<Maybe<PlayerDto>>(getPlayer);
   }
 
   ngOnInit(): void {
@@ -73,19 +83,36 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     });
 
-    // this.planetsRenderinfoSubscription = this.planetsRenderInfo$.subscribe({
-    //   next: (renderInfoMap) => {
-    //     console.log("Render info sub from Galaxy Component");
-    //     let renderInfos: PlanetRenderInfo[] = [];
-    //     renderInfoMap.forEach((value) => {
-    //       renderInfos = renderInfos.concat(value);
-    //     });
-    //     this.planetRenderInfoArray = renderInfos;
-    //   },
-    //   error: (err) => {
-    //     console.error(err);
-    //   },
-    // });
+    this.placingArmiesSubscription = this.placingArmies$.subscribe({
+      next: (placingArmies) => {
+        this.placingArmies = placingArmies;
+      },
+    });
+
+    this.playerSubscription = this.player$.subscribe({
+      next: (p) => {
+        if (isDefined(p)) {
+          this.player = p;
+        }
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+
+    this.planetsRenderinfoSubscription = this.planetsRenderInfo$.subscribe({
+      next: (renderInfoMap) => {
+        console.log('Render info sub from Galaxy Component');
+        let renderInfos: PlanetRenderInfo[] = [];
+        renderInfoMap.forEach((value) => {
+          renderInfos = renderInfos.concat(value);
+        });
+        this.planetRenderInfoArray = renderInfos;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
@@ -120,8 +147,16 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public onPlanetClick(index: number) {
-    alert('i was clicked: ' + index);
-
+    const planet = this.planetRenderInfoArray.find(
+      (p) => p.indexInGalaxy == index
+    );
+    if (
+      planet != undefined &&
+      this.placingArmies &&
+      planet.strokeColor == this.player?.playerColor
+    ) {
+      alert('Placing armies here');
+    } else alert('i was clicked: ' + index);
     event?.preventDefault();
   }
 
@@ -132,6 +167,8 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.galaxySubscription.unsubscribe();
     this.planetsRenderinfoSubscription.unsubscribe();
+    this.placingArmiesSubscription.unsubscribe();
+    this.playerSubscription.unsubscribe();
   }
 }
 

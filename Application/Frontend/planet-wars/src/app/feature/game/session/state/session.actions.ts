@@ -53,5 +53,10 @@ export const updatePlanetOwner = createAction(
 
 export const updatePlanet = createAction(
   '[Galaxy] Update Planet',
-  props<{planet: Planet}>()
-)
+  props<{ planet: Planet }>()
+);
+
+export const placingArmies = createAction(
+  '[Actions] Placing Armies',
+  props<{ placingArmies: boolean }>()
+);
