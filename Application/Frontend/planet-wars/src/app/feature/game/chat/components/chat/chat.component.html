@@ -14,20 +14,22 @@
   [cdkConnectedOverlayOpen]="isOpen"
 >
   <mat-card class="chat-card scrollable">
-    <app-message
-      *ngFor="let message of messages$ | async"
-      [messageDto]="message"
-    ></app-message>
-    <mat-form-field class="example-full-width" appearance="fill">
-      <mat-placeholder> Type message. </mat-placeholder>
-      <textarea
-        matInput
-        [(ngModel)]="messageToSend"
-        name="messageToSend"
-      ></textarea>
-    </mat-form-field>
-    <button mat-flat-button color="primary" (click)="sendMessage()">
-      Send Message
-    </button>
+    <div>
+      <app-message
+        *ngFor="let message of messages$ | async"
+        [messageDto]="message"
+      ></app-message>
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-placeholder> Type message. </mat-placeholder>
+        <textarea
+          matInput
+          [(ngModel)]="messageToSend"
+          name="messageToSend"
+        ></textarea>
+      </mat-form-field>
+      <button mat-flat-button color="primary" (click)="sendMessage()">
+        Send Message
+      </button>
+    </div>
   </mat-card>
 </ng-template>

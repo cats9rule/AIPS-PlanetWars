@@ -13,7 +13,6 @@ import { GalaxyDto } from '../../../dtos/galaxyDto';
 import { PlayerDto } from '../../../dtos/playerDto';
 import { PlanetConnectionInfo } from '../../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../../interfaces/planetRenderInfo';
-import { GalaxyConstructorService } from '../../services/galaxy-constructor.service';
 import { constructGalaxy } from '../../state/session.actions';
 import {
   canDrawGalaxy,
@@ -34,22 +33,6 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   public galaxy: Maybe<GalaxyDto>;
   private galaxySubscription: Subscription = new Subscription();
 
-  public planetsRenderInfo$: Observable<PlanetRenderInfo[]>;
-  private planetsRenderinfoSubscription: Subscription = new Subscription();
-
-  public planetConnectionsRenderInfo$: Observable<PlanetConnectionInfo[]>;
-
-  public canDrawGalaxy$: Observable<boolean>;
-
-  @ViewChild('galaxyMatrix')
-  private galaxyMatrix?: ElementRef;
-
-  public planetRenderInfoArray: PlanetRenderInfo[] = [];
-  public planetConnectionsArray: PlanetConnectionInfo[] = [];
-
-  public drawGalaxy = false;
-  public lines: Line[] = [];
-
   private placingArmies$: Observable<boolean>;
   private placingArmies: boolean = false;
   private placingArmiesSubscription = new Subscription();
@@ -57,6 +40,19 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   private player$: Observable<Maybe<PlayerDto>>;
   private player: Maybe<PlayerDto>;
   private playerSubscription = new Subscription();
+
+  public planetsRenderInfo$: Observable<PlanetRenderInfo[]>;
+  private planetsRenderinfoSubscription: Subscription = new Subscription();
+
+  public planetConnectionsRenderInfo$: Observable<PlanetConnectionInfo[]>;
+  public canDrawGalaxy$: Observable<boolean>;
+
+  @ViewChild('galaxyMatrix')
+  private galaxyMatrix?: ElementRef;
+
+  public planetRenderInfoArray: PlanetRenderInfo[] = [];
+  public planetConnectionsArray: PlanetConnectionInfo[] = [];
+  public drawGalaxy = false;
 
   constructor(private store: Store<SessionState>) {
     this.galaxy$ = this.store.select<Maybe<GalaxyDto>>(getGalaxy);
@@ -127,23 +123,6 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       );
     }
-    // const lines: Line[] = [];
-    // lines.push({ x1: 0, y1: 0, x2: 0, y2: height });
-
-    // const cellHeight = height / this.galaxy!!.gameMap.rows;
-    // const cellWidth = width / this.galaxy!!.gameMap.columns;
-
-    // for (let i = 0; i < this.galaxy!!.gameMap.columns; i++) {
-    //   lines.push({ x1: cellWidth * i, y1: 0, x2: cellWidth * i, y2: height });
-    // }
-
-    // for (let i = 0; i < this.galaxy!!.gameMap.rows; i++) {
-    //   lines.push({ x1: 0, y1: cellHeight * i, x2: width, y2: cellHeight * i });
-    // }
-    // this.lines = lines;
-
-    // this.planetConnectionsArray =
-    //   this.galaxyConstructor.getConnectionsRenderInfo();
   }
 
   public onPlanetClick(index: number) {
@@ -160,21 +139,10 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     event?.preventDefault();
   }
 
-  private generatePlanetRenderInfoArray() {}
-
-  private generatePlanetConnectionsArray() {}
-
   ngOnDestroy(): void {
     this.galaxySubscription.unsubscribe();
     this.planetsRenderinfoSubscription.unsubscribe();
     this.placingArmiesSubscription.unsubscribe();
     this.playerSubscription.unsubscribe();
   }
-}
-
-interface Line {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
 }

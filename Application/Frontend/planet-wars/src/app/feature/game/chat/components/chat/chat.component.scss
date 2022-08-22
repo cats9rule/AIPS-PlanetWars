@@ -20,6 +20,8 @@
 
 .scrollable {
   max-height: 50vh;
-    width: 47vw;
-    overflow: auto;
+  width: 47vw;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
 }

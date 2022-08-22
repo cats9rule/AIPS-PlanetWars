@@ -9,7 +9,6 @@ import { SessionState } from '../../state/session.state';
   styleUrls: ['./actions.component.scss'],
 })
 export class ActionsComponent implements OnInit {
-  //public placingArmies = false;
   public movingArmies = false;
   public attackingPlanet = false;
 
