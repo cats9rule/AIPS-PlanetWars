@@ -7,11 +7,11 @@ using PlanetWars.DTOs;
 
 namespace PlanetWars.Services.Strategy
 {
-    public class ActionContext : IActionContext
+    public class TurnActionContext : ITurnActionContext
     {
         private IActionStrategy _strategy;
 
-        public ActionContext() { }
+        public TurnActionContext() { }
 
         public Session DoAction(ActionDto action, Session session, List<PlanetPlanet> connections)
         {

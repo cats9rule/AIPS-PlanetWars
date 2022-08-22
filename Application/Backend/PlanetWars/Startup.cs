@@ -18,6 +18,7 @@ using PlanetWars.Services.ConcreteServices;
 using PlanetWars.Services;
 using PlanetWars.Communication;
 using PlanetWars.DTOs.MappingProfiles;
+using PlanetWars.Services.Strategy;
 
 namespace PlanetWars
 {
@@ -44,7 +45,7 @@ namespace PlanetWars
             services.AddTransient<IGameMapService, GameMapService>();
 
             services.AddScoped<HubService>();
-
+            services.AddScoped<ITurnActionContext, TurnActionContext>();
 
             services.AddAutoMapper(typeof(Mappings));
 

@@ -7,7 +7,7 @@ using PlanetWars.Data.Models;
 
 namespace PlanetWars.Services.Strategy
 {
-    public interface IActionContext
+    public interface ITurnActionContext
     {
         public void SetStrategy(IActionStrategy strategy);
         public Session DoAction(ActionDto action, Session session, List<PlanetPlanet> connections);

@@ -10,6 +10,7 @@ using PlanetWars.Core.Configuration;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
 using PlanetWars.DTOs.Communication;
+using PlanetWars.Services.Strategy;
 
 namespace PlanetWars.Services.ConcreteServices
 {
@@ -19,13 +20,16 @@ namespace PlanetWars.Services.ConcreteServices
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly HubService _hubService;
+
+        private readonly ITurnActionContext _turnActionContext;
         #endregion
 
-        public SessionService(IUnitOfWork uow, IMapper mapper, HubService hubService)
+        public SessionService(IUnitOfWork uow, IMapper mapper, HubService hubService, ITurnActionContext context)
         {
             _unitOfWork = uow;
             _mapper = mapper;
             _hubService = hubService;
+            _turnActionContext = context;
         }
 
         public async Task<bool> Add(Session session)
