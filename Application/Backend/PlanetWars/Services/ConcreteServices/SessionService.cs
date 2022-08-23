@@ -244,16 +244,15 @@ namespace PlanetWars.Services.ConcreteServices
             {
                 var session = await _unitOfWork.Sessions.GetById(turn.SessionID);
                 if (session == null) throw new InvalidActionException("Session with given ID does not exist.");
-
                 var player = await _unitOfWork.Players.GetById(turn.PlayerID);
                 if (player == null) throw new InvalidActionException("Player with given ID does not exist.");
-
                 if (ValidatePlacedArmies(turn.Actions, player)) throw new InvalidActionException("Invalid number of armies placed.");
 
                 var connections = await _unitOfWork.PlanetPlanets.GetAllRelationsForSession(session.ID);
 
                 session = ProcessActions(turn.Actions, session, player, connections);
 
+                session.Galaxy.Planets = session.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
@@ -262,9 +261,7 @@ namespace PlanetWars.Services.ConcreteServices
                     ArmiesNextTurn = CalculateNewArmies(session.Players.Find(p => p.PlayerColor.TurnIndex == session.CurrentTurnIndex)),
                     Session = _mapper.Map<SessionDto>(session)
                 };
-
                 var result = await _hubService.NotifyOnGameChanges(gud);
-
                 if (result.IsSuccessful)
                 {
                     var winner = FindWinner(session);
@@ -278,7 +275,6 @@ namespace PlanetWars.Services.ConcreteServices
                         result = await _hubService.NotifyOnWinner(god);
                     }
                 }
-
                 return result.IsSuccessful;
             }
         }
