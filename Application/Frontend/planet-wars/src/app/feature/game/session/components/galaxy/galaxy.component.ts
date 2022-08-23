@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -29,13 +30,16 @@ import { SessionState } from '../../state/session.state';
   styleUrls: ['./galaxy.component.scss'],
 })
 export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
+  @Input()
+  public isPlacingArmies = false;
+
   public galaxy$: Observable<Maybe<GalaxyDto>>;
   public galaxy: Maybe<GalaxyDto>;
   private galaxySubscription: Subscription = new Subscription();
 
-  private placingArmies$: Observable<boolean>;
-  private placingArmies: boolean = false;
-  private placingArmiesSubscription = new Subscription();
+  // private placingArmies$: Observable<boolean>;
+  // private placingArmies: boolean = false;
+  // private placingArmiesSubscription = new Subscription();
 
   private player$: Observable<Maybe<PlayerDto>>;
   private player: Maybe<PlayerDto>;
@@ -63,7 +67,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     >(getPlanetConnectionsRenderInfo);
 
     this.canDrawGalaxy$ = this.store.select<boolean>(canDrawGalaxy);
-    this.placingArmies$ = this.store.select<boolean>(getPlacingArmies);
+    //this.placingArmies$ = this.store.select<boolean>(getPlacingArmies);
     this.player$ = this.store.select<Maybe<PlayerDto>>(getPlayer);
   }
 
@@ -79,11 +83,11 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     });
 
-    this.placingArmiesSubscription = this.placingArmies$.subscribe({
-      next: (placingArmies) => {
-        this.placingArmies = placingArmies;
-      },
-    });
+    // this.placingArmiesSubscription = this.placingArmies$.subscribe({
+    //   next: (placingArmies) => {
+    //     this.placingArmies = placingArmies;
+    //   },
+    // });
 
     this.playerSubscription = this.player$.subscribe({
       next: (p) => {
@@ -131,7 +135,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     );
     if (
       planet != undefined &&
-      this.placingArmies &&
+      this.isPlacingArmies &&
       planet.strokeColor == this.player?.playerColor
     ) {
       alert('Placing armies here');
@@ -142,7 +146,7 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.galaxySubscription.unsubscribe();
     this.planetsRenderinfoSubscription.unsubscribe();
-    this.placingArmiesSubscription.unsubscribe();
+    //this.placingArmiesSubscription.unsubscribe();
     this.playerSubscription.unsubscribe();
   }
 }

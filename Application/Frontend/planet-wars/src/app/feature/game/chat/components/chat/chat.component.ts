@@ -8,7 +8,7 @@ import { sendChatMessage } from '../../state/chat.actions';
 import { getChatMessages } from '../../state/chat.selectors';
 import { ChatState } from '../../state/chat.state';
 import 'extensions/string.extensions';
-import { ClientHandlers } from '../../../enums/clientHandlers.enum';
+import { ClientHandlers } from 'core/enums/clientHandlers.enum';
 
 @Component({
   selector: 'app-chat',

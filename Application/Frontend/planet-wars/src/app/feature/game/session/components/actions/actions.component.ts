@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { placingArmies } from '../../state/session.actions';
 import { SessionState } from '../../state/session.state';
@@ -9,8 +9,12 @@ import { SessionState } from '../../state/session.state';
   styleUrls: ['./actions.component.scss'],
 })
 export class ActionsComponent implements OnInit {
-  public movingArmies = false;
-  public attackingPlanet = false;
+  @Output()
+  public onPlacingArmies = new EventEmitter<boolean>();
+  @Output()
+  public onMovingArmies = new EventEmitter<boolean>();
+  @Output()
+  public onAttackingPlanet = new EventEmitter<boolean>();
 
   public notPlacedArmies = true;
 
@@ -19,12 +23,13 @@ export class ActionsComponent implements OnInit {
   ngOnInit(): void {}
 
   onPlaceArmies() {
-    this.sessionStore.dispatch(placingArmies({ placingArmies: true }));
+    //this.sessionStore.dispatch(placingArmies({ placingArmies: true }));
+    this.onPlacingArmies.emit(true);
   }
   onMoveArmies() {
-    this.movingArmies = true;
+    //this.movingArmies = true;
   }
   onAttackPlanet() {
-    this.attackingPlanet = true;
+    //this.attackingPlanet = true;
   }
 }

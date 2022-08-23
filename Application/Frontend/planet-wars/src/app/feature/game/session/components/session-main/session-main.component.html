@@ -7,7 +7,7 @@
         session != null && session != undefined ? session.currentTurnIndex : 0
       "
     ></app-players-info>
-    <app-actions></app-actions>
+    <app-actions (onPlacingArmies)="setPlacingArmies($event)"></app-actions>
     <app-actions-confirmation></app-actions-confirmation>
   </div>
   <div class="map-column">
@@ -24,6 +24,8 @@
         [sessionID]="session != null ? session.id : ''"
       ></app-chat>
     </div>
-    <div class="map"><app-galaxy></app-galaxy></div>
+    <div class="map">
+      <app-galaxy [isPlacingArmies]="placingArmies"></app-galaxy>
+    </div>
   </div>
 </div>

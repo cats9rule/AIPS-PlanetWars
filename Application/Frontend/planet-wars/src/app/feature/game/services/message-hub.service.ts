@@ -7,7 +7,7 @@ import { JoinSessionGroupDto } from '../dtos/joinSessionGroupDto';
 import { SnackbarMessage } from 'src/app/core/interfaces/snackbar-message';
 import { MessageDto } from '../chat/dtos/messageDto';
 import { ChatService } from '../chat/services/chat.service';
-import { ClientHandlers } from '../enums/clientHandlers.enum';
+import { ClientHandlers } from 'core/enums/clientHandlers.enum';
 import { SessionService } from '../session/services/session.service';
 import { NewPlayerDto } from '../dtos/newPlayerDto';
 

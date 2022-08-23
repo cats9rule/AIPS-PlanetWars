@@ -1,0 +1,19 @@
+<h4 mat-dialog-title>{{ action }}:</h4>
+<mat-dialog-content>
+  <p>Armies left: {{ armiesLeft }}</p>
+</mat-dialog-content>
+
+<input
+  matInput
+  type="number"
+  [(ngModel)]="armiesUsed"
+  name="armiesUsed"
+  min="0"
+  max="data.availableArmies"
+  (change)="onArmiesUsedChange($event)"
+/>
+
+<mat-dialog-actions align="end">
+  <button mat-button color="primary" (click)="onAccept()">Accept</button>
+  <button mat-button color="warn" mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

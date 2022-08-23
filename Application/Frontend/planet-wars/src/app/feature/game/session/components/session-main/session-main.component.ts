@@ -20,6 +20,8 @@ export class SessionMainComponent implements OnInit, OnDestroy {
 
   public player$: Observable<Maybe<PlayerDto>>;
 
+  public placingArmies = false;
+
   @Input()
   public user: Maybe<User>;
 
@@ -39,6 +41,10 @@ export class SessionMainComponent implements OnInit, OnDestroy {
         console.error(err);
       },
     });
+  }
+
+  public setPlacingArmies(isPlacing: boolean) {
+    this.placingArmies = isPlacing;
   }
 
   ngOnDestroy() {
