@@ -34,7 +34,7 @@ namespace PlanetWars.Core.Repositories
         public async Task<bool> Delete(Guid planetFromID, Guid planetToID)
         {
             var exist = await dbSet.FindAsync(planetFromID, planetToID);
-            if(exist != null)
+            if (exist != null)
             {
                 dbSet.Remove(exist);
                 return true;
@@ -45,7 +45,7 @@ namespace PlanetWars.Core.Repositories
         public override async Task<bool> Update(PlanetPlanet entity)
         {
             var exist = await dbSet.FindAsync(entity.ID);
-            if(exist == null)
+            if (exist == null)
                 return await Add(entity);
             dbSet.Update(entity);
             return true;
@@ -75,6 +75,11 @@ namespace PlanetWars.Core.Repositories
             var dbset = await dbSet.ToArrayAsync();
             dbSet.RemoveRange(dbset);
             return dbSet;
+        }
+
+        public async Task<List<PlanetPlanet>> GetAllRelationsForSession(Guid sessionID)
+        {
+            return await dbSet.Where(pp => pp.SessionID == sessionID).ToListAsync();
         }
     }
 }

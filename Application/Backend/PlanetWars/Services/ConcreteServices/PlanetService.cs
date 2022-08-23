@@ -32,7 +32,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<IEnumerable<PlanetDto>> CreatePlanets(CreateGameDto createGameDto, Guid GalaxyID)
+        public async Task<IEnumerable<PlanetDto>> CreatePlanets(CreateGameDto createGameDto, Guid GalaxyID, Guid SessionID)
         {
             using (_unitOfWork)
             {
@@ -46,7 +46,7 @@ namespace PlanetWars.Services.ConcreteServices
                     Planet planet = i < planetsWithResource ? await CreatePlanet(true, -1, GalaxyID) : await CreatePlanet(false, -1, GalaxyID);
                     planetList.Add(planet);
 
-                    
+
                 }
                 ShufflePlanets(planetList);
                 var retval = await _unitOfWork.Planets.AddMany(planetList);
@@ -72,7 +72,7 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-       
+
 
         public async Task<bool> Delete(Guid id)
         {
@@ -161,7 +161,7 @@ namespace PlanetWars.Services.ConcreteServices
                 List<PlanetDto> relatedPlanets = new List<PlanetDto>();
                 foreach (PlanetPlanet relation in relations)
                 {
-                    if(relation.PlanetFromID == null) return null;
+                    if (relation.PlanetFromID == null) return null;
                     var planet = await _unitOfWork.Planets.GetById(relation.PlanetFromID);
                     if (planet != null)
                     {
@@ -174,7 +174,7 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<bool> DeleteAll()
         {
-            using(_unitOfWork)
+            using (_unitOfWork)
             {
                 await _unitOfWork.PlanetPlanets.DeleteAll();
                 await _unitOfWork.Planets.DeleteAll();
@@ -219,17 +219,19 @@ namespace PlanetWars.Services.ConcreteServices
         }
 
         #region Helpers 
-        private List<Planet> ShufflePlanets(List<Planet> planets) {
+        private List<Planet> ShufflePlanets(List<Planet> planets)
+        {
             int count = planets.Count;
             Random rnd = new Random(count);
-            for(int i = 0; i< count; i++)
+            for (int i = 0; i < count; i++)
             {
                 int next = rnd.Next() % count;
                 Planet p = planets[i];
                 planets[i] = planets[next];
                 planets[next] = p;
             }
-            for(int i = 0; i< count; i++) {
+            for (int i = 0; i < count; i++)
+            {
                 planets[i].IndexInGalaxy = i;
             }
             return planets;

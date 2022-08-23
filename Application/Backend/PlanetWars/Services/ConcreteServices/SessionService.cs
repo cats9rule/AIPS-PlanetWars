@@ -11,6 +11,7 @@ using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
 using PlanetWars.DTOs.Communication;
 using PlanetWars.Services.Strategy;
+using PlanetWars.Services.Exceptions;
 
 namespace PlanetWars.Services.ConcreteServices
 {
@@ -210,14 +211,10 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-
                 User user = await _unitOfWork.Users.GetById(userID);
                 Session session = await _unitOfWork.Sessions.GetById(sessionID);
 
-                if (session.PlayerCount == session.MaxPlayers)
-                {
-                    return null;
-                }
+                if (session.PlayerCount == session.MaxPlayers) return null;
 
                 int turnIndex = session.PlayerCount;
 
@@ -237,34 +234,53 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                // NewPlayerDto newPlayer = new NewPlayerDto()
-                // {
-                //     ClientHandler = "onNewPlayer",
-                //     NewPlayer = _mapper.Map<PlayerDto>(player),
-                //     SessionID = sessionID.ToString(),
-                //     UserID = userID.ToString()
-                // };
-
-                // await _hubService.NotifyOnNewPlayer(newPlayer);
-
                 return _mapper.Map<SessionDto>(session);
             }
         }
-        private async Task<Session> InitSession(string name, int maxPlayers)
-        {
 
-            Session session = new Session()
+        public async Task<bool> PlayMove(TurnDto turn)
+        {
+            using (_unitOfWork)
             {
-                Name = name,
-                MaxPlayers = maxPlayers,
-                GameCode = GetRandomString(6),
-                Players = new List<Player>(),
-                PlayerCount = 0,
-                CurrentTurnIndex = 0
-            };
-            var result = await _unitOfWork.Sessions.Add(session);
-            await _unitOfWork.CompleteAsync();
-            return result ? session : null;
+                var session = await _unitOfWork.Sessions.GetById(turn.SessionID);
+                if (session == null) throw new InvalidActionException("Session with given ID does not exist.");
+
+                var player = await _unitOfWork.Players.GetById(turn.PlayerID);
+                if (player == null) throw new InvalidActionException("Player with given ID does not exist.");
+
+                if (ValidatePlacedArmies(turn.Actions, player)) throw new InvalidActionException("Invalid number of armies placed.");
+
+                var connections = await _unitOfWork.PlanetPlanets.GetAllRelationsForSession(session.ID);
+
+                session = ProcessActions(turn.Actions, session, player, connections);
+
+                await _unitOfWork.Sessions.Update(session);
+                await _unitOfWork.CompleteAsync();
+
+                GameUpdateDto gud = new GameUpdateDto()
+                {
+                    ArmiesNextTurn = CalculateNewArmies(session.Players.Find(p => p.PlayerColor.TurnIndex == session.CurrentTurnIndex)),
+                    Session = _mapper.Map<SessionDto>(session)
+                };
+
+                var result = await _hubService.NotifyOnGameChanges(gud);
+
+                if (result.IsSuccessful)
+                {
+                    var winner = FindWinner(session);
+                    if (winner != null)
+                    {
+                        GameOverDto god = new GameOverDto()
+                        {
+                            SessionID = session.ID,
+                            winner = _mapper.Map<PlayerDto>(winner)
+                        };
+                        result = await _hubService.NotifyOnWinner(god);
+                    }
+                }
+
+                return result.IsSuccessful;
+            }
         }
 
         //TODO: test this
@@ -316,5 +332,131 @@ namespace PlanetWars.Services.ConcreteServices
             return result.ToString();
         }
 
+        private async Task<Session> InitSession(string name, int maxPlayers)
+        {
+            Session session = new Session()
+            {
+                Name = name,
+                MaxPlayers = maxPlayers,
+                GameCode = GetRandomString(6),
+                Players = new List<Player>(),
+                PlayerCount = 0,
+                CurrentTurnIndex = 0
+            };
+            var result = await _unitOfWork.Sessions.Add(session);
+            await _unitOfWork.CompleteAsync();
+            return result ? session : null;
+        }
+
+        private int CalculateNewArmies(Player player)
+        {
+            return player.Planets.Count / 2;
+        }
+
+        private bool ValidatePlacedArmies(List<ActionDto> actions, Player player)
+        {
+            int armies = CalculateNewArmies(player);
+            if (armies > 0)
+            {
+                actions.ForEach(a =>
+                {
+                    if (a.Type == ActionType.Placement)
+                    {
+                        armies -= a.NumberOfArmies;
+                    }
+                });
+                if (armies != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private Session ProcessActions(List<ActionDto> actions, Session session, Player player, List<PlanetPlanet> connections)
+        {
+            actions.ForEach(action =>
+            {
+                if (SetStrategyForAction(action, player))
+                {
+                    session = _turnActionContext.DoAction(action, session, connections);
+                }
+                else throw new InvalidActionException("Invalid action type.");
+            });
+            session.Players.ForEach(player =>
+            {
+                if (player.Planets.Count == 0) player.IsActive = false;
+            });
+
+            ProcessTurnIndex(session);
+
+            return session;
+        }
+        private bool SetStrategyForAction(ActionDto action, Player player)
+        {
+            switch (action.Type)
+            {
+                case ActionType.Attack:
+                    {
+                        if (player.Planets.Where(p => p.ID == action.PlanetFrom).FirstOrDefault().Extras.Contains("atk"))
+                            _turnActionContext.SetStrategy(new BoostedAttackStrategy());
+                        else
+                            _turnActionContext.SetStrategy(new AttackStrategy());
+                        break;
+                    }
+                case ActionType.Movement:
+                    {
+                        if (player.Planets.Where(p => p.ID == action.PlanetFrom).FirstOrDefault().Extras.Contains("mov"))
+                            _turnActionContext.SetStrategy(new BoostedMoveStrategy());
+                        else
+                            _turnActionContext.SetStrategy(new MovementStrategy());
+                        break;
+                    }
+                case ActionType.Placement:
+                    {
+                        _turnActionContext.SetStrategy(new PlacementStrategy());
+                        break;
+                    }
+                default:
+                    {
+                        return false;
+                    }
+            }
+            return true;
+        }
+
+        private Session ProcessTurnIndex(Session session)
+        {
+            bool foundNext = false;
+            while (!foundNext)
+            {
+                session.CurrentTurnIndex++;
+                var player = session.Players.Where(player => player.PlayerColor.TurnIndex == session.CurrentTurnIndex).First();
+                foundNext = player.IsActive;
+            }
+            return session;
+        }
+
+        private Player FindWinner(Session session)
+        {
+            Player winner = null;
+            for (int i = 0; i < session.PlayerCount; i++)
+            {
+                Player player = session.Players[i];
+                if (player.IsActive)
+                {
+                    if (winner == null) winner = player;
+                    else return null;
+                }
+            }
+            return winner;
+        }
+    }
+
+    public static class ActionType
+    {
+        public const string Attack = "attack";
+        public const string Movement = "movement";
+        public const string Placement = "placement";
     }
 }

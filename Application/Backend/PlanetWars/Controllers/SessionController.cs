@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using PlanetWars.DTOs;
 using PlanetWars.Services;
-using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using PlanetWars.Services.Exceptions;
 
 namespace PlanetWars.Controllers
 {
@@ -33,7 +32,7 @@ namespace PlanetWars.Controllers
         {
 
             var sessionDto = await sessionService.CreateSession(createGameDto);
-            List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.Galaxy.ID));
+            List<PlanetDto> planets = new List<PlanetDto>(await planetService.CreatePlanets(createGameDto, sessionDto.Galaxy.ID, sessionDto.ID));
             if (sessionDto != null)
             {
                 sessionDto.Galaxy.Planets = planets;
@@ -46,16 +45,6 @@ namespace PlanetWars.Controllers
             }
             return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
-
-        // [Route("AddPlayer")]
-        // [HttpPut]
-        // public async Task<ActionResult> AddPlayer([FromBody] JoinGameDto joinGameDto)
-        // {
-        //     var session = await sessionService.GetByNameAndCode(joinGameDto.SessionName, joinGameDto.GameCode);
-        //     var player = await playerService.CreatePlayer(joinGameDto.UserID, session.PlayerCount, session.ID);
-        //     var result = await sessionService.AddPlayer(session.ID, joinGameDto.UserID);
-        //     return Ok(result);
-        // }
 
         [Route("JoinGame")]
         [HttpPut]
@@ -81,6 +70,22 @@ namespace PlanetWars.Controllers
                 else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
             return new StatusCodeResult(StatusCodes.Status404NotFound);
+        }
+
+        [Route("PlayMove")]
+        [HttpPut]
+        public async Task<IActionResult> PlayMove([FromBody] TurnDto turn)
+        {
+            try
+            {
+                var result = await sessionService.PlayMove(turn);
+                if (result) return Ok();
+                else return Problem(detail: "Could not notify session members.");
+            }
+            catch (Exception e)
+            {
+                return Problem(detail: e.Message);
+            }
         }
 
         [Route("GetSession/{id}")]

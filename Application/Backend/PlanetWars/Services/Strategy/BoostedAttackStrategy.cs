@@ -16,7 +16,10 @@ namespace PlanetWars.Services.Strategy
             session.Galaxy.Planets.Where(planet => planet.ID == action.PlanetFrom).FirstOrDefault().ArmyCount -= action.NumberOfArmies;
             var attackedPlanet = session.Galaxy.Planets.Where(planet => planet.ID == action.PlanetTo).FirstOrDefault();
             session.Galaxy.Planets.Remove(attackedPlanet);
-            attackedPlanet.ArmyCount -= action.NumberOfArmies * 2;
+
+            if (attackedPlanet.Extras.Contains("def"))
+                attackedPlanet.ArmyCount = (attackedPlanet.ArmyCount - action.NumberOfArmies) * 2;
+            else attackedPlanet.ArmyCount -= action.NumberOfArmies * 2;
 
             if (attackedPlanet.ArmyCount < 0)
             {
