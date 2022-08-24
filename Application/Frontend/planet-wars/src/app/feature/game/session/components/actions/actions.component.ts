@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { placingArmies } from '../../state/session.actions';
 import { SessionState } from '../../state/session.state';
 
 @Component({

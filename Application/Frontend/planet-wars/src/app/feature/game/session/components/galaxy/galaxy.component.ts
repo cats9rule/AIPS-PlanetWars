@@ -18,7 +18,6 @@ import { constructGalaxy } from '../../state/session.actions';
 import {
   canDrawGalaxy,
   getGalaxy,
-  getPlacingArmies,
   getPlanetConnectionsRenderInfo,
   getPlanetsRenderInfo,
   getPlayer,

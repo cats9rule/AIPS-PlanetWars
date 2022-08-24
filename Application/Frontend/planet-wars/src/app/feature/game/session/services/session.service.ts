@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { State, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { PlayerDto } from '../../dtos/playerDto';
 import { addNewPlayer } from '../state/session.actions';
 import { SessionState } from '../state/session.state';
