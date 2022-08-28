@@ -1,3 +1,4 @@
+import { ThisReceiver } from '@angular/compiler';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
@@ -5,8 +6,12 @@ import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { User } from 'src/app/feature/user/interfaces/user';
 import { PlayerDto } from '../../../dtos/playerDto';
 import { SessionDto } from '../../../dtos/sessionDto';
-import { getPlayer, getSession } from '../../state/session.selectors';
-import { SessionState } from '../../state/session.state';
+import {
+  getPlayer,
+  getSession,
+  getSessionState,
+} from '../../state/session.selectors';
+import { initialSessionState, SessionState } from '../../state/session.state';
 
 @Component({
   selector: 'app-session-main',
@@ -20,7 +25,12 @@ export class SessionMainComponent implements OnInit, OnDestroy {
 
   public player$: Observable<Maybe<PlayerDto>>;
 
+  private sessionState$: Observable<SessionState>;
+  private sessionStateSubscription: Subscription = new Subscription();
+  public sessionState: SessionState = initialSessionState;
+
   public placingArmies = false;
+  public notPlacedArmies = false;
 
   @Input()
   public user: Maybe<User>;
@@ -28,6 +38,7 @@ export class SessionMainComponent implements OnInit, OnDestroy {
   constructor(private store: Store<SessionState>) {
     this.session$ = this.store.select<Maybe<SessionDto>>(getSession);
     this.player$ = this.store.select<Maybe<PlayerDto>>(getPlayer);
+    this.sessionState$ = this.store.select<SessionState>(getSessionState);
   }
 
   ngOnInit(): void {
@@ -41,6 +52,16 @@ export class SessionMainComponent implements OnInit, OnDestroy {
         console.error(err);
       },
     });
+    this.sessionStateSubscription = this.sessionState$.subscribe({
+      next: (state) => {
+        this.sessionState = state;
+        if (state.armiesToPlace > 0) {
+          this.notPlacedArmies = true;
+        } else {
+          this.notPlacedArmies = false;
+        }
+      },
+    });
   }
 
   public setPlacingArmies(isPlacing: boolean) {
@@ -49,5 +70,6 @@ export class SessionMainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sessionSubscription.unsubscribe();
+    this.sessionStateSubscription.unsubscribe();
   }
 }

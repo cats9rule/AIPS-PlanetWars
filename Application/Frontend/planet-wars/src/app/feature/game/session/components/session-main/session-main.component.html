@@ -7,7 +7,10 @@
         session != null && session != undefined ? session.currentTurnIndex : 0
       "
     ></app-players-info>
-    <app-actions (onPlacingArmies)="setPlacingArmies($event)"></app-actions>
+    <app-actions
+      (onPlacingArmies)="setPlacingArmies($event)"
+      [notPlacedArmies]="notPlacedArmies"
+    ></app-actions>
     <app-actions-confirmation></app-actions-confirmation>
   </div>
   <div class="map-column">

@@ -15,6 +15,7 @@ import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { GalaxyDto } from '../../../dtos/galaxyDto';
 import { PlayerDto } from '../../../dtos/playerDto';
+import { Planet } from '../../interfaces/planet';
 import { PlanetConnectionInfo } from '../../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../../interfaces/planetRenderInfo';
 import { constructGalaxy } from '../../state/session.actions';
@@ -70,7 +71,6 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     >(getPlanetConnectionsRenderInfo);
 
     this.canDrawGalaxy$ = this.store.select<boolean>(canDrawGalaxy);
-    //this.placingArmies$ = this.store.select<boolean>(getPlacingArmies);
     this.player$ = this.store.select<Maybe<PlayerDto>>(getPlayer);
 
     this.sessionState$ = this.store.select<SessionState>(getSessionState);
@@ -87,12 +87,6 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error(err);
       },
     });
-
-    // this.placingArmiesSubscription = this.placingArmies$.subscribe({
-    //   next: (placingArmies) => {
-    //     this.placingArmies = placingArmies;
-    //   },
-    // });
 
     this.playerSubscription = this.player$.subscribe({
       next: (p) => {
@@ -142,24 +136,26 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public onPlanetClick(index: number) {
-    const planet = this.planetRenderInfoArray.find(
-      (p) => p.indexInGalaxy == index
+    const planet = this.sessionState.planets.find(
+      (p) => p.getIndexInGalaxy() == index
     );
     if (
       planet != undefined &&
       this.isPlacingArmies &&
-      planet.strokeColor == this.player?.playerColor
+      planet.getOwnerID() == this.player?.id
     ) {
-      const data: TurnActionDialogData = {
-        action: ActionType.Placement,
-        availableArmies: this.sessionState.armiesToPlace,
-        planetID: this.sessionState.planets
-          .find((p) => p.getIndexInGalaxy() == index)!!
-          .getID(),
-      };
-      this.store.dispatch(openActionDialog({ data }));
+      this.openPlacementActionDialog(planet);
     } else alert('i was clicked: ' + index);
     event?.preventDefault();
+  }
+
+  private openPlacementActionDialog(planet: Planet) {
+    const data: TurnActionDialogData = {
+      action: ActionType.Placement,
+      availableArmies: this.sessionState.armiesToPlace,
+      planetID: planet.getID(),
+    };
+    this.store.dispatch(openActionDialog({ data }));
   }
 
   ngOnDestroy(): void {
@@ -167,5 +163,6 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.planetsRenderinfoSubscription.unsubscribe();
     //this.placingArmiesSubscription.unsubscribe();
     this.playerSubscription.unsubscribe();
+    this.sessionStateSubscription.unsubscribe();
   }
 }

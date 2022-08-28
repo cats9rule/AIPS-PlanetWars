@@ -1,16 +1,31 @@
 <mat-card>
   <h3>Actions</h3>
   <div class="container">
-    <button mat-flat-button color="primary" (click)="onPlaceArmies()">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onPlaceArmies()"
+      [disabled]="!notPlacedArmies"
+    >
       Place Armies
     </button>
 
     <mat-divider></mat-divider>
 
-    <button mat-flat-button color="accent" (click)="onMoveArmies()" [disabled]="notPlacedArmies">
+    <button
+      mat-flat-button
+      color="accent"
+      (click)="onMoveArmies()"
+      [disabled]="notPlacedArmies"
+    >
       Move Armies
     </button>
-    <button mat-flat-button color="accent" (click)="onAttackPlanet()" [disabled]="notPlacedArmies">
+    <button
+      mat-flat-button
+      color="accent"
+      (click)="onAttackPlanet()"
+      [disabled]="notPlacedArmies"
+    >
       Attack Planet
     </button>
   </div>

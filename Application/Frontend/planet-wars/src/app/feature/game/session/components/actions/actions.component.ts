@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SessionState } from '../../state/session.state';
 
@@ -15,6 +15,7 @@ export class ActionsComponent implements OnInit {
   @Output()
   public onAttackingPlanet = new EventEmitter<boolean>();
 
+  @Input()
   public notPlacedArmies = true;
 
   constructor(private sessionStore: Store<SessionState>) {}
