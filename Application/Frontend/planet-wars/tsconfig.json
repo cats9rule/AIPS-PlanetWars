@@ -17,7 +17,7 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2020",
-    "module": "es2020",
+    "module": "esnext",
     "lib": ["es2020", "dom"],
     "paths": {
       "core/*": ["src/app/core/*"],
@@ -28,6 +28,8 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   }
 }

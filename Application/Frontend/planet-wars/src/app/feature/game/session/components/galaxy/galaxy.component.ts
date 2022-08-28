@@ -8,6 +8,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ActionType } from 'core/enums/actionType.enum';
+import { TurnActionDialogData } from 'core/interfaces/turn-action-dialog-data';
+import { openActionDialog } from 'core/state/dialog.actions';
 import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { GalaxyDto } from '../../../dtos/galaxyDto';
@@ -21,8 +24,9 @@ import {
   getPlanetConnectionsRenderInfo,
   getPlanetsRenderInfo,
   getPlayer,
+  getSessionState,
 } from '../../state/session.selectors';
-import { SessionState } from '../../state/session.state';
+import { initialSessionState, SessionState } from '../../state/session.state';
 @Component({
   selector: 'app-galaxy',
   templateUrl: './galaxy.component.html',
@@ -32,13 +36,13 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input()
   public isPlacingArmies = false;
 
+  public sessionState$: Observable<SessionState>;
+  public sessionState: SessionState = initialSessionState;
+  private sessionStateSubscription: Subscription = new Subscription();
+
   public galaxy$: Observable<Maybe<GalaxyDto>>;
   public galaxy: Maybe<GalaxyDto>;
   private galaxySubscription: Subscription = new Subscription();
-
-  // private placingArmies$: Observable<boolean>;
-  // private placingArmies: boolean = false;
-  // private placingArmiesSubscription = new Subscription();
 
   private player$: Observable<Maybe<PlayerDto>>;
   private player: Maybe<PlayerDto>;
@@ -68,6 +72,8 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     this.canDrawGalaxy$ = this.store.select<boolean>(canDrawGalaxy);
     //this.placingArmies$ = this.store.select<boolean>(getPlacingArmies);
     this.player$ = this.store.select<Maybe<PlayerDto>>(getPlayer);
+
+    this.sessionState$ = this.store.select<SessionState>(getSessionState);
   }
 
   ngOnInit(): void {
@@ -112,6 +118,13 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
         console.error(err);
       },
     });
+
+    this.sessionStateSubscription = this.sessionState$.subscribe({
+      next: (state) => {
+        this.sessionState = state;
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   ngAfterViewInit(): void {
@@ -137,7 +150,14 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isPlacingArmies &&
       planet.strokeColor == this.player?.playerColor
     ) {
-      alert('Placing armies here');
+      const data: TurnActionDialogData = {
+        action: ActionType.Placement,
+        availableArmies: this.sessionState.armiesToPlace,
+        planetID: this.sessionState.planets
+          .find((p) => p.getIndexInGalaxy() == index)!!
+          .getID(),
+      };
+      this.store.dispatch(openActionDialog({ data }));
     } else alert('i was clicked: ' + index);
     event?.preventDefault();
   }

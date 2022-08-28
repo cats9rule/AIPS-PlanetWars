@@ -56,7 +56,7 @@ export const getAllPlayers = createSelector(
   (state: SessionState) => state.session?.players
 );
 
-export const getPlacingArmies = createSelector(
-  getSessionState,
-  (state: SessionState) => state.sessionInfo.placingArmies
-);
+// export const getPlacingArmies = createSelector(
+//   getSessionState,
+//   (state: SessionState) => state.sessionInfo.placingArmies
+// );

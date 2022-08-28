@@ -12,6 +12,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { GameModule } from './feature/game/game.module';
+import { CommonEffects } from 'core/state/common.effects';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +20,7 @@ import { GameModule } from './feature/game/game.module';
     BrowserModule,
     BrowserAnimationsModule,
     StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([]),
+    EffectsModule.forRoot([CommonEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       autoPause: false,

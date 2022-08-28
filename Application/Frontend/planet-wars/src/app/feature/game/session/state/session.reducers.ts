@@ -1,4 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
+import { setTurnActionDialogResult } from 'core/state/common.actions';
 import { isDefined } from 'src/app/core/utils/types/maybe.type';
 import { GalaxyDto } from '../../dtos/galaxyDto';
 import { PlanetDto } from '../../dtos/planetDto';
@@ -18,6 +19,7 @@ import {
   updatePlanetOwner,
 } from './session.actions';
 import { initialSessionState, SessionState } from './session.state';
+import { cloneDeep } from 'lodash';
 
 export const sessionReducer = createReducer(
   initialSessionState,
@@ -79,13 +81,29 @@ export const sessionReducer = createReducer(
   on(updatePlanet, (state: SessionState, { planet }) => {
     return updatePlanetInState(state, planet);
   }),
-  on(placingArmies, (state: SessionState, { placingArmies }) => {
-    const sessionInfo = { ...state.sessionInfo };
-    sessionInfo.placingArmies = placingArmies;
-    return {
-      ...state,
-      sessionInfo: sessionInfo,
-    };
+  // on(placingArmies, (state: SessionState, { placingArmies }) => {
+  //   const sessionInfo = { ...state.sessionInfo };
+  //   sessionInfo.placingArmies = placingArmies;
+  //   return {
+  //     ...state,
+  //     sessionInfo: sessionInfo,
+  //   };
+  // })
+  on(setTurnActionDialogResult, (state: SessionState, { result }) => {
+    if (state.armiesToPlace >= result.armyCount) {
+      const planets = state.planets.slice();
+      const planet = cloneDeep(
+        planets.find((p) => p.getID() == result.planetID)!!
+      );
+      planet!!.incrementArmyCount(result.armyCount);
+      planets[planet!!.getIndexInGalaxy()] = planet;
+      return {
+        ...state,
+        planets: planets,
+        armiesToPlace: state.armiesToPlace - result.armyCount,
+      };
+    }
+    return state;
   })
 );
 
@@ -95,18 +113,17 @@ const setSession = (
   userID: string
 ) => {
   let planets = sessionDto.galaxy.planets.slice();
-  //planets.sort((p1, p2) => p1.indexInGalaxy - p2.indexInGalaxy);
-  const gal: GalaxyDto = {
-    ...sessionDto.galaxy,
-    planets: planets,
-  };
-  const session: SessionDto = {
-    ...sessionDto,
-    galaxy: gal,
-  };
+  // const gal: GalaxyDto = ;
+  // const session: SessionDto = ;
   return {
     ...state,
-    session: session,
+    session: {
+      ...sessionDto,
+      galaxy: {
+        ...sessionDto.galaxy,
+        planets: planets,
+      },
+    },
     player: sessionDto.players.find((p) => p.userID == userID),
   };
 };
