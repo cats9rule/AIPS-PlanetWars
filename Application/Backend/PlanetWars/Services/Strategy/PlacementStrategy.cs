@@ -16,18 +16,18 @@ namespace PlanetWars.Services.Strategy
         public Session DoAction(ActionDto action, Session session, List<PlanetPlanet> connections)
         {
             ValidateAction(action, session);
-            session.Galaxy.Planets.Where(planet => planet.ID == action.PlanetTo).FirstOrDefault().ArmyCount += action.NumberOfArmies;
+            session.Galaxy.Planets.Where(planet => planet.ID.ToString() == action.PlanetTo).FirstOrDefault().ArmyCount += action.Armies;
             return session;
         }
 
         private bool ValidateAction(ActionDto action, Session session)
         {
             var planet = session.Players
-                .Where(player => player.ID == action.PlayerID)
+                .Where(player => player.ID.ToString() == action.PlayerID)
                 .FirstOrDefault().Planets
-                .Where(planet => planet.ID == action.PlanetTo)
+                .Where(planet => planet.ID.ToString() == action.PlanetTo)
                 .FirstOrDefault();
-            if (planet != null) throw new InvalidActionException("Player does not own this planet.");
+            if (planet == null) throw new InvalidActionException("Player does not own this planet.");
 
             return true;
         }

@@ -4,10 +4,10 @@ namespace PlanetWars.DTOs
 {
     public class ActionDto
     {
-        public Guid PlayerID { get; set; }
-        public Guid PlanetFrom { get; set; }
-        public Guid PlanetTo { get; set; }
-        public int NumberOfArmies { get; set; }
+        public string PlayerID { get; set; }
+        public string PlanetFrom { get; set; }
+        public string PlanetTo { get; set; }
+        public int Armies { get; set; }
         public string Type { get; set; }
     }
 }

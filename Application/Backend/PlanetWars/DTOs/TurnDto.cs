@@ -8,7 +8,7 @@ namespace PlanetWars.DTOs
     public class TurnDto
     {
         public List<ActionDto> Actions { get; set; }
-        public Guid SessionID { get; set; }
-        public Guid PlayerID { get; set; }
+        public string SessionID { get; set; }
+        public string PlayerID { get; set; }
     }
 }

@@ -116,8 +116,6 @@ namespace PlanetWars.Services.ConcreteServices
                 User user = await _unitOfWork.Users.GetById(userId);
                 Session session = await _unitOfWork.Sessions.GetById(sessionId);
 
-                Console.WriteLine("\n\n" + sessionId + "\n\n");
-
                 Player player = new Player();
                 player.User = user;
                 player.UserID = userId;
@@ -151,7 +149,6 @@ namespace PlanetWars.Services.ConcreteServices
                         while (notSpawned)
                         {
                             randomPlanet = random.Next() % planetCount;
-                            Console.WriteLine("\n\n Planet count: " + planetCount + ", planet index: " + randomPlanet + "\n\n");
                             if (session.Galaxy.Planets[randomPlanet].Owner == null)
                             {
                                 notSpawned = false;

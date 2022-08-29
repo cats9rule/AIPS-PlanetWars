@@ -242,17 +242,21 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                var session = await _unitOfWork.Sessions.GetById(turn.SessionID);
+                var session = await _unitOfWork.Sessions.GetById(new Guid(turn.SessionID));
                 if (session == null) throw new InvalidActionException("Session with given ID does not exist.");
-                var player = await _unitOfWork.Players.GetById(turn.PlayerID);
+                var player = await _unitOfWork.Players.GetById(new Guid(turn.PlayerID));
                 if (player == null) throw new InvalidActionException("Player with given ID does not exist.");
-                if (ValidatePlacedArmies(turn.Actions, player)) throw new InvalidActionException("Invalid number of armies placed.");
+                if (session.TurnsPlayed <= player.PlayerColor.TurnIndex) {
+                    if (!ValidatePlacedArmies(turn.Actions, player, true)) throw new InvalidActionException("Invalid number of armies placed.");
+                }
+                else if (!ValidatePlacedArmies(turn.Actions, player)) throw new InvalidActionException("Invalid number of armies placed.");
 
                 var connections = await _unitOfWork.PlanetPlanets.GetAllRelationsForSession(session.ID);
 
                 session = ProcessActions(turn.Actions, session, player, connections);
 
                 session.Galaxy.Planets = session.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
+                session.TurnsPlayed++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
@@ -349,24 +353,27 @@ namespace PlanetWars.Services.ConcreteServices
             return player.Planets.Count / 2;
         }
 
-        private bool ValidatePlacedArmies(List<ActionDto> actions, Player player)
+        private bool ValidatePlacedArmies(List<ActionDto> actions, Player player, bool isInitial = false)
         {
-            int armies = CalculateNewArmies(player);
+            int armies = isInitial ? 5 : CalculateNewArmies(player);
+            Console.WriteLine("\n\n" + armies + "\n\n");
             if (armies > 0)
             {
                 actions.ForEach(a =>
                 {
                     if (a.Type == ActionType.Placement)
                     {
-                        armies -= a.NumberOfArmies;
+                        armies -= a.Armies;
                     }
                 });
-                if (armies != 0)
+                Console.WriteLine("\n\nAfter validate: " + armies + "\n\n");
+                if (armies == 0)
                 {
-                    return false;
+                    return true;
                 }
+
             }
-            return true;
+            return false;
         }
 
         private Session ProcessActions(List<ActionDto> actions, Session session, Player player, List<PlanetPlanet> connections)
@@ -394,7 +401,7 @@ namespace PlanetWars.Services.ConcreteServices
             {
                 case ActionType.Attack:
                     {
-                        if (player.Planets.Where(p => p.ID == action.PlanetFrom).FirstOrDefault().Extras.Contains("atk"))
+                        if (player.Planets.Where(p => p.ID.ToString() == action.PlanetFrom).FirstOrDefault().Extras.Contains("atk"))
                             _turnActionContext.SetStrategy(new BoostedAttackStrategy());
                         else
                             _turnActionContext.SetStrategy(new AttackStrategy());
@@ -402,7 +409,7 @@ namespace PlanetWars.Services.ConcreteServices
                     }
                 case ActionType.Movement:
                     {
-                        if (player.Planets.Where(p => p.ID == action.PlanetFrom).FirstOrDefault().Extras.Contains("mov"))
+                        if (player.Planets.Where(p => p.ID.ToString() == action.PlanetFrom).FirstOrDefault().Extras.Contains("mov"))
                             _turnActionContext.SetStrategy(new BoostedMoveStrategy());
                         else
                             _turnActionContext.SetStrategy(new MovementStrategy());

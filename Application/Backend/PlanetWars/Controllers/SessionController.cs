@@ -72,6 +72,7 @@ namespace PlanetWars.Controllers
             return new StatusCodeResult(StatusCodes.Status404NotFound);
         }
 
+        // TODO: proveriti da li radi za akcije sa Movement i Attack (radi za Placement)
         [Route("PlayMove")]
         [HttpPut]
         public async Task<IActionResult> PlayMove([FromBody] TurnDto turn)
