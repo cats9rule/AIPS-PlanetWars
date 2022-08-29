@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ActionType } from '../../../../core/enums/actionType.enum';
 import { TurnDto } from '../dtos/turnDto';
+import { initialSessionState, SessionState } from '../state/session.state';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TurnBuilderService {
   private _turn: TurnDto;
+
+  private _backupSessionState = initialSessionState;
 
   constructor() {
     this._turn = {
@@ -16,11 +19,12 @@ export class TurnBuilderService {
     };
   }
 
-  public newTurn(playerID: string, sessionID: string): TurnBuilderService {
+  public newTurn(sessionState: SessionState): TurnBuilderService {
+    this._backupSessionState = sessionState;
     this._turn = {
       actions: [],
-      playerID: playerID,
-      sessionID: sessionID,
+      playerID: sessionState.player!!.id,
+      sessionID: sessionState.session!!.id,
     };
     return this;
   }
@@ -71,5 +75,10 @@ export class TurnBuilderService {
 
   public build(): TurnDto {
     return this._turn;
+  }
+
+  public discard(): SessionState {
+    this.newTurn(this._backupSessionState);
+    return this._backupSessionState;
   }
 }

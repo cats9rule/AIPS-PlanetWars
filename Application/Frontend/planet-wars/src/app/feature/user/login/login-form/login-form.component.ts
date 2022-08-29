@@ -51,7 +51,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
         username: usernameAndTagArray[0],
       };
       this.store.dispatch(userLogin({ userLoginDto }));
-      console.log(userLoginDto);
     } else alert('Input username and password please!');
   }
 }

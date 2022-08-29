@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { outputAst } from '@angular/compiler';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { TurnBuilderService } from '../../services/turn-builder.service';
 
 @Component({
   selector: 'app-actions-confirmation',
@@ -6,11 +8,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./actions-confirmation.component.scss'],
 })
 export class ActionsConfirmationComponent implements OnInit {
+  @Output()
+  onDiscardMoveEvent = new EventEmitter<boolean>();
+
+  @Output()
+  onFinishMoveEvent = new EventEmitter<boolean>();
+
   constructor() {}
 
   ngOnInit(): void {}
 
-  onFinishMove() {}
+  onFinishMove() {
+    this.onFinishMoveEvent.emit(true);
+  }
 
-  onDiscard() {}
+  onDiscard() {
+    this.onDiscardMoveEvent.emit(true);
+  }
 }

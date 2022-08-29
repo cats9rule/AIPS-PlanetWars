@@ -11,7 +11,10 @@
       (onPlacingArmies)="setPlacingArmies($event)"
       [notPlacedArmies]="notPlacedArmies"
     ></app-actions>
-    <app-actions-confirmation></app-actions-confirmation>
+    <app-actions-confirmation
+      (onFinishMoveEvent)="onFinishMove()"
+      (onDiscardMoveEvent)="onDiscardMove()"
+    ></app-actions-confirmation>
   </div>
   <div class="map-column">
     <div class="info-chat">

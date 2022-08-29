@@ -15,6 +15,7 @@ import {
   constructPlanetConnectionsRenderInfoSuccess,
   constructPlanetRenderInfoSuccess,
   placingArmies,
+  setSessionState,
   updatePlanet,
   updatePlanetOwner,
 } from './session.actions';
@@ -23,12 +24,13 @@ import { cloneDeep } from 'lodash';
 
 export const sessionReducer = createReducer(
   initialSessionState,
-  on(createGameSuccess, (state: SessionState, { sessionDto, userID }) => {
-    return setSession(state, sessionDto, userID);
-  }),
-  on(joinGameSuccess, (state: SessionState, { sessionDto, userID }) => {
-    return setSession(state, sessionDto, userID);
-  }),
+  on(
+    createGameSuccess,
+    joinGameSuccess,
+    (state: SessionState, { sessionDto, userID }) => {
+      return setSession(state, sessionDto, userID);
+    }
+  ),
   on(constructGalaxySuccess, (state: SessionState, { planets }) => {
     return {
       ...state,
@@ -38,8 +40,6 @@ export const sessionReducer = createReducer(
   on(
     constructPlanetRenderInfoSuccess,
     (state: SessionState, { planetsRenderInfo }) => {
-      console.log(state.planetsRenderInfo);
-      console.log(planetsRenderInfo);
       return {
         ...state,
         planetsRenderInfo: planetsRenderInfo,
@@ -81,14 +81,6 @@ export const sessionReducer = createReducer(
   on(updatePlanet, (state: SessionState, { planet }) => {
     return updatePlanetInState(state, planet);
   }),
-  // on(placingArmies, (state: SessionState, { placingArmies }) => {
-  //   const sessionInfo = { ...state.sessionInfo };
-  //   sessionInfo.placingArmies = placingArmies;
-  //   return {
-  //     ...state,
-  //     sessionInfo: sessionInfo,
-  //   };
-  // })
   on(setTurnActionDialogResult, (state: SessionState, { result }) => {
     if (state.armiesToPlace >= result.armyCount) {
       const planets = state.planets.slice();
@@ -104,6 +96,9 @@ export const sessionReducer = createReducer(
       };
     }
     return state;
+  }),
+  on(setSessionState, (state: SessionState, { sessionState }) => {
+    return sessionState;
   })
 );
 

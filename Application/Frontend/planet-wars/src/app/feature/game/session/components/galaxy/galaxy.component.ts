@@ -101,7 +101,6 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.planetsRenderinfoSubscription = this.planetsRenderInfo$.subscribe({
       next: (renderInfoMap) => {
-        console.log('Render info sub from Galaxy Component');
         let renderInfos: PlanetRenderInfo[] = [];
         renderInfoMap.forEach((value) => {
           renderInfos = renderInfos.concat(value);

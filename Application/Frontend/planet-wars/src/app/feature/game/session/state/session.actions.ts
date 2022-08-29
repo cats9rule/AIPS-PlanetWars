@@ -7,6 +7,7 @@ import { PlayerDto } from '../../dtos/playerDto';
 import { Planet } from '../interfaces/planet';
 import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
+import { SessionState } from './session.state';
 
 export const joinSessionGroup = createAction(
   '[Session] Join Session Group',
@@ -59,4 +60,9 @@ export const updatePlanet = createAction(
 export const placingArmies = createAction(
   '[Actions] Placing Armies',
   props<{ placingArmies: boolean }>()
+);
+
+export const setSessionState = createAction(
+  '[Session] Set Session State',
+  props<{ sessionState: SessionState }>()
 );

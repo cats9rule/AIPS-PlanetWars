@@ -15,7 +15,6 @@ export const getSession = createSelector(
 export const getIsInSession = createSelector(
   getSessionState,
   (state: SessionState) => {
-    console.log(state);
     if (isDefined(state.session)) return true;
     else return false;
   }
