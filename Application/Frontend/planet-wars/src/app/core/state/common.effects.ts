@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { act, Actions, createEffect, ofType } from '@ngrx/effects';
+import { ConfirmationDialogComponent } from 'core/components/confirmation-dialog/confirmation-dialog.component';
+import { InfoDialogComponent } from 'core/components/info-dialog/info-dialog.component';
 import { TurnActionDialogComponent } from 'core/components/turn-action-dialog/turn-action-dialog.component';
-import { mergeMap } from 'rxjs';
+import { values } from 'lodash';
+import { mergeMap, tap } from 'rxjs';
 import { setTurnActionDialogResult } from './common.actions';
-import { openActionDialog } from './dialog.actions';
+import { openActionDialog, openInfoDialog } from './dialog.actions';
 
 @Injectable()
 export class CommonEffects {
@@ -32,5 +35,16 @@ export class CommonEffects {
         );
       })
     )
+  );
+
+  openInfoDialog$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(openInfoDialog),
+        tap((action) => {
+          this.dialog.open(InfoDialogComponent, { data: action.data });
+        })
+      ),
+    { dispatch: false }
   );
 }

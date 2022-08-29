@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { openInfoDialog } from 'core/state/dialog.actions';
 import { SessionState } from '../../state/session.state';
 
 @Component({
@@ -24,6 +25,14 @@ export class ActionsComponent implements OnInit {
 
   onPlaceArmies() {
     //this.sessionStore.dispatch(placingArmies({ placingArmies: true }));
+    this.sessionStore.dispatch(
+      openInfoDialog({
+        data: {
+          title: 'Placing armies',
+          message: 'Choose a planet in your possession.',
+        },
+      })
+    );
     this.onPlacingArmies.emit(true);
   }
   onMoveArmies() {

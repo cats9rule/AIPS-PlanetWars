@@ -9,6 +9,9 @@ export class PlanetResource implements Planet {
   constructor(wrappee: Planet) {
     this._wrappee = wrappee;
   }
+  getArmyCount(): number {
+    return this._wrappee.getArmyCount();
+  }
 
   public getAttack(): number {
     return this._wrappee.getAttack();

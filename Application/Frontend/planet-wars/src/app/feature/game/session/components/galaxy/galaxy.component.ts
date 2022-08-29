@@ -149,6 +149,16 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
     event?.preventDefault();
   }
 
+  public getArmyCount(index: number) {
+    const planet = this.sessionState.planets.find(
+      (p) => p.getIndexInGalaxy() == index
+    );
+    if (planet != undefined) {
+      return planet.getArmyCount();
+    }
+    return 0;
+  }
+
   private openPlacementActionDialog(planet: Planet) {
     const data: TurnActionDialogData = {
       action: ActionType.Placement,
