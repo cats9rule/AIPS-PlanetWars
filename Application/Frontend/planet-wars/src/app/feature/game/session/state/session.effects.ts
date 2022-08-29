@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { act, Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { ActionType } from 'core/enums/actionType.enum';
 import { TurnActionDialogResult } from 'core/interfaces/turn-action-dialog-result';
-import { concatMap, mergeMap, tap } from 'rxjs';
+import { concatMap, map, mergeMap, tap, withLatestFrom } from 'rxjs';
 import {
   noAction,
   setTurnActionDialogResult,
 } from 'src/app/core/state/common.actions';
 import { MessageHubService } from '../../services/message-hub.service';
 import { GalaxyConstructorService } from '../services/galaxy-constructor.service';
+import { SessionService } from '../services/session.service';
 import { TurnBuilderService } from '../services/turn-builder.service';
 import {
   addNewPlayer,
@@ -19,10 +21,14 @@ import {
   constructPlanetRenderInfo,
   constructPlanetRenderInfoSuccess,
   joinSessionGroup,
+  playMove,
   setSessionState,
   updatePlanet,
   updatePlanetOwner,
+  updateSession,
 } from './session.actions';
+import { getSessionState } from './session.selectors';
+import { SessionState } from './session.state';
 
 @Injectable()
 export class SessionEffects {
@@ -30,7 +36,9 @@ export class SessionEffects {
     private actions$: Actions,
     private galaxyConstructor: GalaxyConstructorService,
     private hubService: MessageHubService,
-    private turnBuilder: TurnBuilderService
+    private turnBuilder: TurnBuilderService,
+    private sessionService: SessionService,
+    private store: Store<SessionState>
   ) {}
 
   joinSessionGroup$ = createEffect(() =>
@@ -129,6 +137,33 @@ export class SessionEffects {
   //     })
   //   )
   // );
+
+  updateSession$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateSession),
+      withLatestFrom(this.store.select(getSessionState)),
+      mergeMap((action) => {
+        return [
+          constructGalaxy({
+            galaxyDto: action[0].gameUpdate.session.galaxy,
+            matrixHeight: action[1].renderHeight,
+            matrixWidth: action[1].renderWidth,
+          }),
+        ];
+      })
+    )
+  );
+
+  playMove$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(playMove),
+        tap((action) => {
+          this.sessionService.playMove(action.turnDto);
+        })
+      ),
+    { dispatch: false }
+  );
 
   private resolveTurnAction(result: TurnActionDialogResult) {
     switch (result.actionType) {

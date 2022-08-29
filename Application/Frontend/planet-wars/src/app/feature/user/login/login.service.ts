@@ -23,9 +23,6 @@ export class LoginService {
   ) {}
 
   private url = environment.serverUrl + '/User/LogInUser';
-  private httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-  };
 
   loginUser(user: UserLoginDto): Observable<UserDto> {
     return this.http

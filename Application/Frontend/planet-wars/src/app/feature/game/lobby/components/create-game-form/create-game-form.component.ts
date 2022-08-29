@@ -33,10 +33,7 @@ export class CreateGameFormComponent implements OnInit {
 
   private selectedMapID: string = '';
 
-  constructor(
-    private store: Store<LobbyState>,
-    private snackbarService: SnackbarService
-  ) {
+  constructor(private store: Store<LobbyState>) {
     this.gameMaps$ = this.store.select<GameMapDto[]>(getGameMaps);
     this.store.dispatch(loadGameMaps());
   }
@@ -45,10 +42,6 @@ export class CreateGameFormComponent implements OnInit {
 
   onSelectRow(row: any) {
     this.selectedMapID = row.id;
-    this.snackbarService.showMessage(
-      { contents: `Clicked on row with ${this.selectedMapID}.`, type: 'Info' },
-      'short'
-    );
   }
 
   isRowSelected(row: any) {

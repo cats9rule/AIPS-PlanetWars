@@ -1,4 +1,3 @@
-import { ThisReceiver } from '@angular/compiler';
 import {
   AfterViewInit,
   Component,
@@ -7,14 +6,16 @@ import {
   OnInit,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { openInfoDialog } from 'core/state/dialog.actions';
 import { SnackbarService } from 'core/utils/services/snackbar.service';
 import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { User } from 'src/app/feature/user/interfaces/user';
 import { PlayerDto } from '../../../dtos/playerDto';
 import { SessionDto } from '../../../dtos/sessionDto';
+import { SessionService } from '../../services/session.service';
 import { TurnBuilderService } from '../../services/turn-builder.service';
-import { setSessionState } from '../../state/session.actions';
+import { playMove, setSessionState } from '../../state/session.actions';
 import {
   getPlayer,
   getSession,
@@ -41,13 +42,16 @@ export class SessionMainComponent implements OnInit, OnDestroy, AfterViewInit {
   public placingArmies = false;
   public notPlacedArmies = false;
 
+  public isOnTurn = false;
+
   @Input()
   public user: Maybe<User>;
 
   constructor(
     private store: Store<SessionState>,
     private turnBuilder: TurnBuilderService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private sessionService: SessionService
   ) {
     this.session$ = this.store.select<Maybe<SessionDto>>(getSession);
     this.player$ = this.store.select<Maybe<PlayerDto>>(getPlayer);
@@ -73,6 +77,18 @@ export class SessionMainComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
           this.notPlacedArmies = false;
         }
+
+        if (state.isOnTurn && !this.isOnTurn) {
+          this.isOnTurn = true;
+          this.store.dispatch(
+            openInfoDialog({
+              data: { title: 'Turn', message: "It's your turn!" },
+            })
+          );
+          this.turnBuilder.newTurn(state);
+        } else if (!state.isOnTurn) {
+          this.isOnTurn = false;
+        }
       },
     });
   }
@@ -86,7 +102,9 @@ export class SessionMainComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   public onFinishMove() {
-    //TODO: dispatch action for sending turn info to server
+    const turnDto = this.turnBuilder.build();
+    this.store.dispatch(playMove({ turnDto }));
+    //this.sessionService.playMove(turnDto);
   }
 
   public onDiscardMove() {

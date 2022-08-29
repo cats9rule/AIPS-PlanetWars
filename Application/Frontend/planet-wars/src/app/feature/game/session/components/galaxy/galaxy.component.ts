@@ -18,7 +18,7 @@ import { PlayerDto } from '../../../dtos/playerDto';
 import { Planet } from '../../interfaces/planet';
 import { PlanetConnectionInfo } from '../../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../../interfaces/planetRenderInfo';
-import { constructGalaxy } from '../../state/session.actions';
+import { constructGalaxy, setRenderWindow } from '../../state/session.actions';
 import {
   canDrawGalaxy,
   getGalaxy,
@@ -123,6 +123,9 @@ export class GalaxyComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     const width = this.galaxyMatrix?.nativeElement.clientWidth;
     const height = this.galaxyMatrix?.nativeElement.clientHeight;
+
+    this.store.dispatch(setRenderWindow({ height, width }));
+
     if (isDefined(this.galaxy)) {
       this.store.dispatch(
         constructGalaxy({

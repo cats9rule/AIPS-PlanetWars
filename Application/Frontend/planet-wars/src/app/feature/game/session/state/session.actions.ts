@@ -2,8 +2,12 @@ import { createAction, props } from '@ngrx/store';
 import { Maybe } from 'src/app/core/utils/types/maybe.type';
 import { User } from 'src/app/feature/user/interfaces/user';
 import { GalaxyDto } from '../../dtos/galaxyDto';
+import { GameMapDto } from '../../dtos/gameMapDto';
+import { GameUpdateDto } from '../../dtos/gameUpdateDto';
 import { PlanetDto } from '../../dtos/planetDto';
 import { PlayerDto } from '../../dtos/playerDto';
+import { SessionDto } from '../../dtos/sessionDto';
+import { TurnDto } from '../dtos/turnDto';
 import { Planet } from '../interfaces/planet';
 import { PlanetConnectionInfo } from '../interfaces/planetConnectionInfo';
 import { PlanetRenderInfo } from '../interfaces/planetRenderInfo';
@@ -65,4 +69,19 @@ export const placingArmies = createAction(
 export const setSessionState = createAction(
   '[Session] Set Session State',
   props<{ sessionState: SessionState }>()
+);
+
+export const updateSession = createAction(
+  '[Session] Update Session',
+  props<{ gameUpdate: GameUpdateDto }>()
+);
+
+export const playMove = createAction(
+  '[Session] Play Move',
+  props<{ turnDto: TurnDto }>()
+);
+
+export const setRenderWindow = createAction(
+  '[Galaxy] Set Render Window',
+  props<{ width: number; height: number }>()
 );

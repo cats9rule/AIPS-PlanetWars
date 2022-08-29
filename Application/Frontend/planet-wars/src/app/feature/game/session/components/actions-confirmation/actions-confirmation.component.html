@@ -1,10 +1,20 @@
 <mat-card>
   <div class="container">
-    <button mat-flat-button color="primary" (click)="onFinishMove()">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onFinishMove()"
+      [disabled]="!isOnTurn"
+    >
       Finish Move
     </button>
 
-    <button mat-flat-button color="warn" (click)="onDiscard()">
+    <button
+      mat-flat-button
+      color="warn"
+      (click)="onDiscard()"
+      [disabled]="!isOnTurn"
+    >
       Discard Actions
     </button>
   </div>

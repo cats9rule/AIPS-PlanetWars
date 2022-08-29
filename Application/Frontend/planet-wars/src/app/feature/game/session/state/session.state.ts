@@ -13,6 +13,9 @@ export interface SessionState {
   planetsRenderInfo: PlanetRenderInfo[];
   planetConnectionsInfo: PlanetConnectionInfo[];
   armiesToPlace: number;
+  isOnTurn: boolean;
+  renderWidth: number;
+  renderHeight: number;
 }
 
 export const initialSessionState: SessionState = {
@@ -22,4 +25,7 @@ export const initialSessionState: SessionState = {
   planetsRenderInfo: [],
   planetConnectionsInfo: [],
   armiesToPlace: 5,
+  isOnTurn: false,
+  renderWidth: 0,
+  renderHeight: 0,
 };

@@ -15,9 +15,11 @@ import {
   constructPlanetConnectionsRenderInfoSuccess,
   constructPlanetRenderInfoSuccess,
   placingArmies,
+  setRenderWindow,
   setSessionState,
   updatePlanet,
   updatePlanetOwner,
+  updateSession,
 } from './session.actions';
 import { initialSessionState, SessionState } from './session.state';
 import { cloneDeep } from 'lodash';
@@ -99,8 +101,33 @@ export const sessionReducer = createReducer(
   }),
   on(setSessionState, (state: SessionState, { sessionState }) => {
     return sessionState;
+  }),
+  on(updateSession, (state: SessionState, { gameUpdate }) => {
+    let armies: number = 0;
+    const onTurn =
+      gameUpdate.session.currentTurnIndex == state.player!!.turnIndex;
+    if (onTurn) {
+      armies = gameUpdate.armiesNextTurn;
+    }
+    return {
+      ...state,
+      session: gameUpdate.session,
+      isOnTurn: onTurn,
+      armiesToPlace: armies,
+    };
+  }),
+  on(setRenderWindow, (state: SessionState, { width, height }) => {
+    return {
+      ...state,
+      renderHeight: height,
+      renderWidth: width,
+    };
   })
 );
+
+/**
+ * HELPER METHODS
+ */
 
 const setSession = (
   state: SessionState,
@@ -110,6 +137,7 @@ const setSession = (
   let planets = sessionDto.galaxy.planets.slice();
   // const gal: GalaxyDto = ;
   // const session: SessionDto = ;
+  const player = sessionDto.players.find((p) => p.userID == userID);
   return {
     ...state,
     session: {
@@ -119,7 +147,8 @@ const setSession = (
         planets: planets,
       },
     },
-    player: sessionDto.players.find((p) => p.userID == userID),
+    player: player,
+    isOnTurn: player!!.turnIndex == sessionDto.currentTurnIndex,
   };
 };
 

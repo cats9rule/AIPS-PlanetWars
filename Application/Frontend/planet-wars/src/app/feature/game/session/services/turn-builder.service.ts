@@ -35,7 +35,7 @@ export class TurnBuilderService {
     numberOfArmies: number
   ): TurnBuilderService {
     this._turn.actions.push({
-      numberOfArmies,
+      armies: numberOfArmies,
       planetFrom,
       planetTo,
       playerID: this._turn.playerID,
@@ -50,7 +50,7 @@ export class TurnBuilderService {
     numberOfArmies: number
   ): TurnBuilderService {
     this._turn.actions.push({
-      numberOfArmies,
+      armies: numberOfArmies,
       planetFrom,
       planetTo,
       playerID: this._turn.playerID,
@@ -64,11 +64,11 @@ export class TurnBuilderService {
     numberOfArmies: number
   ): TurnBuilderService {
     this._turn.actions.push({
-      numberOfArmies,
+      armies: numberOfArmies,
       planetFrom: '',
       planetTo,
       playerID: this._turn.playerID,
-      type: ActionType.Movement,
+      type: ActionType.Placement,
     });
     return this;
   }

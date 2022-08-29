@@ -10,10 +10,12 @@
     <app-actions
       (onPlacingArmies)="setPlacingArmies($event)"
       [notPlacedArmies]="notPlacedArmies"
+      [isOnTurn]="isOnTurn"
     ></app-actions>
     <app-actions-confirmation
       (onFinishMoveEvent)="onFinishMove()"
       (onDiscardMoveEvent)="onDiscardMove()"
+      [isOnTurn]="isOnTurn"
     ></app-actions-confirmation>
   </div>
   <div class="map-column">

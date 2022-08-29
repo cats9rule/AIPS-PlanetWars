@@ -1,5 +1,5 @@
 import { outputAst } from '@angular/compiler';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TurnBuilderService } from '../../services/turn-builder.service';
 
 @Component({
@@ -8,9 +8,11 @@ import { TurnBuilderService } from '../../services/turn-builder.service';
   styleUrls: ['./actions-confirmation.component.scss'],
 })
 export class ActionsConfirmationComponent implements OnInit {
+  @Input()
+  public isOnTurn = false;
+
   @Output()
   onDiscardMoveEvent = new EventEmitter<boolean>();
-
   @Output()
   onFinishMoveEvent = new EventEmitter<boolean>();
 

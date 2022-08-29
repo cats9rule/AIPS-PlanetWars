@@ -4,6 +4,6 @@ export interface ActionDto {
   playerID: string;
   planetFrom: string;
   planetTo: string;
-  numberOfArmies: number;
+  armies: number;
   type: ActionType;
 }

@@ -22,6 +22,7 @@ import { GalaxyConstructorService } from './services/galaxy-constructor.service'
 import { EffectsModule } from '@ngrx/effects';
 import { SessionEffects } from './state/session.effects';
 import { ChatModule } from '../chat/chat.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ChatModule } from '../chat/chat.module';
     CommonModule,
     StoreModule.forFeature(Features.Session, sessionReducer),
     EffectsModule.forFeature([SessionEffects]),
+    HttpClientModule,
     MatCardModule,
     MatFormFieldModule,
     MatIconModule,

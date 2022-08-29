@@ -17,6 +17,8 @@ export class ActionsComponent implements OnInit {
   public onAttackingPlanet = new EventEmitter<boolean>();
 
   @Input()
+  public isOnTurn = false;
+  @Input()
   public notPlacedArmies = true;
 
   constructor(private sessionStore: Store<SessionState>) {}
@@ -40,5 +42,14 @@ export class ActionsComponent implements OnInit {
   }
   onAttackPlanet() {
     //this.attackingPlanet = true;
+  }
+
+  resolveActionsEnabled() {
+    if (this.isOnTurn) {
+      if (!this.notPlacedArmies) {
+        return true;
+      }
+    }
+    return false;
   }
 }

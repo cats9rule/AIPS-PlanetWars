@@ -10,6 +10,7 @@ import { ChatService } from '../chat/services/chat.service';
 import { ClientHandlers } from 'core/enums/clientHandlers.enum';
 import { SessionService } from '../session/services/session.service';
 import { NewPlayerDto } from '../dtos/newPlayerDto';
+import { GameUpdateDto } from '../dtos/gameUpdateDto';
 
 @Injectable({
   providedIn: 'root',
@@ -74,8 +75,14 @@ export class MessageHubService {
     this.hubConnection!!.on(
       ClientHandlers.onNewPlayer,
       (newPlayerDto: NewPlayerDto) => {
-        console.log('ON NEW PLAYER');
         this.sessionService.addPlayer(newPlayerDto.newPlayer);
+      }
+    );
+
+    this.hubConnection!!.on(
+      ClientHandlers.onGameUpdate,
+      (gameUpdateDto: GameUpdateDto) => {
+        this.sessionService.updateSession(gameUpdateDto);
       }
     );
   }
