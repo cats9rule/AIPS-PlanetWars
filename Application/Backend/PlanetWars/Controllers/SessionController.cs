@@ -85,6 +85,7 @@ namespace PlanetWars.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine("\n Exception in PlayMove: " + e.Message + "\n");
                 return Problem(detail: e.Message);
             }
         }

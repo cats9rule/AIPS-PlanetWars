@@ -247,22 +247,35 @@ namespace PlanetWars.Services.ConcreteServices
                 var player = await _unitOfWork.Players.GetById(new Guid(turn.PlayerID));
                 if (player == null) throw new InvalidActionException("Player with given ID does not exist.");
                 if (session.TurnsPlayed <= player.PlayerColor.TurnIndex) {
-                    if (!ValidatePlacedArmies(turn.Actions, player, true)) throw new InvalidActionException("Invalid number of armies placed.");
+                    if (!ValidatePlacedArmies(turn.Actions, player, true)) 
+                        throw new InvalidActionException("Invalid number of armies placed.");
                 }
-                else if (!ValidatePlacedArmies(turn.Actions, player)) throw new InvalidActionException("Invalid number of armies placed.");
+                else if (!ValidatePlacedArmies(turn.Actions, player)) 
+                    throw new InvalidActionException("Invalid number of armies placed.");
 
                 var connections = await _unitOfWork.PlanetPlanets.GetAllRelationsForSession(session.ID);
 
                 session = ProcessActions(turn.Actions, session, player, connections);
 
+                var nextPlayer = session.Players.Find(p => p.PlayerColor.TurnIndex == session.CurrentTurnIndex);
+
+                if (nextPlayer == null) throw new Exception("Next player could not be found.");
+                int armiesNextTurn = CalculateNewArmies(
+                    nextPlayer, 
+                    session.CurrentTurnIndex >= ++session.TurnsPlayed
+                );
+
+                nextPlayer.TotalArmies += armiesNextTurn; 
+
                 session.Galaxy.Planets = session.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
-                session.TurnsPlayed++;
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
+                Console.WriteLine("\n\n" + session.CurrentTurnIndex);
+
                 GameUpdateDto gud = new GameUpdateDto()
                 {
-                    ArmiesNextTurn = CalculateNewArmies(session.Players.Find(p => p.PlayerColor.TurnIndex == session.CurrentTurnIndex)),
+                    ArmiesNextTurn = armiesNextTurn,
                     Session = _mapper.Map<SessionDto>(session)
                 };
                 var result = await _hubService.NotifyOnGameChanges(gud);
@@ -348,14 +361,14 @@ namespace PlanetWars.Services.ConcreteServices
             return result ? session : null;
         }
 
-        private int CalculateNewArmies(Player player)
+        private int CalculateNewArmies(Player player, bool isInitial)
         {
-            return player.Planets.Count / 2;
+            return isInitial ? 5 : player.Planets.Count / 2;
         }
 
         private bool ValidatePlacedArmies(List<ActionDto> actions, Player player, bool isInitial = false)
         {
-            int armies = isInitial ? 5 : CalculateNewArmies(player);
+            int armies = CalculateNewArmies(player, isInitial);
             Console.WriteLine("\n\n" + armies + "\n\n");
             if (armies > 0)
             {
@@ -433,8 +446,9 @@ namespace PlanetWars.Services.ConcreteServices
             bool foundNext = false;
             while (!foundNext)
             {
-                session.CurrentTurnIndex++;
+                session.CurrentTurnIndex = (session.CurrentTurnIndex + 1) % session.PlayerCount;
                 var player = session.Players.Where(player => player.PlayerColor.TurnIndex == session.CurrentTurnIndex).First();
+                Console.WriteLine(player.User.Username);
                 foundNext = player.IsActive;
             }
             return session;
