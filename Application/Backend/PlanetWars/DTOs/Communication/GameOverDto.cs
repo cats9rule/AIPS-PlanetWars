@@ -8,7 +8,7 @@ namespace PlanetWars.DTOs.Communication
 {
     public class GameOverDto : CommunicationParam
     {
-        public Guid SessionID { get; set; }
+        public string SessionID { get; set; }
         public PlayerDto winner { get; set; }
     }
 }

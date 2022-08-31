@@ -16,6 +16,9 @@ export class BasicPlanet implements Planet {
     this._armyCount = planetDto.armyCount;
     this._indexInGalaxy = planetDto.indexInGalaxy;
   }
+  setArmyCount(count: number): void {
+    this._armyCount = count;
+  }
   getArmyCount(): number {
     return this._armyCount;
   }

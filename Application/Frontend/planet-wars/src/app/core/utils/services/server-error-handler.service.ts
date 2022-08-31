@@ -11,15 +11,20 @@ export class ServerErrorHandlerService {
   constructor(private snackbarService: SnackbarService) {}
 
   handleError = (error: HttpErrorResponse) => {
+    console.log(error);
     if (error.status === 0) {
       this.log({
         type: 'Error',
-        contents: `An error occurred: ${error.message}}`,
+        contents: `An error occurred: ${error.message}`,
       });
     } else {
+      let details = '';
+      if (error.error.detail != undefined) {
+        details = ' ' + error.error.detail;
+      }
       this.log({
         type: 'Error',
-        contents: `Backend returned code ${error.status}:  ${error.message}}`,
+        contents: `Status ${error.status}:  ${error.error.title}${details}`,
       });
     }
     return throwError(

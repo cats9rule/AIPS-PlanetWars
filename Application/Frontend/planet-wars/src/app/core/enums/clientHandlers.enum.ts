@@ -3,4 +3,5 @@ export enum ClientHandlers {
   onNewPlayer = 'onNewPlayer',
   onPlayerLeft = 'onPlayerLeft',
   onGameUpdate = 'onGameUpdate',
+  onWinner = 'onGameOver',
 }

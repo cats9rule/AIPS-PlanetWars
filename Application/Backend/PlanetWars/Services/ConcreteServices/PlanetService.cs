@@ -61,7 +61,8 @@ namespace PlanetWars.Services.ConcreteServices
                         PlanetPlanet pp = new PlanetPlanet()
                         {
                             PlanetFromID = planetList[Int32.Parse(entry.Key)].ID,
-                            PlanetToID = planetList[index].ID
+                            PlanetToID = planetList[index].ID,
+                            SessionID = SessionID
                         };
                         await _unitOfWork.PlanetPlanets.Add(pp);
                     }

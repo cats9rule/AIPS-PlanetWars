@@ -82,7 +82,7 @@ export class SessionEffects {
     )
   );
 
-  constructPlanetConnectionsRenderInfo = createEffect(() =>
+  constructPlanetConnectionsRenderInfo$ = createEffect(() =>
     this.actions$.pipe(
       ofType(constructPlanetConnectionsRenderInfo),
       mergeMap(() => {
@@ -95,6 +95,18 @@ export class SessionEffects {
         ];
       })
     )
+  );
+
+  constructPlanetConnectionsRenderInfoSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(constructPlanetConnectionsRenderInfoSuccess),
+        withLatestFrom(this.store.select(getSessionState)),
+        tap((action) => {
+          this.turnBuilder.newTurn(action[1]);
+        })
+      ),
+    { dispatch: false }
   );
 
   addNewPlayer$ = createEffect(() =>
@@ -124,6 +136,8 @@ export class SessionEffects {
         ofType(setTurnActionDialogResult),
         tap((action) => {
           this.resolveTurnAction(action.result);
+          if (action.result.armyCount > 0) {
+          }
         })
       ),
     { dispatch: false }
@@ -168,7 +182,27 @@ export class SessionEffects {
   private resolveTurnAction(result: TurnActionDialogResult) {
     switch (result.actionType) {
       case ActionType.Placement: {
-        this.turnBuilder.addPlacementAction(result.planetID, result.armyCount);
+        this.turnBuilder.addPlacementAction(
+          result.planetIDs[0],
+          result.armyCount
+        );
+        break;
+      }
+      case ActionType.Movement: {
+        this.turnBuilder.addMovementAction(
+          result.planetIDs[0],
+          result.planetIDs[1],
+          result.armyCount
+        );
+        break;
+      }
+      case ActionType.Attack: {
+        this.turnBuilder.addAttackAction(
+          result.planetIDs[0],
+          result.planetIDs[1],
+          result.armyCount
+        );
+        break;
       }
     }
   }

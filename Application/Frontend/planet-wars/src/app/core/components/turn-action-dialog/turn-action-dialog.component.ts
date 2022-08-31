@@ -32,6 +32,8 @@ export class TurnActionDialogComponent implements OnInit {
     if (armies > this.data.availableArmies)
       this.armiesUsed = this.data.availableArmies;
     else if (armies < 0) this.armiesUsed = 0;
+
+    this.armiesLeft = this.data.availableArmies - this.armiesUsed;
   }
 
   public onAccept() {

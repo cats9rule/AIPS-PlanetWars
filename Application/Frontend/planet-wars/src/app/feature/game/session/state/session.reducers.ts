@@ -23,6 +23,8 @@ import {
 } from './session.actions';
 import { initialSessionState, SessionState } from './session.state';
 import { cloneDeep } from 'lodash';
+import { TurnActionDialogResult } from 'core/interfaces/turn-action-dialog-result';
+import { ActionType } from 'core/enums/actionType.enum';
 
 export const sessionReducer = createReducer(
   initialSessionState,
@@ -84,20 +86,7 @@ export const sessionReducer = createReducer(
     return updatePlanetInState(state, planet);
   }),
   on(setTurnActionDialogResult, (state: SessionState, { result }) => {
-    if (state.armiesToPlace >= result.armyCount) {
-      const planets = state.planets.slice();
-      const planet = cloneDeep(
-        planets.find((p) => p.getID() == result.planetID)!!
-      );
-      planet!!.incrementArmyCount(result.armyCount);
-      planets[planet!!.getIndexInGalaxy()] = planet;
-      return {
-        ...state,
-        planets: planets,
-        armiesToPlace: state.armiesToPlace - result.armyCount,
-      };
-    }
-    return state;
+    return executeAction(state, result);
   }),
   on(setSessionState, (state: SessionState, { sessionState }) => {
     return sessionState;
@@ -177,6 +166,102 @@ const updatePlanetInState = (state: SessionState, planet: Planet) => {
       ...state,
       planets: planets,
     };
+  }
+  return state;
+};
+
+const executeAction = (state: SessionState, result: TurnActionDialogResult) => {
+  console.log(result);
+  switch (result.actionType) {
+    case ActionType.Placement: {
+      return executePlacement(state, result);
+    }
+    case ActionType.Movement: {
+      return executeMovement(state, result);
+    }
+    case ActionType.Attack: {
+      return executeAttack(state, result);
+    }
+    default:
+      return state;
+  }
+};
+
+const executePlacement = (
+  state: SessionState,
+  result: TurnActionDialogResult
+) => {
+  if (state.armiesToPlace >= result.armyCount) {
+    const planets = state.planets.slice();
+    const planet = cloneDeep(
+      planets.find(
+        (p) => p.getID() == result.planetIDs[result.planetIDs.length - 1]
+      )!!
+    );
+    planet!!.incrementArmyCount(result.armyCount);
+    planets[planet!!.getIndexInGalaxy()] = planet;
+    return {
+      ...state,
+      planets: planets,
+      armiesToPlace: state.armiesToPlace - result.armyCount,
+    };
+  }
+  return state;
+};
+
+const executeMovement = (
+  state: SessionState,
+  result: TurnActionDialogResult
+) => {
+  const planets = state.planets.slice();
+  const planetFrom = cloneDeep(
+    planets.find((p) => p.getID() == result.planetIDs[0])
+  );
+  if (planetFrom != undefined) {
+    const planetTo = cloneDeep(
+      planets.find((p) => p.getID() == result.planetIDs[1])
+    );
+    console.log(planetTo);
+    if (planetTo != undefined) {
+      planetFrom.incrementArmyCount(-result.armyCount);
+      planetTo.incrementArmyCount(result.armyCount);
+      planets[planetFrom.getIndexInGalaxy()] = planetFrom;
+      planets[planetTo.getIndexInGalaxy()] = planetTo;
+      return {
+        ...state,
+        planets: planets,
+      };
+    }
+  }
+  return state;
+};
+
+const executeAttack = (state: SessionState, result: TurnActionDialogResult) => {
+  console.log('Executing attack');
+  const planets = state.planets.slice();
+  const planetFrom = cloneDeep(
+    planets.find((p) => p.getID() == result.planetIDs[0])
+  );
+  if (
+    planetFrom != undefined &&
+    planetFrom!!.getArmyCount() >= result.armyCount
+  ) {
+    const planetTo = cloneDeep(
+      planets.find((p) => p.getID() == result.planetIDs[1])
+    );
+    if (planetTo != undefined) {
+      planetFrom.incrementArmyCount(-result.armyCount);
+      planetTo.setArmyCount(
+        planetTo.getArmyCount() * planetTo.getDefense() -
+          result.armyCount * planetFrom.getAttack()
+      );
+      planets[planetFrom.getIndexInGalaxy()] = planetFrom;
+      planets[planetTo.getIndexInGalaxy()] = planetTo;
+      return {
+        ...state,
+        planets: planets,
+      };
+    }
   }
   return state;
 };

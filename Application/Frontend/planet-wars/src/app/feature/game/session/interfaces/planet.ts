@@ -17,4 +17,5 @@ export interface Planet {
 
   setOwnerID(id: string): void;
   incrementArmyCount(diff: number): void;
+  setArmyCount(count: number): void;
 }

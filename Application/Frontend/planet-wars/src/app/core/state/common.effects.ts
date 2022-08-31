@@ -25,7 +25,7 @@ export class CommonEffects {
             return [
               setTurnActionDialogResult({
                 result: {
-                  planetID: action.data.planetID,
+                  planetIDs: action.data.planetIDs,
                   actionType: action.data.action,
                   armyCount: value,
                 },

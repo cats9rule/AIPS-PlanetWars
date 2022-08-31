@@ -56,11 +56,8 @@ export class GalaxyConstructorService implements OnDestroy {
       next: (planets) => {
         if (isDefined(planets)) {
           this.statePlanets = planets!!;
-
         }
-        
-      }
-
+      },
     });
   }
 
@@ -90,6 +87,7 @@ export class GalaxyConstructorService implements OnDestroy {
 
   public getRenderInfoForGalaxy() {
     if (isDefined(this._gameMap)) {
+      this.planetsRenderInfo = [];
       this._gameMap!!.planetMatrix.forEach(
         (indicator: boolean, index: number) => {
           if (indicator == true) {

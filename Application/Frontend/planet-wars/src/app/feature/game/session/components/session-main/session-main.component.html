@@ -9,6 +9,8 @@
     ></app-players-info>
     <app-actions
       (onPlacingArmies)="setPlacingArmies($event)"
+      (onMovingArmies)="setMovingArmies($event)"
+      (onAttackingPlanet)="setAttacking($event)"
       [notPlacedArmies]="notPlacedArmies"
       [isOnTurn]="isOnTurn"
     ></app-actions>
@@ -33,7 +35,7 @@
       ></app-chat>
     </div>
     <div class="map">
-      <app-galaxy [isPlacingArmies]="placingArmies"></app-galaxy>
+      <app-galaxy></app-galaxy>
     </div>
   </div>
 </div>

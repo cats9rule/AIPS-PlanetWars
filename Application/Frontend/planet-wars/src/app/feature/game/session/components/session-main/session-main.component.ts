@@ -42,6 +42,9 @@ export class SessionMainComponent implements OnInit, OnDestroy, AfterViewInit {
   public placingArmies = false;
   public notPlacedArmies = false;
 
+  public movingArmies = false;
+  public attacking = false;
+
   public isOnTurn = false;
 
   @Input()
@@ -99,12 +102,26 @@ export class SessionMainComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public setPlacingArmies(isPlacing: boolean) {
     this.placingArmies = isPlacing;
+    this.movingArmies = false;
+    this.attacking = false;
+  }
+
+  public setMovingArmies(isMoving: boolean) {
+    this.movingArmies = isMoving;
+    this.attacking = false;
+    this.placingArmies = false;
+  }
+
+  public setAttacking(isAttacking: boolean) {
+    console.log(isAttacking);
+    this.attacking = isAttacking;
+    this.movingArmies = false;
+    this.placingArmies = false;
   }
 
   public onFinishMove() {
     const turnDto = this.turnBuilder.build();
     this.store.dispatch(playMove({ turnDto }));
-    //this.sessionService.playMove(turnDto);
   }
 
   public onDiscardMove() {

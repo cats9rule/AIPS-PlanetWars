@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ActionType } from 'core/enums/actionType.enum';
+import { openInfoDialog } from 'core/state/dialog.actions';
 import { ServerErrorHandlerService } from 'core/utils/services/server-error-handler.service';
-import { catchError } from 'rxjs';
+import { BehaviorSubject, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import { GameUpdateDto } from '../../dtos/gameUpdateDto';
 import { PlayerDto } from '../../dtos/playerDto';
@@ -21,6 +23,7 @@ export class SessionService {
   ) {}
 
   private url = environment.serverUrl + '/Session/PlayMove';
+  messageSource: BehaviorSubject<number> = new BehaviorSubject(-1);
 
   public addPlayer(playerDto: PlayerDto) {
     this.sessionStore.dispatch(addNewPlayer({ playerDto }));
@@ -32,6 +35,7 @@ export class SessionService {
 
   public playMove(turnDto: TurnDto) {
     console.log(turnDto);
+    this.messageSource.next(3);
     return this.http
       .put<any>(this.url, turnDto)
       .pipe(catchError(this.errorHandler.handleError))
@@ -40,5 +44,16 @@ export class SessionService {
           console.log(response);
         },
       });
+  }
+
+  public notifyWinner(playerDto: PlayerDto) {
+    this.sessionStore.dispatch(
+      openInfoDialog({
+        data: {
+          title: 'WINNER',
+          message: `The winner of this session is ${playerDto.username}. Congratulations!`,
+        },
+      })
+    );
   }
 }

@@ -11,6 +11,7 @@ import { ClientHandlers } from 'core/enums/clientHandlers.enum';
 import { SessionService } from '../session/services/session.service';
 import { NewPlayerDto } from '../dtos/newPlayerDto';
 import { GameUpdateDto } from '../dtos/gameUpdateDto';
+import { GameOverDto } from '../dtos/gameOverDto';
 
 @Injectable({
   providedIn: 'root',
@@ -83,6 +84,13 @@ export class MessageHubService {
       ClientHandlers.onGameUpdate,
       (gameUpdateDto: GameUpdateDto) => {
         this.sessionService.updateSession(gameUpdateDto);
+      }
+    );
+
+    this.hubConnection!!.on(
+      ClientHandlers.onWinner,
+      (gameOverDto: GameOverDto) => {
+        this.sessionService.notifyWinner(gameOverDto.winner);
       }
     );
   }

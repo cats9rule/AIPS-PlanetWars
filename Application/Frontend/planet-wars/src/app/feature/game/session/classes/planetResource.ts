@@ -9,6 +9,9 @@ export class PlanetResource implements Planet {
   constructor(wrappee: Planet) {
     this._wrappee = wrappee;
   }
+  setArmyCount(count: number): void {
+    this._wrappee.setArmyCount(count);
+  }
   getArmyCount(): number {
     return this._wrappee.getArmyCount();
   }

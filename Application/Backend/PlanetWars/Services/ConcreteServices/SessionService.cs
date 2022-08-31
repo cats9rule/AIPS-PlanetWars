@@ -246,16 +246,13 @@ namespace PlanetWars.Services.ConcreteServices
                 if (session == null) throw new InvalidActionException("Session with given ID does not exist.");
                 var player = await _unitOfWork.Players.GetById(new Guid(turn.PlayerID));
                 if (player == null) throw new InvalidActionException("Player with given ID does not exist.");
-                if (session.TurnsPlayed <= player.PlayerColor.TurnIndex) {
-                    if (!ValidatePlacedArmies(turn.Actions, player, true)) 
-                        throw new InvalidActionException("Invalid number of armies placed.");
-                }
-                else if (!ValidatePlacedArmies(turn.Actions, player)) 
+                if (!ValidatePlacedArmies(turn.Actions, player, session.TurnsPlayed <= player.PlayerColor.TurnIndex)) 
                     throw new InvalidActionException("Invalid number of armies placed.");
 
                 var connections = await _unitOfWork.PlanetPlanets.GetAllRelationsForSession(session.ID);
 
                 session = ProcessActions(turn.Actions, session, player, connections);
+                await _unitOfWork.Sessions.Update(session);
 
                 var nextPlayer = session.Players.Find(p => p.PlayerColor.TurnIndex == session.CurrentTurnIndex);
 
@@ -286,7 +283,7 @@ namespace PlanetWars.Services.ConcreteServices
                     {
                         GameOverDto god = new GameOverDto()
                         {
-                            SessionID = session.ID,
+                            SessionID = session.ID.ToString(),
                             winner = _mapper.Map<PlayerDto>(winner)
                         };
                         result = await _hubService.NotifyOnWinner(god);
@@ -384,9 +381,10 @@ namespace PlanetWars.Services.ConcreteServices
                 {
                     return true;
                 }
+                else return false;
 
             }
-            return false;
+            return true;
         }
 
         private Session ProcessActions(List<ActionDto> actions, Session session, Player player, List<PlanetPlanet> connections)
