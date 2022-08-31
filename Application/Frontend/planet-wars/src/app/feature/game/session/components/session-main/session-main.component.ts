@@ -11,11 +11,16 @@ import { SnackbarService } from 'core/utils/services/snackbar.service';
 import { Observable, Subscription } from 'rxjs';
 import { isDefined, Maybe } from 'src/app/core/utils/types/maybe.type';
 import { User } from 'src/app/feature/user/interfaces/user';
+import { LeaveGameDto } from '../../../dtos/leaveGameDto';
 import { PlayerDto } from '../../../dtos/playerDto';
 import { SessionDto } from '../../../dtos/sessionDto';
 import { SessionService } from '../../services/session.service';
 import { TurnBuilderService } from '../../services/turn-builder.service';
-import { playMove, setSessionState } from '../../state/session.actions';
+import {
+  leaveGame,
+  playMove,
+  setSessionState,
+} from '../../state/session.actions';
 import {
   getPlayer,
   getSession,
@@ -117,6 +122,14 @@ export class SessionMainComponent implements OnInit, OnDestroy, AfterViewInit {
     this.attacking = isAttacking;
     this.movingArmies = false;
     this.placingArmies = false;
+  }
+
+  public onLeaveGame() {
+    const lgd: LeaveGameDto = {
+      playerID: this.sessionState.player!!.id,
+      sessionID: this.session!!.id,
+    };
+    this.store.dispatch(leaveGame({ leaveGameDto: lgd }));
   }
 
   public onFinishMove() {

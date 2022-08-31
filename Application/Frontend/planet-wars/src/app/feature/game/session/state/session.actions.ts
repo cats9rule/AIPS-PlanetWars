@@ -4,6 +4,7 @@ import { User } from 'src/app/feature/user/interfaces/user';
 import { GalaxyDto } from '../../dtos/galaxyDto';
 import { GameMapDto } from '../../dtos/gameMapDto';
 import { GameUpdateDto } from '../../dtos/gameUpdateDto';
+import { LeaveGameDto } from '../../dtos/leaveGameDto';
 import { PlanetDto } from '../../dtos/planetDto';
 import { PlayerDto } from '../../dtos/playerDto';
 import { SessionDto } from '../../dtos/sessionDto';
@@ -85,3 +86,12 @@ export const setRenderWindow = createAction(
   '[Galaxy] Set Render Window',
   props<{ width: number; height: number }>()
 );
+
+export const resetAll = createAction('[Session] Reset Everything');
+
+export const leaveGame = createAction(
+  '[Session] Leave Game',
+  props<{ leaveGameDto: LeaveGameDto }>()
+);
+
+export const leaveGameSuccess = createAction('[Session] Leave Game Success');

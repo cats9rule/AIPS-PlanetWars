@@ -1,6 +1,5 @@
 <div class="columns">
   <div class="info-column">
-    <app-player-stats></app-player-stats>
     <app-players-info
       [playersList]="session?.players"
       [currentTurnIndex]="
@@ -14,6 +13,9 @@
       [notPlacedArmies]="notPlacedArmies"
       [isOnTurn]="isOnTurn"
     ></app-actions>
+    <!-- <button mat-flat-button color="warn" (click)="onLeaveGame()">
+      Leave Game
+    </button> -->
     <app-actions-confirmation
       (onFinishMoveEvent)="onFinishMove()"
       (onDiscardMoveEvent)="onDiscardMove()"

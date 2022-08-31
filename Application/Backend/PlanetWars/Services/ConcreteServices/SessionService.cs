@@ -298,13 +298,16 @@ namespace PlanetWars.Services.ConcreteServices
         {
             using (_unitOfWork)
             {
-                Session session = await _unitOfWork.Sessions.GetById(dto.SessionID);
-                Player player = session.Players.Where(player => player.ID == dto.PlayerID).FirstOrDefault();
+                Session session = await _unitOfWork.Sessions.GetById(new Guid(dto.SessionID));
+                Player player = session.Players.Where(player => player.ID.ToString() == dto.PlayerID).FirstOrDefault();
                 if (player != null)
                 {
                     User user = await _unitOfWork.Users.GetById(player.UserID);
-                    var success = await _unitOfWork.Players.Delete(dto.PlayerID);
+                    var success = await _unitOfWork.Players.Delete(new Guid(dto.PlayerID));
                     session.PlayerCount--;
+                    ProcessTurnIndex(session);
+                    await _unitOfWork.Sessions.Update(session);
+                    await _unitOfWork.CompleteAsync();
                     if (success)
                     {
                         await _unitOfWork.CompleteAsync();
@@ -312,7 +315,13 @@ namespace PlanetWars.Services.ConcreteServices
                         {
                             Message = $"{user.Username}#{user.Tag} has left the game.",
                             PlayerID = player.ID,
-                            SessionID = dto.SessionID
+                            GameUpdate = {
+                                Session = _mapper.Map<SessionDto>(session),
+                                ArmiesNextTurn = CalculateNewArmies(session.Players[session.CurrentTurnIndex],
+                                 session.TurnsPlayed <= session.Players[session.CurrentTurnIndex].PlayerColor.TurnIndex),
+                                ClientHandler = "onPlayerLeft",
+                                UserID = user.ID.ToString()
+                            }
                         };
                         await _hubService.NotifyPlayerLeft(notification);
                         return true;

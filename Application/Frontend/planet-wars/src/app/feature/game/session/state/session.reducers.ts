@@ -15,6 +15,7 @@ import {
   constructPlanetConnectionsRenderInfoSuccess,
   constructPlanetRenderInfoSuccess,
   placingArmies,
+  resetAll,
   setRenderWindow,
   setSessionState,
   updatePlanet,
@@ -111,6 +112,9 @@ export const sessionReducer = createReducer(
       renderHeight: height,
       renderWidth: width,
     };
+  }),
+  on(resetAll, (state: SessionState) => {
+    return initialSessionState;
   })
 );
 

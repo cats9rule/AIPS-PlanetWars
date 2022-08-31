@@ -37,7 +37,7 @@ namespace PlanetWars.Communication
 
         public Task NotifyPlayerLeft(LeaveGameNotificationDto param)
         {
-            return _hubContext.Clients.Group(param.SessionID.ToString()).SendAsync("onPlayerLeave", param);
+            return _hubContext.Clients.Group(param.GameUpdate.Session.ID.ToString()).SendAsync("onPlayerLeave", param);
         }
     }
 }

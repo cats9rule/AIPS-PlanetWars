@@ -21,7 +21,10 @@ import {
   constructPlanetRenderInfo,
   constructPlanetRenderInfoSuccess,
   joinSessionGroup,
+  leaveGame,
+  leaveGameSuccess,
   playMove,
+  resetAll,
   setSessionState,
   updatePlanet,
   updatePlanetOwner,
@@ -177,6 +180,24 @@ export class SessionEffects {
         })
       ),
     { dispatch: false }
+  );
+
+  leaveGame$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(leaveGame),
+      tap((action) => {
+        this.sessionService.leaveGame(action.leaveGameDto);
+      })
+    )
+  );
+
+  leaveGameSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(leaveGameSuccess),
+      mergeMap(() => {
+        return [resetAll()];
+      })
+    )
   );
 
   private resolveTurnAction(result: TurnActionDialogResult) {

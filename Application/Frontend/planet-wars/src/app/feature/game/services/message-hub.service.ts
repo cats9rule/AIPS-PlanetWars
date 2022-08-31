@@ -12,6 +12,7 @@ import { SessionService } from '../session/services/session.service';
 import { NewPlayerDto } from '../dtos/newPlayerDto';
 import { GameUpdateDto } from '../dtos/gameUpdateDto';
 import { GameOverDto } from '../dtos/gameOverDto';
+import { LeaveGameNotificationDto } from '../dtos/leaveGameNotificationDto';
 
 @Injectable({
   providedIn: 'root',
@@ -91,6 +92,13 @@ export class MessageHubService {
       ClientHandlers.onWinner,
       (gameOverDto: GameOverDto) => {
         this.sessionService.notifyWinner(gameOverDto.winner);
+      }
+    );
+
+    this.hubConnection!!.on(
+      ClientHandlers.onPlayerLeft,
+      (leaveGameNotif: LeaveGameNotificationDto) => {
+        this.sessionService.onPlayerLeftGame(leaveGameNotif);
       }
     );
   }

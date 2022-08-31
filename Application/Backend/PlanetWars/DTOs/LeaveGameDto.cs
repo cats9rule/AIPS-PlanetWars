@@ -4,7 +4,7 @@ namespace PlanetWars.DTOs
 {
     public class LeaveGameDto
     {
-        public Guid SessionID { get; set; }
-        public Guid PlayerID { get; set; }
+        public string SessionID { get; set; }
+        public string PlayerID { get; set; }
     }
 }

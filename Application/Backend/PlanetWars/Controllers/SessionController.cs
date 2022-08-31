@@ -148,7 +148,7 @@ namespace PlanetWars.Controllers
         [HttpPut]
         public async Task<ActionResult> LeaveGame(LeaveGameDto dto)
         {
-            if (dto.PlayerID.ToString() == "" || dto.SessionID.ToString() == "")
+            if (dto.PlayerID == "" || dto.SessionID == "")
             {
                 return BadRequest(false);
             }
@@ -157,10 +157,10 @@ namespace PlanetWars.Controllers
                 var result = await sessionService.LeaveGame(dto);
                 if (result)
                 {
-                    var session = await sessionService.GetById(dto.SessionID);
+                    var session = await sessionService.GetById(new Guid(dto.SessionID));
                     if (session.PlayerCount == 0)
                     {
-                        result = await sessionService.Delete(dto.SessionID);
+                        result = await sessionService.Delete(new Guid(dto.SessionID));
                     }
                 }
                 return result ? Ok(result) : new StatusCodeResult(StatusCodes.Status500InternalServerError);
@@ -172,10 +172,5 @@ namespace PlanetWars.Controllers
                 return new StatusCodeResult(StatusCodes.Status500InternalServerError);
             }
         }
-
-        //TODO: implement methods for exchanging game state
-
-
-
     }
 }

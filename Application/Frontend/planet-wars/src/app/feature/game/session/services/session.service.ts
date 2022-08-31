@@ -7,9 +7,16 @@ import { ServerErrorHandlerService } from 'core/utils/services/server-error-hand
 import { BehaviorSubject, catchError } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import { GameUpdateDto } from '../../dtos/gameUpdateDto';
+import { LeaveGameDto } from '../../dtos/leaveGameDto';
+import { LeaveGameNotificationDto } from '../../dtos/leaveGameNotificationDto';
 import { PlayerDto } from '../../dtos/playerDto';
 import { TurnDto } from '../dtos/turnDto';
-import { addNewPlayer, updateSession } from '../state/session.actions';
+import {
+  addNewPlayer,
+  leaveGameSuccess,
+  resetAll,
+  updateSession,
+} from '../state/session.actions';
 import { SessionState } from '../state/session.state';
 
 @Injectable({
@@ -22,7 +29,7 @@ export class SessionService {
     private errorHandler: ServerErrorHandlerService
   ) {}
 
-  private url = environment.serverUrl + '/Session/PlayMove';
+  private url = environment.serverUrl + '/Session/';
   messageSource: BehaviorSubject<number> = new BehaviorSubject(-1);
 
   public addPlayer(playerDto: PlayerDto) {
@@ -37,7 +44,7 @@ export class SessionService {
     console.log(turnDto);
     this.messageSource.next(3);
     return this.http
-      .put<any>(this.url, turnDto)
+      .put<any>(this.url + 'PlayMove', turnDto)
       .pipe(catchError(this.errorHandler.handleError))
       .subscribe({
         next: (response) => {
@@ -55,5 +62,22 @@ export class SessionService {
         },
       })
     );
+    this.sessionStore.dispatch(resetAll());
+  }
+
+  public leaveGame(ldg: LeaveGameDto) {
+    this.http
+      .put<any>(this.url + 'LeaveGame', ldg)
+      .pipe(catchError(this.errorHandler.handleError))
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+          this.sessionStore.dispatch(leaveGameSuccess());
+        },
+      });
+  }
+
+  public onPlayerLeftGame(lgn: LeaveGameNotificationDto) {
+    this.sessionStore.dispatch(updateSession({ gameUpdate: lgn.gameUpdate }));
   }
 }
