@@ -10,6 +10,8 @@ import { TurnBuilderService } from '../../services/turn-builder.service';
 export class ActionsConfirmationComponent implements OnInit {
   @Input()
   public isOnTurn = false;
+  @Input()
+  public notPlacedArmies = true;
 
   @Output()
   onDiscardMoveEvent = new EventEmitter<boolean>();

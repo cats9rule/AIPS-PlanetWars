@@ -7,8 +7,6 @@ namespace PlanetWars.DTOs
     {
         public Guid ID { get; set; }
         public Dictionary<string, List<int>> PlanetGraph { get; set; }
-
-        //TODO: uncomment when it is time to put real game map in DB
         public List<bool> PlanetMatrix { get; set; }
         public int Rows { get; set; }
         public int Columns { get; set; }

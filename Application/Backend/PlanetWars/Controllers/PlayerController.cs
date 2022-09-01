@@ -78,7 +78,6 @@ namespace PlanetWars.Controllers
             return Ok(result);
         }
 
-        //FIXME: maybe rename this to LeaveGame?
         [Route("DeletePlayer/{playerId}")]
         [HttpDelete]
         public async Task<ActionResult> DeletePlayer(Guid playerId)

@@ -180,7 +180,7 @@ namespace PlanetWars.Services.ConcreteServices
                     Session = session,
                     IsSessionOwner = true,
                     SessionID = session.ID,
-                    TotalArmies = 5,
+                    TotalArmies = -1,
                     Planets = new List<Planet>()
                 };
 
@@ -229,7 +229,8 @@ namespace PlanetWars.Services.ConcreteServices
                     IsActive = true,
                     SessionID = sessionID,
                     Session = session,
-                    Planets = new List<Planet>()
+                    Planets = new List<Planet>(),
+                    TotalArmies = -1
                 };
 
                 session.Players.Add(player);
@@ -249,7 +250,7 @@ namespace PlanetWars.Services.ConcreteServices
                 if (session == null) throw new InvalidActionException("Session with given ID does not exist.");
                 var player = await _unitOfWork.Players.GetById(new Guid(turn.PlayerID));
                 if (player == null) throw new InvalidActionException("Player with given ID does not exist.");
-                if (!ValidatePlacedArmies(turn.Actions, player, session.TurnsPlayed <= player.PlayerColor.TurnIndex)) 
+                if (!ValidatePlacedArmies(turn.Actions, player)) 
                     throw new InvalidActionException("Invalid number of armies placed.");
 
                 var connections = await _unitOfWork.PlanetPlanets.GetAllRelationsForSession(session.ID);
@@ -260,10 +261,7 @@ namespace PlanetWars.Services.ConcreteServices
                 var nextPlayer = session.Players.Find(p => p.PlayerColor.TurnIndex == session.CurrentTurnIndex);
 
                 if (nextPlayer == null) throw new Exception("Next player could not be found.");
-                int armiesNextTurn = CalculateNewArmies(
-                    nextPlayer, 
-                    session.CurrentTurnIndex >= ++session.TurnsPlayed
-                );
+                int armiesNextTurn = CalculateNewArmies(ref nextPlayer);
 
                 nextPlayer.TotalArmies += armiesNextTurn; 
 
@@ -295,7 +293,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //TODO: test this
         public async Task<bool> LeaveGame(LeaveGameDto dto)
         {
             using (_unitOfWork)
@@ -313,14 +310,14 @@ namespace PlanetWars.Services.ConcreteServices
                     if (success)
                     {
                         await _unitOfWork.CompleteAsync();
+                        Player p = session.Players[session.CurrentTurnIndex];
                         var notification = new LeaveGameNotificationDto()
                         {
                             Message = $"{user.Username}#{user.Tag} has left the game.",
                             PlayerID = player.ID,
                             GameUpdate = {
                                 Session = _mapper.Map<SessionDto>(session),
-                                ArmiesNextTurn = CalculateNewArmies(session.Players[session.CurrentTurnIndex],
-                                 session.TurnsPlayed <= session.Players[session.CurrentTurnIndex].PlayerColor.TurnIndex),
+                                ArmiesNextTurn = CalculateNewArmies(ref p),
                                 ClientHandler = "onPlayerLeft",
                                 UserID = user.ID.ToString()
                             }
@@ -369,14 +366,17 @@ namespace PlanetWars.Services.ConcreteServices
             return result ? session : null;
         }
 
-        private int CalculateNewArmies(Player player, bool isInitial)
+        private int CalculateNewArmies(ref Player player)
         {
-            return isInitial ? 5 : player.Planets.Count / 2;
+            int retval = player.TotalArmies == -1 ? 5 : player.Planets.Count / 2;
+            if (player.TotalArmies == -1)
+                player.TotalArmies = 0;
+            return retval;
         }
 
-        private bool ValidatePlacedArmies(List<ActionDto> actions, Player player, bool isInitial = false)
+        private bool ValidatePlacedArmies(List<ActionDto> actions, Player player)
         {
-            int armies = CalculateNewArmies(player, isInitial);
+            int armies = CalculateNewArmies(ref player);
 
             if (armies > 0)
             {

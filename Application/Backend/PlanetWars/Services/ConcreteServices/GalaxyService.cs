@@ -40,7 +40,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //TODO: check 
         public async Task<IEnumerable<GalaxyDto>> GetAllGalaxies()
         {
             using (_unitOfWork)
@@ -49,7 +48,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //TODO: check 
         public async Task<GalaxyDto> GetGalaxy(Guid id)
         {
             using (_unitOfWork)
@@ -63,7 +61,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //TODO: check 
         public async Task<IEnumerable<GalaxyDto>> GetGalaxiesByPlanetCount(int count)
         {
             using(_unitOfWork)
@@ -72,7 +69,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //TODO: check 
         public async Task<bool> UpdateGalaxy(GalaxyDto dto)
         {
             using(_unitOfWork)
@@ -83,7 +79,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //TODO: check 
         public async Task<bool> DeleteGalaxy(Guid id)
         {
             using (_unitOfWork)

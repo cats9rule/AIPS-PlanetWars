@@ -7,7 +7,6 @@ namespace PlanetWars.DTOs.MappingProfiles
 {
     public class Mappings : Profile
     {
-        //TODO: check all mappings if they work as expected
         public Mappings()
         {
             // works

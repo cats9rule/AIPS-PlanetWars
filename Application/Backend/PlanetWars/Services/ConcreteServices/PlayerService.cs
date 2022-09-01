@@ -110,7 +110,6 @@ namespace PlanetWars.Services.ConcreteServices
 
         public async Task<PlayerDto> CreatePlayer(Guid userId, int turnIndex, Guid sessionId)
         {
-            //TODO: check this method if its needed
             using (_unitOfWork)
             {
                 User user = await _unitOfWork.Users.GetById(userId);

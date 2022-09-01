@@ -25,7 +25,6 @@ namespace PlanetWars.Communication
             param.ClientHandler = "onGameUpdate";
             await _hubContext.Clients.Group(param.Session.ID.ToString()).SendAsync(param.ClientHandler, param);
             return new ResponseParam { IsSuccessful = true, Message = "Turn Played." };
-            //FIXME: mislim da je ovaj message response dto suvisan
         }
 
         public async Task<ResponseParam> NotifyOnWinner(GameOverDto param)
