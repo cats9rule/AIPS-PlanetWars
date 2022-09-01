@@ -1,0 +1,10 @@
+{
+  "planetCount": 12,
+  "resourcePlanetRatio": 0.8,
+  "maxPlayers": 3,
+  "planetGraph": "0:2,4|1:2,3|2:0,1,5,8|3:1,6|4:0,5,9|5:2,4,7|6:3,8|7:5,8,9,10|8:2,6,7,10,11|9:4,7|10:7,8|11:8",
+  "planetMatrix": "1001000101110010101010101",
+  "rows": 5,
+  "columns": 5,
+  "description": "Jagged map with less planets."
+}

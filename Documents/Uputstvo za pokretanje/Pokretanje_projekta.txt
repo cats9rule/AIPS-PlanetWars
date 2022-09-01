@@ -1,0 +1,35 @@
+INSTALLATIONS:
+	- NodeJS 
+	- Angular CLI 
+	- .NET
+	- localDB (SQL Server)
+	
+	Install Angular: 	npm install -g @angular/cli
+	Install Dotnet EF: 	dotnet tool install --global dotnet-ef --version 5.0.6
+
+CHECK:
+	- Node: 		node -v			(LTS or 16.x)
+	- Angular CLI:	ng -v				(14.x)
+	- Dotnet:		dotnet --version 	(5.xxx)
+				dotnet tool info 	(should have dotnet-ef listed)
+	- LocalDB:		sqllocaldb versions 	(shows installed version, mine is 15.0)
+
+
+1. Create Database using sqllocaldb:
+	- sqllocaldb create "PlanetWars"
+	- sqllocaldb start "PlanetWars"
+	
+2. Position inside Backend/PlanetWars
+
+3. cmd:	dotnet ef database update
+
+4. Position inside Frontend/planet-wars
+
+5. cmd:	npm install
+
+6. Swagger: add 5 player colors, 1 game map
+
+
+START PROJECT:
+	- Backend/PlanetWars: 	dotnet watch run		(https://localhost:5001/swagger/index.html)
+	- Frontend/planet-wars: 	ng serve			(http://localhost:4200)

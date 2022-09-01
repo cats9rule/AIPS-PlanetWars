@@ -1,0 +1,25 @@
+  {
+    "hexColor": "#4a73f7",
+    "colorName": "Blue",
+    "turnIndex": 0
+  },
+  {
+    "hexColor": "#fc7d42",
+    "colorName": "Orange",
+    "turnIndex": 1
+  },
+  {
+    "hexColor": "#b041fa",
+    "colorName": "Purple",
+    "turnIndex": 2
+  },
+  {
+    "hexColor": "#58c72c",
+    "colorName": "Green",
+    "turnIndex": 3
+  },
+  {
+    "hexColor": "#f238a1",
+    "colorName": "Pink",
+    "turnIndex": 4
+  }
