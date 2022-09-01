@@ -13,6 +13,9 @@ import { NewPlayerDto } from '../dtos/newPlayerDto';
 import { GameUpdateDto } from '../dtos/gameUpdateDto';
 import { GameOverDto } from '../dtos/gameOverDto';
 import { LeaveGameNotificationDto } from '../dtos/leaveGameNotificationDto';
+import { ChatState } from '../chat/state/chat.state';
+import { Store } from '@ngrx/store';
+import { disconnectChat } from '../chat/state/chat.actions';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +25,8 @@ export class MessageHubService {
   constructor(
     private chatService: ChatService,
     private sessionService: SessionService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private store: Store<ChatState>
   ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('https://localhost:5001/GameUpdates')
@@ -92,6 +96,7 @@ export class MessageHubService {
       ClientHandlers.onWinner,
       (gameOverDto: GameOverDto) => {
         this.sessionService.notifyWinner(gameOverDto.winner);
+        this.store.dispatch(disconnectChat());
       }
     );
 

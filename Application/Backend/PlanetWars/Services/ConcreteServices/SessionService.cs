@@ -113,6 +113,9 @@ namespace PlanetWars.Services.ConcreteServices
                     relations.AddRange(await _unitOfWork.PlanetPlanets.DeleteAllRelationsForPlanet(planet.ID));
                 }
                 await _unitOfWork.CompleteAsync();
+                await _unitOfWork.Players.DeleteForSession(id);
+                await _unitOfWork.Planets.DeleteForSession(id);
+                await _unitOfWork.Galaxies.DeleteForSession(id);
                 var retval = await _unitOfWork.Sessions.Delete(id);
                 if (retval)
                 {
@@ -177,7 +180,7 @@ namespace PlanetWars.Services.ConcreteServices
                     Session = session,
                     IsSessionOwner = true,
                     SessionID = session.ID,
-                    TotalArmies = 5, //TODO: define this parameter
+                    TotalArmies = 5,
                     Planets = new List<Planet>()
                 };
 
@@ -285,6 +288,7 @@ namespace PlanetWars.Services.ConcreteServices
                             winner = _mapper.Map<PlayerDto>(winner)
                         };
                         result = await _hubService.NotifyOnWinner(god);
+                        await this.Delete(session.ID);
                     }
                 }
                 return result.IsSuccessful;

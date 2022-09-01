@@ -44,6 +44,12 @@ namespace PlanetWars.Core.Repositories
             }
             return false;
         }
+        public async Task<bool> DeleteForSession(Guid sessionID) 
+        {
+            var galaxy = await dbSet.Where(g => g.SessionID == sessionID).FirstOrDefaultAsync();
+            dbSet.Remove(galaxy);
+            return true;
+        }
 
         public override async Task<bool> Update(Galaxy entity)
         {

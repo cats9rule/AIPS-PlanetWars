@@ -44,6 +44,13 @@ namespace PlanetWars.Core.Repositories
             return false;
         }
 
+        public async Task<bool> DeleteForSession(Guid sessionID) 
+        {
+            var planets = await dbSet.Where(p => p.Galaxy.SessionID == sessionID).ToListAsync();
+            dbSet.RemoveRange(planets);
+            return true;
+        }
+
         public override async Task<bool> Update(Planet entity)
         {
             var exist = await dbSet.Where(x => x.ID == entity.ID).FirstOrDefaultAsync();

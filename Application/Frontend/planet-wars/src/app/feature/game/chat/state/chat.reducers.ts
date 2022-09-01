@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { receiveChatMessage } from './chat.actions';
+import { disconnectChat, receiveChatMessage } from './chat.actions';
 import { ChatState, initialChatState } from './chat.state';
 
 export const chatReducer = createReducer(
@@ -9,6 +9,11 @@ export const chatReducer = createReducer(
     return {
       ...state,
       messages: [...messages, chatMessage],
+    };
+  }),
+  on(disconnectChat, (state: ChatState) => {
+    return {
+      messages: [],
     };
   })
 );

@@ -9,6 +9,8 @@ namespace PlanetWars.Core.IRepositories
     {
         public Task<IEnumerable<Planet>> GetForPlayer(Guid playerID);
         public Task<IEnumerable<Planet>> GetForSession(Guid sessionID);
-        public Task<bool> DeleteAll();  
+        public Task<bool> DeleteAll(); 
+        public Task<bool> DeleteForSession(Guid sessionID);
+
     }
 }

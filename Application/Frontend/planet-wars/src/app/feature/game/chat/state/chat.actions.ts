@@ -15,3 +15,5 @@ export const sendHubMessage = createAction(
   '[Message Hub] Send Hub Message',
   props<{ messageDto: MessageDto }>()
 );
+
+export const disconnectChat = createAction('[Chat] Disconnect Chat');

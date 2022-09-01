@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlanetWars.Data.Models;
@@ -8,5 +9,7 @@ namespace PlanetWars.Core.IRepositories
     {
         public Task<IEnumerable<Galaxy>> GetGalaxiesByResourceAbundanceFactor(float abundanceFactor);
         public Task<List<Galaxy>> GetGalaxiesByPlanetCount(int planetCount);
+        public Task<bool> DeleteForSession(Guid sessionID);
+
     }
 }

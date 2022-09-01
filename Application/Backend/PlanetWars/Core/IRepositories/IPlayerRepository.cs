@@ -10,6 +10,7 @@ namespace PlanetWars.Core.IRepositories
     {
         public Task<IEnumerable<Player>> GetByUsernameAndTag(string username, string tag);
         public Task<IEnumerable<Player>> GetByUserId(Guid id);
+        public Task<bool> DeleteForSession(Guid sessionID);
         // public Task<Player> GetByUsernameAndTag(string username, string tag);
         // public Task<Player> GetByUserId(Guid id);
     }
