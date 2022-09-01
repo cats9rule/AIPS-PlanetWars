@@ -6,7 +6,7 @@ namespace PlanetWars.Communication
 {
     public class MessageHub : Hub
     {
-        public async Task<MessageResponseDto> JoinGameGroup(JoinSessionGroupDto param)
+        public async Task<ResponseParam> JoinGameGroup(JoinSessionGroupDto param)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, param.SessionID);
             MessageDto mess = new MessageDto {
@@ -17,20 +17,20 @@ namespace PlanetWars.Communication
                 UsernameWithTag = "ChatBot"
             };
             await Clients.Group(param.SessionID).SendAsync("receiveMessage", mess);
-            return new MessageResponseDto { IsSuccessful = true, Message = "Joined Game." };
+            return new ResponseParam { IsSuccessful = true, Message = "Joined Game." };
         }
 
-        public async Task<MessageResponseDto> LeaveGameGroup(LeaveSessionGroupDto param)
+        public async Task<ResponseParam> LeaveGameGroup(LeaveSessionGroupDto param)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, param.SessionID.ToString());
             await Clients.Group(param.SessionID.ToString()).SendAsync(param.ClientHandler, param.UsernameWithTag + " has left the game!");
-            return new MessageResponseDto { IsSuccessful = true, Message = "Left Game." };
+            return new ResponseParam { IsSuccessful = true, Message = "Left Game." };
         }
 
-        public async Task<MessageResponseDto> SendChatMessage(MessageDto message)
+        public async Task<ResponseParam> SendChatMessage(MessageDto message)
         {
             await Clients.Group(message.SessionID).SendAsync("receiveMessage", message);
-            return new MessageResponseDto { IsSuccessful = true, Message = "Sent Message." };
+            return new ResponseParam { IsSuccessful = true, Message = "Sent Message." };
         }
     }
 }

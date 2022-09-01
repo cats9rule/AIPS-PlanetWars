@@ -1,9 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.Http;
 using PlanetWars.DTOs;
 using PlanetWars.Services;
 
@@ -24,7 +22,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> CreatePlayer(Guid sessionId, [FromBody] PlayerDto player)
         {
             var result = await playerService.CreatePlayer(player.UserID, player.TurnIndex, sessionId);
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("GetAllPlayers")]
@@ -32,7 +31,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetAllPlayers()
         {
             var result = await playerService.GetAll();
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("GetPlayerById/{id}")]

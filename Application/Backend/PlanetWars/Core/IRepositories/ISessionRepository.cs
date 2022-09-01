@@ -1,7 +1,5 @@
 using PlanetWars.Data.Models;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
 
 namespace PlanetWars.Core.IRepositories
 {

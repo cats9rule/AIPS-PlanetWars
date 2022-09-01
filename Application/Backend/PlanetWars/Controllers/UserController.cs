@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using PlanetWars.DTOs;
 using PlanetWars.Services;
 
@@ -22,7 +23,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> CreateUser([FromBody] UserCreateDto user)
         {
             var result = await _userService.CreateUser(user);
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("GetAllUsers")]
@@ -30,7 +32,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllUsers();
-            return Ok(users);
+            if (users != null) return Ok(users);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("GetUserById/{id}")]

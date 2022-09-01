@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using PlanetWars.Core.Configuration;
@@ -130,30 +129,6 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        //FIXME: do we need multiple updaters?
-        public Task<bool> UpdateArmies(Guid id, int armyDifference)
-        {
-            using (_unitOfWork)
-            {
-                return _unitOfWork.Planets.UpdateArmies(id, armyDifference);
-            }
-        }
-
-        public Task<bool> UpdateOwnership(Guid id, Guid ownerID)
-        {
-            using (_unitOfWork)
-            {
-                return _unitOfWork.Planets.UpdateOwnership(id, ownerID);
-            }
-        }
-
-        public Task<bool> UpdateOwnership(int planetIndex, Guid galaxyID, Guid ownerID)
-        {
-            using (_unitOfWork)
-            {
-                return _unitOfWork.Planets.UpdateOwnership(planetIndex, galaxyID, ownerID);
-            }
-        }
         public async Task<IEnumerable<PlanetDto>> GetRelatedPlanets(Guid planetID)
         {
             using (_unitOfWork)

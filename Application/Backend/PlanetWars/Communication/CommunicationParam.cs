@@ -1,5 +1,3 @@
-using System;
-
 namespace PlanetWars.Communication
 {
     public class CommunicationParam

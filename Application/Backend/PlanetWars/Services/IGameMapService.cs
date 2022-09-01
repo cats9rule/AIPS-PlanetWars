@@ -9,7 +9,5 @@ namespace PlanetWars.Services
     {
         public Task<bool> AddGameMap(GameMap gm);
         public Task<IEnumerable<GameMapDto>> GetAll();
-        public Task<IEnumerable<GameMap>> GetByPlanetCount(int planetCount);
-        public Task<IEnumerable<GameMap>> GetByResourcePlanetRatio(float ratio);
     }
 }

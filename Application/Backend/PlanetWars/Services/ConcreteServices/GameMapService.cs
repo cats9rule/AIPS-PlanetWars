@@ -37,16 +37,5 @@ namespace PlanetWars.Services.ConcreteServices
             }
         }
 
-        public async Task<IEnumerable<GameMap>> GetByPlanetCount(int planetCount)
-        {
-            return await _unitOfWork.GameMaps.GetByPlanetCount(planetCount);
-        }
-
-        public async Task<IEnumerable<GameMap>> GetByResourcePlanetRatio(float ratio)
-        {
-            return await _unitOfWork.GameMaps.GetByResourcePlanetRatio(ratio);
-        }
-
-
     }
 }

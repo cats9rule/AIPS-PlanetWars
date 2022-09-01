@@ -87,7 +87,9 @@ export const sessionReducer = createReducer(
     return updatePlanetInState(state, planet);
   }),
   on(setTurnActionDialogResult, (state: SessionState, { result }) => {
-    return executeAction(state, result);
+    if (result.armyCount > 0) {
+      return executeAction(state, result);
+    } else return state;
   }),
   on(setSessionState, (state: SessionState, { sessionState }) => {
     return sessionState;

@@ -143,17 +143,26 @@ namespace PlanetWars.Services.ConcreteServices
                     if (player != null)
                     {
                         int planetCount = session.Galaxy.PlanetCount;
+                        List<int> checkedPlanets = new List<int>();
                         Random random = new Random();
                         bool notSpawned = true;
                         int randomPlanet = 0;
-                        while (notSpawned)
+                        
+                        while (notSpawned && checkedPlanets.Count < planetCount)
                         {
                             randomPlanet = random.Next() % planetCount;
+                            while (checkedPlanets.Contains(randomPlanet))
+                                randomPlanet = random.Next() % planetCount;
+                            checkedPlanets.Add(randomPlanet);
+
                             if (session.Galaxy.Planets[randomPlanet].Owner == null)
                             {
                                 notSpawned = false;
                             }
                         }
+                        if (checkedPlanets.Count == planetCount)
+                            return null;
+
                         session.Galaxy.Planets[randomPlanet].Owner = player;
                         session.Galaxy.Planets = session.Galaxy.Planets.OrderBy(p => p.IndexInGalaxy).ToList();
                         await _unitOfWork.Sessions.Update(session);

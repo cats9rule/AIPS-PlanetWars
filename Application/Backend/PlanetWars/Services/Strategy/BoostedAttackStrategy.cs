@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
 using PlanetWars.Services.Exceptions;
@@ -26,12 +25,9 @@ namespace PlanetWars.Services.Strategy
                 Player loser = session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault();
                 if (loser != null) {
                     var lostPlanet = session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().Planets.Where(p => p.ID == attackedPlanet.ID).FirstOrDefault();
-                    Console.WriteLine("\n\n" + lostPlanet.IndexInGalaxy);
                     session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().Planets.Remove(lostPlanet);
                     if (session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().Planets.Count == 0) {
-
                         session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().IsActive = false;
-                        Console.WriteLine(session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().IsActive);
                     }
                 } 
                 attackedPlanet.OwnerID = new Guid(action.PlayerID);

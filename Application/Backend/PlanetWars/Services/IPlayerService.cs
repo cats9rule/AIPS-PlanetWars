@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PlanetWars.DTOs;
-using PlanetWars.Data.Models;
 
 //CreatePlayer vraca Task<Player> 
 

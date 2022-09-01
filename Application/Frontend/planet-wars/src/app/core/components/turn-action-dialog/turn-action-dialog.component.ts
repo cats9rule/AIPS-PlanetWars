@@ -40,6 +40,10 @@ export class TurnActionDialogComponent implements OnInit {
     this.dialogRef.close(this.armiesUsed);
   }
 
+  public onCancel() {
+    this.dialogRef.close(-1);
+  }
+
   private resolveAction(type: ActionType) {
     switch (type) {
       case ActionType.Movement:

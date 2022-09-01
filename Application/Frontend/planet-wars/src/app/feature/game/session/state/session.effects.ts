@@ -138,8 +138,10 @@ export class SessionEffects {
       this.actions$.pipe(
         ofType(setTurnActionDialogResult),
         tap((action) => {
-          this.resolveTurnAction(action.result);
           if (action.result.armyCount > 0) {
+            this.resolveTurnAction(action.result);
+          } else {
+            this.sessionService.messageSource.next(3);
           }
         })
       ),

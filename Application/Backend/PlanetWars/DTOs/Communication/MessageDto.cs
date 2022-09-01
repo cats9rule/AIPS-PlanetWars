@@ -1,4 +1,3 @@
-using System;
 using PlanetWars.Communication;
 
 namespace PlanetWars.DTOs

@@ -16,9 +16,6 @@ namespace PlanetWars.Services
         public Task<IEnumerable<PlanetDto>> GetRelatedPlanets(Guid planetID);
 
         public Task<bool> Update(PlanetDto planetDto);
-        public Task<bool> UpdateArmies(Guid id, int armyDifference);
-        public Task<bool> UpdateOwnership(Guid id, Guid ownerID);
-        public Task<bool> UpdateOwnership(int planetIndex, Guid galaxyID, Guid ownerID);
 
         public Task<bool> Delete(Guid id);
         public Task<bool> DeleteAll();

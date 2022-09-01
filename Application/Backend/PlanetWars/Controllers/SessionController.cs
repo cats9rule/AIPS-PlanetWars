@@ -6,7 +6,6 @@ using PlanetWars.DTOs;
 using PlanetWars.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using PlanetWars.Services.Exceptions;
 
 namespace PlanetWars.Controllers
 {
@@ -95,7 +94,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetSession(Guid id)
         {
             var result = await sessionService.GetById(id);
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("GetAllSessions")]
@@ -103,7 +103,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetAllSessions()
         {
             var result = await sessionService.GetAllSessions();
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("GetByName/{name}/{code}")]
@@ -111,7 +112,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetByNameAndCode(string name, string code)
         {
             var result = await sessionService.GetByNameAndCode(name, code);
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("UpdateSession")]

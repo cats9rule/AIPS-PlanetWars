@@ -58,40 +58,6 @@ namespace PlanetWars.Core.Repositories
             return await dbSet.Where(p => p.Owner.ID == playerID).ToListAsync();
         }
 
-        public async Task<bool> UpdateArmies(Guid id, int armyDifference)
-        {
-            var planet = await dbSet.FindAsync(id);
-            if (planet != null)
-            {
-                planet.ArmyCount += armyDifference;
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> UpdateOwnership(Guid id, Guid ownerID)
-        {
-            var planet = await dbSet.FindAsync(id);
-            if (planet != null) {
-                planet.OwnerID = ownerID;
-                return true;
-            }
-            return false;
-        }
-
-        public async Task<bool> UpdateOwnership(int planetIndex, Guid galaxyID, Guid ownerID) {
-            Console.WriteLine("\n\n" + galaxyID);
-            Console.WriteLine(ownerID + "\n\n");
-            var planet = await dbSet.Where(p => p.GalaxyID == galaxyID && p.IndexInGalaxy == planetIndex).FirstOrDefaultAsync();
-
-            if (planet != null) {
-                Console.WriteLine("\n\n Planet is not null. " + planet.ID + "\n\n");
-                planet.OwnerID = ownerID;
-                return true;
-            }
-            return false;
-        }
-
         public async Task<IEnumerable<Planet>> GetForSession(Guid sessionID)
         {
             return await dbSet.Where(p => p.Galaxy.SessionID == sessionID).ToListAsync();

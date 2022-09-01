@@ -268,8 +268,6 @@ namespace PlanetWars.Services.ConcreteServices
                 await _unitOfWork.Sessions.Update(session);
                 await _unitOfWork.CompleteAsync();
 
-                Console.WriteLine("\n\n" + session.CurrentTurnIndex);
-
                 GameUpdateDto gud = new GameUpdateDto()
                 {
                     ArmiesNextTurn = armiesNextTurn,
@@ -375,7 +373,7 @@ namespace PlanetWars.Services.ConcreteServices
         private bool ValidatePlacedArmies(List<ActionDto> actions, Player player, bool isInitial = false)
         {
             int armies = CalculateNewArmies(player, isInitial);
-            Console.WriteLine("\n\n" + armies + "\n\n");
+
             if (armies > 0)
             {
                 actions.ForEach(a =>
@@ -385,7 +383,6 @@ namespace PlanetWars.Services.ConcreteServices
                         armies -= a.Armies;
                     }
                 });
-                Console.WriteLine("\n\nAfter validate: " + armies + "\n\n");
                 if (armies == 0)
                 {
                     return true;
@@ -455,7 +452,6 @@ namespace PlanetWars.Services.ConcreteServices
             {
                 session.CurrentTurnIndex = (session.CurrentTurnIndex + 1) % session.PlayerCount;
                 var player = session.Players.Where(player => player.PlayerColor.TurnIndex == session.CurrentTurnIndex).First();
-                Console.WriteLine(player.User.Username);
                 foundNext = player.IsActive;
             }
             return session;

@@ -1,5 +1,4 @@
 using PlanetWars.DTOs;
-using PlanetWars.Data.Models;
 
 using System;
 using System.Collections.Generic;

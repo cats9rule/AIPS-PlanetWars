@@ -1,10 +1,7 @@
-using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using PlanetWars.DTOs;
-using PlanetWars.Data.Models;
 using PlanetWars.Services;
 
 namespace PlanetWars.Controllers
@@ -33,7 +30,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetAllColors()
         {
             var result = await playerColorService.GetAll();
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }    
 }

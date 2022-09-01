@@ -21,16 +21,6 @@ namespace PlanetWars.Core.Repositories
             return await base.GetAll();
         }
 
-        public async Task<IEnumerable<GameMap>> GetByPlanetCount(int planetCount)
-        {
-            return await dbSet.Where(gm => gm.PlanetCount == planetCount).ToListAsync();
-        }
-
-        public async Task<IEnumerable<GameMap>> GetByResourcePlanetRatio(float ratio)
-        {
-            return await dbSet.Where(gm => gm.ResourcePlanetRatio == ratio).ToListAsync();
-        }
-
         public override async Task<bool> Add(GameMap entity)
         {
             await dbSet.AddAsync(entity);

@@ -1,12 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using PlanetWars.DTOs;
-using PlanetWars.Services;
-using System.Net;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.AspNetCore.Mvc;
+using PlanetWars.Services;
 namespace PlanetWars.Controllers
 {
     [ApiController]
@@ -25,7 +21,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetAllPlanets()
         {
             var result = await planetService.GetAll();
-            return Ok(result);
+            if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("GetNeighbouringPlanets/{planetId}")]
@@ -33,7 +30,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> GetNeighbouringPlanets(Guid planetId)
         {
             var result = await planetService.GetRelatedPlanets(planetId);
-            return Ok(result);
+             if (result != null) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         [Route("DeleteAll")]
@@ -41,7 +39,8 @@ namespace PlanetWars.Controllers
         public async Task<ActionResult> DeleteAll()
         {
             var result = await planetService.DeleteAll();
-            return Ok(result);
+            if (result) return Ok(result);
+            else return new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }
 }

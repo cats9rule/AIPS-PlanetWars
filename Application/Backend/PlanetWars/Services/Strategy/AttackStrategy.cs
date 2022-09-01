@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PlanetWars.Data.Models;
 using PlanetWars.DTOs;
 using PlanetWars.Services.Exceptions;
@@ -26,12 +25,10 @@ namespace PlanetWars.Services.Strategy
                 Player loser = session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault();
                 if (loser != null) {
                     var lostPlanet = session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().Planets.Where(p => p.ID == attackedPlanet.ID).FirstOrDefault();
-                    Console.WriteLine("\n\n" + lostPlanet.IndexInGalaxy);
                     session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().Planets.Remove(lostPlanet);
                     if (session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().Planets.Count == 0) {
 
                         session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().IsActive = false;
-                        Console.WriteLine(session.Players.Where(p => p.ID == attackedPlanet.OwnerID).FirstOrDefault().IsActive);
                     }
                 } 
                 attackedPlanet.OwnerID = new Guid(action.PlayerID);
@@ -63,10 +60,6 @@ namespace PlanetWars.Services.Strategy
             if (planet2.OwnerID == session.Players
                 .Where(player => player.ID.ToString() == action.PlayerID)
                 .FirstOrDefault().ID) throw new InvalidActionException("The destination planet is owned by the player attacking it.");
-
-            Console.WriteLine("\n\n Planet1 index: " + planet1.IndexInGalaxy + ", planet 2 index: " + planet2.IndexInGalaxy);
-            Console.WriteLine("\n Connections count: " + connections.Count);
-
 
             if (connections.Where(c => c.PlanetFromID == planet1.ID && c.PlanetToID == planet2.ID).First() == null)
                 throw new InvalidActionException("Start and destination planet are not connected.");
